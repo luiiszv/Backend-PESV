@@ -2,7 +2,7 @@ import { connect,connections } from "mongoose";
 
 export const connectDb = async () => {
     try {
-      const mongoUrl = process.env.MONGODB_URL;
+      const mongoUrl = process.env.MONGODB_URL_PESV;
       if (!mongoUrl) {
         throw new Error("La URL de MongoDB no está definida en el archivo .env");
       }

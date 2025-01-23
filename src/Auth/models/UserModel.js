@@ -4,22 +4,22 @@ const UsuariosSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      require: true,
     },
     lastName: {
       type: String,
-      required: true,
+      require: true,
     },
     email: {
       type: String,
-      required: true,
+      require: true,
       unique: true, //  correo único
       match: /.+\@.+\..+/, // Validación básica para el formato del correo
     },
     tipoIdentificacion: {
       type: Schema.Types.ObjectId,
       ref: "tipo_identificacion",
-      required: true,
+      require: true,
     },
     numeroDocumento: {
       type: String,
@@ -32,11 +32,17 @@ const UsuariosSchema = new Schema(
     role: {
       type: Schema.Types.ObjectId,
       ref: "rol",
-      required: true,
+      require: true,
     },
     createdAt: {
       type: Date,
       default: Date.now, //  fecha por defecto
+    },
+    tipoLicencia: {
+      type: String,
+      enum: ['A1','A2', 'B1', 'B2', 'C1', 'C2', 'C3'],
+      require: true
+
     },
     vehiculos: {
       type: Schema.Types.ObjectId,
@@ -54,3 +60,4 @@ const UsuariosSchema = new Schema(
 
 // Exporta el modelo de usuario
 export default model("usuarios", UsuariosSchema);
+
