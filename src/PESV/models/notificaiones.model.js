@@ -11,6 +11,7 @@ const notificacionesSchema = new Schema({
     ref: "formularios",
     require: true,
   },
+  
 });
 
 export default model("notificaciones", notificacionesSchema);
