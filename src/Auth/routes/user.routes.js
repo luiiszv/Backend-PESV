@@ -2,7 +2,7 @@
 import { Router } from "express";
 
 // Import Controladores
-import { registerUsers, getAllUsers, login } from "../controllers/user.contollers.js";
+import { registerUsers, getAllUsers, login } from "../controllers/user.controller.js";
 
 // Validaciones
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";

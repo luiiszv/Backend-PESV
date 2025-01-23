@@ -1,12 +1,7 @@
-
 import { hash, compare } from "bcrypt";
-import {
-  getAll,
-  createUser,
-  findUserByEamil,
-  delteOneUser,
-} from "../repositories/user.repository.js";
-
+import UserRepository from "../repositories/user.repository.js";
+import RoleRepository from "../repositories/role.repository.js";
+import TipoIdentRepository from "../repositories/tipoIdentificacion.respository.js";
 import { createAccessToken } from "../libs/jwt.js";
 
 /**
@@ -16,13 +11,55 @@ import { createAccessToken } from "../libs/jwt.js";
  */
 
 const insertUser = async (user) => {
+  const { role, tipoIdentificacion, numeroDocumento, email } = user;
   const passwordHashed = await hash(user.password, 10);
   const userPassHashed = { ...user, password: passwordHashed };
-  const response = await createUser(userPassHashed);
+
+  //ROLE
+  const roleExist = await RoleRepository.findRoleById(role);
+  const numeroDocumentoExist =
+    await UserRepository.findUserByIdentificationNumber(numeroDocumento);
+  const emailExist = await UserRepository.findUserByEamil(email);
+  const tipoIdentificacionExit =
+    await TipoIdentRepository.findTipoIdentificaionById(tipoIdentificacion);
+
+  if (!roleExist) {
+    return {
+      success: false,
+      data: "Role not found",
+    };
+  }
+  if (!tipoIdentificacionExit) {
+    return {
+      success: false,
+      data: "tipoIdentificacion not found",
+    };
+  }
+
+  if (!roleExist) {
+    return {
+      success: false,
+      data: "Role not found",
+    };
+  }
+  if (numeroDocumentoExist) {
+    return {
+      success: false,
+      data: "Identification number is already registered",
+    };
+  }
+  if (emailExist) {
+    return {
+      success: false,
+      data: "Email is already registered",
+    };
+  }
+
+  await UserRepository.createUser(userPassHashed);
+
   return {
     success: true,
-    message: "User registred",
-    data: response,
+    data: "User registered",
   };
 };
 
@@ -32,7 +69,7 @@ const insertUser = async (user) => {
  * @returns
  */
 const getUser = async (email) => {
-  const response = await findUserByEamil(email);
+  const response = await UserRepository.findUserByEamil(email);
   return {
     success: true,
     message: "User Found",
@@ -46,7 +83,7 @@ const getUser = async (email) => {
  * @returns Users
  */
 const findUsers = async () => {
-  const response = await getAll();
+  const response = await UserRepository.getAll();
   return {
     success: true,
     data: response,
@@ -59,13 +96,16 @@ const findUsers = async () => {
  * @returns
  */
 const deleteUser = async (_id) => {
-  const response = await delteOneUser(_id);
+  const response = await UserRepository.delteOneUser(_id);
   return {
     seccess: true,
     message: "User Deleted",
     data: response,
   };
 };
+
+
+
 
 /**
  * Login user
@@ -74,7 +114,7 @@ const deleteUser = async (_id) => {
  */
 
 const loginUser = async (email, password) => {
-  const userExist = await findUserByEamil(email);
+  const userExist = await UserRepository.findUserByEamil(email);
   if (!userExist) {
     return {
       success: false,

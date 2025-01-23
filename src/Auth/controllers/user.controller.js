@@ -1,4 +1,3 @@
-
 import {
   getUser,
   insertUser,
@@ -30,7 +29,7 @@ export const getUserDetail = async ({ body }, res) => {
   }
 };
 
-export const getAllUsers = async (_req, res) => {
+export const getAllUsers = async (req, res) => {
   try {
     const users = await findUsers();
     res.status(200).json(users);
@@ -41,17 +40,22 @@ export const getAllUsers = async (_req, res) => {
   }
 };
 
+export const updateUser = async ({ body }, res) => {
+  
+  try {
+    
+  } catch (error) {
+    res.status(400).json({ message: "Something went wrong in updateUser", error });
+  }
+};
+
 export const login = async ({ body }, res) => {
   try {
-    const { success, token } = await loginUser(
-      body.email,
-      body.password
-    );
+    const { success, token } = await loginUser(body.email, body.password);
 
     res.cookie("accessToken", token, {
       httpOnly: true,
       secure: true,
-      sameSite: "strict",
     });
 
     res.status(200).json({ success, token });

@@ -1,19 +1,31 @@
 import UserModel from "../models/UserModel.js";
 
-
-export const getAll = async () => {
+const getAll = async () => {
   return await UserModel.find();
 };
 
-export const createUser = async (user) => {
-  return await UserModel.create(user);
+const createUser = async (user) => {
+  const newUser = new UserModel(user);
+
+  return await newUser.save();
 };
 
-export const findUserByEamil = async (email) => {
+const findUserByEamil = async (email) => {
   return await UserModel.findOne({ email });
 };
 
-export const delteOneUser = async (_id) => {
+const findUserByIdentificationNumber = async (numeroDocumento) => {
+  return await UserModel.findOne({ numeroDocumento });
+};
+
+const delteOneUser = async (_id) => {
   return await UserModel.deleteOne({ _id });
 };
 
+export default {
+  delteOneUser,
+  findUserByEamil,
+  createUser,
+  getAll,
+  findUserByIdentificationNumber,
+};

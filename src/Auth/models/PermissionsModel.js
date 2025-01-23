@@ -1,15 +1,15 @@
 import { Schema, model } from "mongoose";
 
 const PermisosSchema = new Schema({
-    _id_rol: {
+    id_rol: {
         type: Schema.Types.ObjectId,
-        ref: 'rol',
+        ref: 'roles',
         require,
     },
-    canRead: { type: Boolean, default: false },
-    canWrite: { type: Boolean, default: false },
-    canEdit: { type: Boolean, default: false },
-    canDelete: { type: Boolean, default: false },
+    canRead: { type: Boolean, default: true },
+    canWrite: { type: Boolean, default: true },
+    canEdit: { type: Boolean, default: true },
+    canDelete: { type: Boolean, default: true },
 });
 
 export default model("permisos", PermisosSchema);

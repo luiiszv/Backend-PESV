@@ -13,4 +13,4 @@ const rolsSchema = new Schema({
 });
 
 // Exporta el modelo de rol
-export default model("rols", rolsSchema);
+export default model("roles", rolsSchema);
