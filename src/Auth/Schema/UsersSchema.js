@@ -10,7 +10,7 @@ const registerUserSchema = z.object({
     .min(3, { message: "lastName must be at least 3 characters" }),
 
   telefono: z
-    .string({required_error: "telefono is reuqired"})
+    .string({ required_error: "telefono is reuqired" })
     .min(6, { message: "telefono must be at least 6 characters" }),
   email: z
     .string({ required_error: "email is required" })
@@ -21,11 +21,7 @@ const registerUserSchema = z.object({
   role: z.string().refine((value) => mongoose.Types.ObjectId.isValid(value), {
     message: "Id Rol is not valid",
   }),
-  tipoIdentificacion: z
-    .string({ required_error: "tipoIdentificacion is required" })
-    .refine((value) => mongoose.Types.ObjectId.isValid(value), {
-      message: "Id TipoIdentificaion is not valid",
-    }),
+  tipoIdentificacion: z.enum(["Cedula de Ciudadania", "Tarjeta de Identidad"]),
   numeroDocumento: z
     .string({ required_error: "numeroDocumento is required" })
     .min(7, { message: "numeroDocumento must be at least 7 characters" }),

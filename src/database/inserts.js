@@ -1,16 +1,3 @@
-db.tipo_identificacion.insertMany([
-  {
-    name: "Cédula de Ciudadanía",
-    description: "Documento de identificación para ciudadanos colombianos.",
-  },
-  {
-    name: "Tarjeta de Identidad",
-    description:
-      "Documento de identificación para menores de edad en Colombia.",
-  },
-]);
-
-
 db.clase_vehiculos.insertMany([
   {
     name: "Todos",
@@ -26,7 +13,8 @@ db.clase_vehiculos.insertMany([
   },
   {
     name: "Camioneta",
-    description: "Vehículo versátil utilizado para transporte de carga o pasajeros.",
+    description:
+      "Vehículo versátil utilizado para transporte de carga o pasajeros.",
   },
   {
     name: "Campero",
@@ -34,7 +22,8 @@ db.clase_vehiculos.insertMany([
   },
   {
     name: "Automovil",
-    description: "Vehículo de cuatro ruedas diseñado principalmente para transporte personal.",
+    description:
+      "Vehículo de cuatro ruedas diseñado principalmente para transporte personal.",
   },
   {
     name: "Jeep",
@@ -42,14 +31,15 @@ db.clase_vehiculos.insertMany([
   },
   {
     name: "Microbus",
-    description: "Vehículo más pequeño que un autobús, usado para transporte de pasajeros.",
+    description:
+      "Vehículo más pequeño que un autobús, usado para transporte de pasajeros.",
   },
   {
     name: "Motocarro",
-    description: "Vehículo pequeño de tres ruedas usado para carga o pasajeros.",
+    description:
+      "Vehículo pequeño de tres ruedas usado para carga o pasajeros.",
   },
 ]);
-
 
 db.roles.insertMany([
   {
@@ -89,7 +79,6 @@ db.permisos.insertMany([
   },
 ]);
 
-
 db.zonas.insertMany([
   {
     nombreZona: "Norte",
@@ -102,5 +91,53 @@ db.zonas.insertMany([
   {
     nombreZona: "Centro",
     codeZona: "3",
+  },
+]);
+
+db.tipos_documentos.insertMany([
+  {
+    nombre: "Cédula de Ciudadanía",
+    categoria: "persona",
+    descripcion: "Documento de identificación para ciudadanos colombianos.",
+  },
+  {
+    nombre: "Licencia de conducir",
+    categoria: "persona",
+    descripcion:
+      "Documento que acredita la autorización para conducir vehículos.",
+  },
+  {
+    nombre: "Tarjeta de propiedad",
+    categoria: "vehiculo",
+    descripcion: "Documento que certifica la propiedad de un vehículo.",
+  },
+  {
+    nombre: "SOAT",
+    categoria: "vehiculo",
+    descripcion: "Seguro Obligatorio de Accidentes de Tránsito para vehículos.",
+  },
+
+  {
+    nombre: "Revisión técnico-mecánica",
+    categoria: "vehiculo",
+    descripcion:
+      "Documento que acredita el estado técnico y mecánico del vehículo.",
+  },
+  {
+    nombre: "Poliza Todo Riesgo",
+    categoria: "vehiculo",
+    descripcion: "Seguro opcional que cubre daños al vehículo y terceros.",
+  },
+  {
+    nombre: "Contrato",
+    categoria: "vehiculo",
+    descripcion:
+      "Documento que certifica la cesión temporal de uso de un vehículo bajo contrato.",
+  },
+  {
+    nombre: "Tarjeta de operación",
+    categoria: "vehiculo",
+    descripcion:
+      "Documento que autoriza a un vehículo a operar dentro de las normas legales.",
   },
 ]);

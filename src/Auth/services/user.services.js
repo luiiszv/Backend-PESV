@@ -1,7 +1,7 @@
 import { hash, compare } from "bcrypt";
 import UserRepository from "../repositories/user.repository.js";
 import RoleRepository from "../repositories/role.repository.js";
-import TipoIdentRepository from "../repositories/tipoIdentificacion.respository.js";
+
 import { createAccessToken } from "../libs/jwt.js";
 
 /**
@@ -20,8 +20,7 @@ const insertUser = async (user) => {
   const numeroDocumentoExist =
     await UserRepository.findUserByIdentificationNumber(numeroDocumento);
   const emailExist = await UserRepository.findUserByEamil(email);
-  const tipoIdentificacionExit =
-    await TipoIdentRepository.findTipoIdentificaionById(tipoIdentificacion);
+
 
   if (!roleExist) {
     return {
@@ -29,12 +28,7 @@ const insertUser = async (user) => {
       data: "Role not found",
     };
   }
-  if (!tipoIdentificacionExit) {
-    return {
-      success: false,
-      data: "tipoIdentificacion not found",
-    };
-  }
+
 
   if (!roleExist) {
     return {

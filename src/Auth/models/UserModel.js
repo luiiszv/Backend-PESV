@@ -17,8 +17,8 @@ const UsuariosSchema = new Schema(
       match: /.+\@.+\..+/, // Validación básica para el formato del correo
     },
     tipoIdentificacion: {
-      type: Schema.Types.ObjectId,
-      ref: "tipo_identificacion",
+      type: String,
+      enum: ["Cedula de Ciudadania", "Tarjeta de Identidad"],
       require: true,
     },
     numeroDocumento: {
@@ -40,15 +40,8 @@ const UsuariosSchema = new Schema(
     },
     tipoLicencia: {
       type: String,
-      enum: ['A1','A2', 'B1', 'B2', 'C1', 'C2', 'C3'],
-      require: true
-
-    },
-    vehiculos: {
-      type: Schema.Types.ObjectId,
-      ref: "vehiclos",
-      require: false,
-      default: null
+      enum: ["A1", "A2", "B1", "B2", "C1", "C2", "C3"],
+      require: true,
     },
     active: {
       type: Boolean,
@@ -60,4 +53,3 @@ const UsuariosSchema = new Schema(
 
 // Exporta el modelo de usuario
 export default model("usuarios", UsuariosSchema);
-
