@@ -1,7 +1,14 @@
 import { Schema, model } from "mongoose";
 
 const VehiculosSchema = new Schema({
-  idUsario: {
+  idUsuario: {
+    //Usuario Asignado
+    type: Schema.Types.ObjectId,
+    ref: "usuarios",
+    require: true,
+  },
+  ownerId: {
+    //Dueno
     type: Schema.Types.ObjectId,
     ref: "usuarios",
     require: true,
@@ -40,7 +47,6 @@ const VehiculosSchema = new Schema({
     //Numero del Motor
     type: String,
     require: false,
-    s,
   },
   modeloVehiculo: {
     //año 2030
@@ -59,12 +65,21 @@ const VehiculosSchema = new Schema({
     type: String,
     require: true,
   },
+  VehicleEmpresa: {
+    // Si es vehículo de empresa
+    type: Boolean,
+    required: true,
+  },
   estadoVehiculo: {
     //Estado Activo = true Inactivo = 🍕
     type: Boolean,
     require: true,
     default: true,
   },
-});
+  fechaCreacion: {
+    type: Date,
+    default: Date.now, //  fecha por creacion
+}
+}, {timestamps: true});
 
 export default model("vehiculos", VehiculosSchema);

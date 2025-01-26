@@ -1,9 +1,9 @@
 import { Schema, model } from "mongoose";
 
-const DocumentosVehiculeModel = new Schema({
-  idVehiculo: {
+const DocumentosUsuariosSchema = new Schema({
+  idUsuario: {
     type: Schema.Types.ObjectId,
-    ref: "vehiculos",
+    ref: "usuarios",
     require: true,
   },
   tipoDocumentoId: {
@@ -16,14 +16,13 @@ const DocumentosVehiculeModel = new Schema({
     require: true,
   },
   fechaExpiracion: {
-    type: Date,
+    type: String,
     require: true,
   },
   ruta: {
     type: String,
     require: true,
   },
-  
 });
 
-export default model("documentos_vehiculos", DocumentosVehiculeModel);
+export default model("documentos_usuarios", DocumentosUsuariosSchema);

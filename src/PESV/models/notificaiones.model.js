@@ -1,12 +1,12 @@
 import { Schema, model } from "mongoose";
 
 const notificacionesSchema = new Schema({
-  id_usuario: {
+  idUsuario: {
     type: Schema.Types.ObjectId,
     ref: "usuarios",
     require: true,
   },
-  id_formulario: {
+  idFormulario: {
     type: Schema.Types.ObjectId,
     ref: "formularios",
     require: true,

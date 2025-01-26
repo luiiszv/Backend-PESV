@@ -15,4 +15,4 @@ const TipoDocuemntos = new Schema({
   },
 });
 
-export default model("tipos_documentos ", TipoDocuemntos);
+export default model("tipos_documentos", TipoDocuemntos);

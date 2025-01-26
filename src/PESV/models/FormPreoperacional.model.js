@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 
-const FormRespuestasSchema = new Schema({
+const FormPreoperacionalSchema = new Schema({
     idUsuario: {
         type: Schema.Types.ObjectId,
         ref: 'usuarios',
@@ -21,7 +21,7 @@ const FormRespuestasSchema = new Schema({
         {
             idPregunta: {
                 type: Schema.Types.ObjectId,
-                ref: "form_preguntas_pre_operacioanal",
+                ref: "preguntas_formularios",
                 required: true,
             },
             respuesta: {
@@ -43,4 +43,4 @@ const FormRespuestasSchema = new Schema({
 
 })
 
-export default model('form_respuestas', FormRespuestasSchema);
+export default model('form_preoperacionales', FormPreoperacionalSchema);
