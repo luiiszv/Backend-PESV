@@ -16,11 +16,6 @@ const UsuariosSchema = new Schema(
       unique: true, //  correo único
       match: /.+\@.+\..+/, // Validación básica para el formato del correo
     },
-    tipoIdentificacion: {
-      type: String,
-      enum: ["Cedula de Ciudadania", "Tarjeta de Identidad"],
-      require: true,
-    },
     numeroDocumento: {
       type: String,
       require: true,
@@ -50,6 +45,8 @@ const UsuariosSchema = new Schema(
   },
   { timestamps: true }
 );
+
+
 
 // Exporta el modelo de usuario
 export default model("usuarios", UsuariosSchema);

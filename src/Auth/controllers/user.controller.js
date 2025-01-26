@@ -3,7 +3,7 @@ import {
   insertUser,
   findUsers,
   loginUser,
-} from "../services/user.services.js";
+} from "../services/user.service.js";
 
 export const registerUsers = async ({ body }, res) => {
   try {

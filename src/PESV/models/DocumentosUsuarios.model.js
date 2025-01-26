@@ -16,7 +16,7 @@ const DocumentosUsuariosSchema = new Schema({
     require: true,
   },
   fechaExpiracion: {
-    type: String,
+    type: Date,
     require: true,
   },
   ruta: {

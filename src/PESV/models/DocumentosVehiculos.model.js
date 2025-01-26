@@ -26,4 +26,6 @@ const DocumentosVehiculeModel = new Schema({
   
 });
 
+DocumentosVehiculeModel.index({ idVehiculo: 1 });
+
 export default model("documentos_vehiculos", DocumentosVehiculeModel);
