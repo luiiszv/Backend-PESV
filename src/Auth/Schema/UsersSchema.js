@@ -21,7 +21,9 @@ const registerUserSchema = z.object({
   role: z.string().refine((value) => mongoose.Types.ObjectId.isValid(value), {
     message: "Id Rol is not valid",
   }),
-  tipoIdentificacion: z.enum(["Cedula de Ciudadania", "Tarjeta de Identidad"]),
+  cargo: z.string().refine((value) => mongoose.Types.ObjectId.isValid(value), {
+    message: "Id cargo is not valid",
+  }),
   numeroDocumento: z
     .string({ required_error: "numeroDocumento is required" })
     .min(7, { message: "numeroDocumento must be at least 7 characters" }),

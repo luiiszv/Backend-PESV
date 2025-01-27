@@ -1,7 +1,7 @@
 import UserModel from "../models/UserModel.js";
 
 const getAll = async () => {
-  return await UserModel.find();
+  return await UserModel.find().select('-password -numeroDocumento -telefono -email');
 };
 
 const createUser = async (user) => {
