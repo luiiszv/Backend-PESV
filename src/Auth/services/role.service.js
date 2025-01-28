@@ -19,3 +19,24 @@ export const findRoleById = async (id_role) => {
     data: response,
   };
 };
+
+/**
+ * Get Role
+ * @params id_role
+ * @returns Role
+ */
+
+export const findAllRoles = async () => {
+  const response = await RoleRepository.findAllRoles();
+  if (!response) {
+    return {
+      success: false,
+      data: "Roles not found",
+    };
+  }
+  return {
+    success: true,
+    data: response,
+  };
+};
+

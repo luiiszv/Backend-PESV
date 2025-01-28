@@ -24,7 +24,7 @@ export const updateOneUser = async ({ body }, res) => {
   }
 }
 
-const createFormPregunta = async ({ body }, res) => {
+export const createFormPregunta = async ({ body }, res) => {
   const { userId } = req.user; //Auth
   try {
     const response = await createFormPreguntas(userId, body);
@@ -39,7 +39,7 @@ const createFormPregunta = async ({ body }, res) => {
 
 const changeEstadoPregunta = async (id_pregunta) => {
   try {
-    const response = await 
+    
     
   } catch (error) {
 
