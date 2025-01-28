@@ -1,1 +1,1 @@
-import {  } from "../controllers/";
+import { getAllRoles } from "../controllers/roles.controller.js";

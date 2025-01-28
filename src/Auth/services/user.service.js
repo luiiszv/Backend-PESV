@@ -3,6 +3,7 @@ import UserRepository from "../repositories/user.repository.js";
 import RoleRepository from "../repositories/role.repository.js";
 
 import { createAccessToken } from "../libs/jwt.js";
+import { validateToken } from "../../Middleware/ValidateAuth.js";
 
 /**
  * Registar usuario
@@ -135,4 +136,24 @@ const loginUser = async (email, password) => {
     token: token,
   };
 };
-export { insertUser, getUser, findUsers, deleteUser, loginUser };
+
+const VerifyAuthUser = async (token) => {
+  const responseValidation = validateToken(token);
+
+  if (!responseValidation) {
+    console.log(responseValidation);
+    return {
+      success: false,
+      data: "Token is't valid"
+    }
+  }
+
+  return {
+    success: true,
+    data: responseValidation 
+  }
+
+}
+export { insertUser, getUser, findUsers, deleteUser, loginUser, VerifyAuthUser };
+
+

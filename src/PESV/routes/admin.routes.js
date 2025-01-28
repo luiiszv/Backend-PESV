@@ -8,26 +8,41 @@ const adminRoutes = Router();
  * @swagger
  * tags:
  *   name: PESV
- *   description: Endpoints for user authentication
+ *   description: Endpoints for PESV operations
  */
-
 
 /**
  * @swagger
  * /auth/users/{id}:
  *   put:
- *     summary: Get a user by ID
+ *     summary: Update a user by ID
+ *     tags: [PESV]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of the user to retrieve
+ *         description: ID of the user to update
  *         schema:
  *           type: string
  *           example: 12345
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The updated name of the user
+ *                 example: John Doe
+ *               email:
+ *                 type: string
+ *                 description: The updated email of the user
+ *                 example: johndoe@example.com
  *     responses:
  *       200:
- *         description: Successfully retrieved user
+ *         description: User successfully updated
  *         content:
  *           application/json:
  *             schema:
@@ -35,12 +50,33 @@ const adminRoutes = Router();
  *               properties:
  *                 id:
  *                   type: string
+ *                   example: 12345
  *                 name:
  *                   type: string
+ *                   example: John Doe
  *                 email:
  *                   type: string
+ *                   example: johndoe@example.com
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Invalid data provided
  *       404:
  *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found
  */
 adminRoutes.put('admin/', updateOneUser);
 
