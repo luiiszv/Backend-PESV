@@ -2,7 +2,7 @@ import { Router } from "express";
 import { registerUsers, getAllUsers, login, verifyToken } from "../controllers/user.controller.js";
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
 import { registerUserSchema, loginSchema } from "../Schema/UsersSchema.js";
-import { validateToken } from "../../Middleware/ValidateAuth.js";
+import { authMiddleware } from "../../Middleware/ValidateAuth.js";
 
 const router = Router();
 
@@ -88,7 +88,7 @@ const router = Router();
  *       400:
  *         description: Invalid login credentials
  */
-router.post("/login", validateSchema(loginSchema), login);
+router.post("/login", authMiddleware, validateSchema(loginSchema), login);
 
 /**
  * @swagger
@@ -205,7 +205,7 @@ router.post("/verify", verifyToken);
  *         description: Unauthorized (token no enviado o inválido)
 
  */
-router.post("/", validateToken, validateSchema(registerUserSchema), registerUsers);
+router.post("/", authMiddleware, validateSchema(registerUserSchema), registerUsers);
 
 
 export default router;

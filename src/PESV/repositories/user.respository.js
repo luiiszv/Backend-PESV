@@ -1,5 +1,5 @@
 import UserModel from "../../Auth/models/UserModel.js";
-
+import CargoModel from "../models/Cargos.model.js";
 const getAllUsers = async () => {
   return await UserModel.find().populate('cargo');
 };

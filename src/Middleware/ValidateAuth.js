@@ -30,7 +30,6 @@ export const authMiddleware = (req, res, next) => {
       return;
     }
     req.user = validation;
-
     return next();
   } catch (error) {
     res.status(500).json({
@@ -39,3 +38,7 @@ export const authMiddleware = (req, res, next) => {
     });
   }
 };
+
+
+
+

@@ -3,9 +3,14 @@ import {
   getAllUsers,
   updateOneUser,
   createFormPregunta,
+  changeStatusPregunta
+
 } from "../controllers/admin.controller.js";
 
 const adminRoutes = Router();
+
+import { authMiddleware } from "../../Middleware/ValidateAuth.js";
+import { authAdminMiddleware } from "../../Middleware/ValidateAdmin.js";
 
 /**
  * @swagger
@@ -129,8 +134,6 @@ adminRoutes.get('/users', getAllUsers);
 
 
 
-
-adminRoutes.get('/users/idUser', getAllUsers);
-
+adminRoutes.get('/users/id', changeStatusPregunta);
 
 export default adminRoutes;
