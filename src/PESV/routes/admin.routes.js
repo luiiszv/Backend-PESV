@@ -1,8 +1,11 @@
 import { Router } from "express";
-import { getAllUsers, updateOneUser, createFormPregunta } from "../controllers/admin.controller.js";
+import {
+  getAllUsers,
+  updateOneUser,
+  createFormPregunta,
+} from "../controllers/admin.controller.js";
 
 const adminRoutes = Router();
-
 
 /**
  * @swagger
@@ -13,18 +16,19 @@ const adminRoutes = Router();
 
 /**
  * @swagger
- * /auth/users/{id}:
+ * /pesv/users/{id}:
  *   put:
  *     summary: Update a user by ID
  *     tags: [PESV]
+ *     security:
+ *       - BearerAuth: []  # Se requiere Auth Token
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of the user to update
  *         schema:
  *           type: string
- *           example: 12345
+ *         description: User ID to update
  *     requestBody:
  *       required: true
  *       content:
@@ -35,11 +39,32 @@ const adminRoutes = Router();
  *               name:
  *                 type: string
  *                 description: The updated name of the user
- *                 example: John Doe
+ *                 example: Yose Doe
+ *               lastName:
+ *                 type: string
+ *                 example: Martinez
  *               email:
  *                 type: string
  *                 description: The updated email of the user
  *                 example: johndoe@example.com
+ *               role:
+ *                 type: string
+ *                 example: "64c2f930ae634c2e947b6c88"
+ *               tipoLicencia:
+ *                 type: string
+ *                 example: A2
+ *               cargo:
+ *                 type: string
+ *                 example: "64c2f930ae634c2e947b6c81"
+ *               numeroDocumento:
+ *                 type: string
+ *                 example: "1122334455"
+ *               password:
+ *                 type: string
+ *                 example: password123
+ *               active:
+ *                 type: boolean
+ *                 example: false
  *     responses:
  *       200:
  *         description: User successfully updated
@@ -50,7 +75,7 @@ const adminRoutes = Router();
  *               properties:
  *                 id:
  *                   type: string
- *                   example: 12345
+ *                   example: "12345"
  *                 name:
  *                   type: string
  *                   example: John Doe
@@ -78,7 +103,7 @@ const adminRoutes = Router();
  *                   type: string
  *                   example: User not found
  */
-adminRoutes.put('admin/', updateOneUser);
+adminRoutes.put("/pesv/users/:id", updateOneUser);
 
 
 export default adminRoutes;

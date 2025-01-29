@@ -160,6 +160,8 @@ router.post("/verify", verifyToken);
  *   post:
  *     summary: Register a new user
  *     tags: [Auth]
+ *     security:
+ *       - BearerAuth: []  # Se requiere autenticación con token
  *     requestBody:
  *       required: true
  *       content:
@@ -188,14 +190,22 @@ router.post("/verify", verifyToken);
  *                 example: strongPassword123
  *               role:
  *                 type: string
+ *                 description: ID del rol del usuario
  *                 example: "64c2f930ae634c2e947b6c99"
  *               cargo:
  *                 type: string
+ *                 description: ID del cargo del usuario
  *                 example: "64c2f930ae634c2e947b6c88"
  *     responses:
  *       200:
  *         description: User registered successfully
+ *       400:
+ *         description: Bad request (error en los datos enviados)
+ *       401:
+ *         description: Unauthorized (token no enviado o inválido)
+
  */
 router.post("/", validateToken, validateSchema(registerUserSchema), registerUsers);
+
 
 export default router;
