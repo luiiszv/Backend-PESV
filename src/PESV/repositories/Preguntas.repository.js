@@ -1,4 +1,4 @@
-import PreguntasModel from "../models/PreguntasFormularios.model";
+import PreguntasModel from "../models/PreguntasFormularios.model.js";
 
 
 const findAllPreguntas = async () => {

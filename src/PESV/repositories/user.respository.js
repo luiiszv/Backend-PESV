@@ -1,11 +1,13 @@
 import UserModel from "../../Auth/models/UserModel.js";
 
 const getAllUsers = async () => {
-  return await UserModel.find();
+  return await UserModel.find().populate('cargo');
 };
 
 const getUserById = async (id_user) => {
-  return await UserModel.findById(id_user).populate('');
+  return await UserModel.findById(id_user).populate({
+    path: 'cargo',
+  });
 };
 
 const UpdateUser = async (user_data) => {

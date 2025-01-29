@@ -7,15 +7,17 @@ import {
 } from "../services/user.service.js";
 
 export const registerUsers = async ({ body }, res) => {
-  try {
-    const user = await insertUser(body);
-    res.status(200).json(user);
-  } catch (error) {
-    console.log(error);
-    res
-      .status(400)
-      .json({ message: "Something went wrong in registerUsers", error });
-  }
+
+  console.log(body);
+  // try {
+  //   const user = await insertUser(body);
+  //   res.status(200).json(user);
+  // } catch (error) {
+  //   console.log(error);
+  //   res
+  //     .status(400)
+  //     .json({ message: "Something went wrong in registerUsers", error });
+  // }
 };
 
 export const getUserDetail = async ({ body }, res) => {

@@ -15,6 +15,31 @@ export const findAllUsers = async () => {
       message: "Users not found",
     };
   }
+
+  return{
+    sucess: true,
+      data: response
+  }
+};
+
+/**
+ * Get All Usuarios
+ * @params 
+ * @returns users
+ */
+export const findUserById = async () => {
+  const response = await UserRepository.findUserById();
+  if (!response) {
+    return {
+      success: false,
+      message: "Users not found",
+    };
+  }
+
+  return{
+    sucess: true,
+      data: response
+  }
 };
 
 /**
@@ -79,6 +104,6 @@ export const changeEstadoPregunta = async (id_pregunta) => {
     };
 
   }
- 
+
 }
 

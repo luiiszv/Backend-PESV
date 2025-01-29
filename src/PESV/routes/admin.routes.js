@@ -16,7 +16,7 @@ const adminRoutes = Router();
 
 /**
  * @swagger
- * /pesv/users/{id}:
+ * /pesv/admin/users:
  *   put:
  *     summary: Update a user by ID
  *     tags: [PESV]
@@ -46,7 +46,7 @@ const adminRoutes = Router();
  *               email:
  *                 type: string
  *                 description: The updated email of the user
- *                 example: johndoe@example.com
+ *                 example: johndoe@gmail.com
  *               role:
  *                 type: string
  *                 example: "64c2f930ae634c2e947b6c88"
@@ -92,18 +92,45 @@ const adminRoutes = Router();
  *                 message:
  *                   type: string
  *                   example: Invalid data provided
- *       404:
- *         description: User not found
+ */
+
+adminRoutes.put('/users', updateOneUser);
+
+
+
+/**
+ * @swagger
+ * /pesv/admin/users:
+ *   get:
+ *     summary: Get all users With all the information
+ *     tags: [PESV]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of users retrieved successfully
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 message:
- *                   type: string
- *                   example: User not found
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad request
  */
-adminRoutes.put("/pesv/users/:id", updateOneUser);
+
+adminRoutes.get('/users', getAllUsers);
+
+
+
+
+adminRoutes.get('/users/idUser', getAllUsers);
 
 
 export default adminRoutes;

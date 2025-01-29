@@ -20,7 +20,7 @@ const routerDocuments = Router();
  *   post:
  *     summary: Upload a user document
  *     tags: [PESV Documents]
- *     parameters:
+ *     parameters: 
  *       - in: path
  *         name: id_user
  *         required: true
