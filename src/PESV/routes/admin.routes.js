@@ -3,14 +3,22 @@ import {
   getAllUsers,
   updateOneUser,
   createFormPregunta,
-  changeStatusPregunta
+  changeStatusPregunta,
+  getAllFormPreguntas
 
 } from "../controllers/admin.controller.js";
 
 const adminRoutes = Router();
 
+
+//AuthMiddlewares
 import { authMiddleware } from "../../Middleware/ValidateAuth.js";
 import { authAdminMiddleware } from "../../Middleware/ValidateAdmin.js";
+
+//Validate Schema
+import { regiterPreguntasSchema } from "../schemas/Preguntas.schema.js";
+import { validateSchema } from "../../Middleware/ValitarorSchema.js";
+
 
 /**
  * @swagger
@@ -133,7 +141,9 @@ adminRoutes.put('/users', updateOneUser);
 adminRoutes.get('/users', getAllUsers);
 
 
-
-adminRoutes.get('/users/id', changeStatusPregunta);
+//Preguntas
+adminRoutes.get('/users/id', authMiddleware, authAdminMiddleware, changeStatusPregunta);
+adminRoutes.get('/preguntas', authMiddleware, authAdminMiddleware, getAllFormPreguntas); 
+adminRoutes.post('/preguntas', authMiddleware, authAdminMiddleware, validateSchema(regiterPreguntasSchema), createFormPregunta);
 
 export default adminRoutes;

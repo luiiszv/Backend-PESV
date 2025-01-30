@@ -1,8 +1,9 @@
 import PreguntasModel from "../models/PreguntasFormularios.model.js";
-
+import ClaseVehiuclosModel from "../models/ClaseVehiuclos.model.js";
+import UserModel from "../../Auth/models/UserModel.js";
 
 const findAllPreguntas = async () => {
-    return await PreguntasModel.find();
+    return await PreguntasModel.find().populate('idUsuarioCreador').populate('calseVehiculo');
 
 }
 
@@ -24,7 +25,7 @@ const updatePregunta = async (pregunta_data) => {
     )
 }
 
-const changeEstadoPregunta = async(id_pregunta, nuevoEstado) => {
+const changeEstadoPregunta = async (id_pregunta, nuevoEstado) => {
     return await PreguntasModel.updateOne(
         { _id: id_pregunta },
         { $set: { estadoPregunta: nuevoEstado } },

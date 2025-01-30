@@ -1,6 +1,6 @@
-import UserRepository  from "../repositories/user.respository.js";
+import UserRepository from "../repositories/user.respository.js";
 import PreguntasRepository from "../repositories/Preguntas.repository.js";
-
+import ClaseVehiculoRepository from "../repositories/claseVehiculos.repository.js";
 
 /**
  * Get All Usuarios
@@ -16,9 +16,9 @@ export const findAllUsers = async () => {
     };
   }
 
-  return{
+  return {
     sucess: true,
-      data: response
+    data: response
   }
 };
 
@@ -36,9 +36,9 @@ export const findUserById = async () => {
     };
   }
 
-  return{
+  return {
     sucess: true,
-      data: response
+    data: response
   }
 };
 
@@ -68,14 +68,46 @@ export const updateUser = async (user_data) => {
  * @returns 
  */
 export const createFormPreguntas = async (id_user, preguntas) => {
+  const { calseVehiculo } = preguntas;
+  if (!claseVehiculoExist) {
+    return {
+      success: false,
+      message: "ClaseVehiculo no fue encontrado"
+    }
+  }
+  const claseVehiculoExist = await ClaseVehiculoRepository.findClaseVehiculoById(calseVehiculo);
   const newPregunta = { ...preguntas, idUsuarioCreador: id_user };
   const response = await PreguntasRepository.insertPreguntas(newPregunta);
-
   return {
     sucess: true,
     message: `Documento Acualizado, ${response}`
   }
 }
+
+
+/**
+ * create  Preguntas
+ * @params 
+ * @returns All Preguntas con usuario y clase de vehiculo
+ */
+
+export const findAllPreguntas = async () => {
+  const preguntas = await PreguntasRepository.findAllPreguntas();
+  if (!preguntas) {
+    return {
+      sucess: false,
+      messsage: 'No Hay Preguntas Registradas aun'
+    }
+  }
+
+  return {
+    sucess: true,
+    data: preguntas
+  }
+
+}
+
+
 
 /**
  * Change estado Preguntas

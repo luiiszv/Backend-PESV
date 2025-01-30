@@ -1,4 +1,4 @@
-import { findAllUsers, updateUser, createFormPreguntas, changeEstadoPregunta } from "../services/admin.service.js";
+import { findAllUsers, updateUser, createFormPreguntas, changeEstadoPregunta, findAllPreguntas } from "../services/admin.service.js";
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -35,6 +35,18 @@ export const createFormPregunta = async ({ body }, res) => {
     res
       .status(400)
       .json({ message: "Something went wrong in createFormPregunta", error });
+  }
+}
+
+export const getAllFormPreguntas = async ({ body }, res) => {
+  try {
+    const response = await findAllPreguntas();
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(400)
+      .json({ message: "Something went wrong in getAllFormPreguntas", error });
   }
 }
 

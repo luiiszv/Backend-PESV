@@ -88,7 +88,7 @@ const router = Router();
  *       400:
  *         description: Invalid login credentials
  */
-router.post("/login", authMiddleware, validateSchema(loginSchema), login);
+router.post("/login", validateSchema(loginSchema), login);
 
 /**
  * @swagger
