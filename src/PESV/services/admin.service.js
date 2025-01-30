@@ -1,4 +1,4 @@
-import UserRepository from "../repositories/user.respository.js";
+import UserRepository  from "../repositories/user.respository.js";
 import PreguntasRepository from "../repositories/Preguntas.repository.js";
 
 
