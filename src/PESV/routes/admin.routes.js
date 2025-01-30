@@ -4,7 +4,9 @@ import {
   updateOneUser,
   createFormPregunta,
   changeStatusPregunta,
-  getAllFormPreguntas
+  getAllFormPreguntas,
+  getUserById,
+  getVehiclosByUser
 
 } from "../controllers/admin.controller.js";
 
@@ -107,7 +109,7 @@ import { validateSchema } from "../../Middleware/ValitarorSchema.js";
  *                   example: Invalid data provided
  */
 
-adminRoutes.put('/users', updateOneUser);
+adminRoutes.put('/users', authMiddleware, updateOneUser);
 
 
 
@@ -138,12 +140,314 @@ adminRoutes.put('/users', updateOneUser);
  *         description: Bad request
  */
 
-adminRoutes.get('/users', getAllUsers);
+adminRoutes.get('/users', authMiddleware, getAllUsers);
+
+/**
+ * @swagger
+ * /pesv/admin/users/{id}:
+ *   get:
+ *     summary: Obtiene los datos de un usuario específico.
+ *     description: Retorna la información de un usuario en base a su ID.
+ *     tags:
+ *       - PESV
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del usuario a buscar.
+ *     responses:
+ *       200:
+ *         description: Datos del usuario obtenidos correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "60a2f4981b865c1a4cfb65e3"
+ *                     nombre:
+ *                       type: string
+ *                       example: "luis Martinez"
+ *                     email:
+ *                       type: string
+ *                       example: "luis@example.com"
+ *                     rol:
+ *                       type: string
+ *                       example: "Administrador"
+ *       400:
+ *         description: ID de usuario inválido.
+ *       401:
+ *         description: No autorizado, token no válido o no presente.
+ *       403:
+ *         description: No tiene permisos para acceder a esta información.
+ *       404:
+ *         description: Usuario no encontrado.
+ *       500:
+ *         description: Error interno del servidor.
+ */
+adminRoutes.get('/users/:id', authMiddleware, getUserById);
 
 
-//Preguntas
-adminRoutes.get('/users/id', authMiddleware, authAdminMiddleware, changeStatusPregunta);
-adminRoutes.get('/preguntas', authMiddleware, authAdminMiddleware, getAllFormPreguntas); 
+
+/**
+ * @swagger
+ * /admin/preguntas/{id}:
+ *   put:
+ *     summary: Cambia el estado de una pregunta específica.
+ *     description: Alterna el estado de una pregunta identificada por su ID.
+ *     tags:
+ *       - PESV Administración de Preguntas
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de la pregunta que se desea actualizar.
+ *     responses:
+ *       200:
+ *         description: Estado de la pregunta actualizado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "El estado de la pregunta ha sido actualizado"
+ *                 nuevoEstado:
+ *                   type: boolean
+ *                   example: false
+ *       400:
+ *         description: ID de pregunta inválido.
+ *       401:
+ *         description: No autorizado, token no válido o no presente.
+ *       403:
+ *         description: El usuario no tiene permisos para acceder a esta información.
+ *       404:
+ *         description: La pregunta no fue encontrada.
+ *       500:
+ *         description: Error interno del servidor.
+ */
+adminRoutes.put('/preguntas/:id', authMiddleware, authAdminMiddleware, changeStatusPregunta);
+
+/**
+ * @swagger
+ * /pesv/admin/preguntas:
+ *   get:
+ *     summary: Obtiene todas las preguntas registradas en el sistema.
+ *     description: Devuelve una lista con todas las preguntas disponibles.
+ *     tags:
+ *       - PESV Administración de Preguntas
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de preguntas obtenida correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                         example: "60a2f4981b865c1a4cfb65e3"
+ *                       titulo:
+ *                         type: string
+ *                         example: "¿Cuál es tu color favorito?"
+ *                       determinancia:
+ *                         type: boolean
+ *                         example: false
+ *                       estado:
+ *                         type: boolean
+ *                         example: true
+ *       404:
+ *         description: No hay preguntas registradas aún.
+ *       401:
+ *         description: No autorizado, token no válido o no presente.
+ *       403:
+ *         description: El usuario no tiene permisos para acceder a esta información.
+ *       500:
+ *         description: Error interno del servidor.
+ */
+adminRoutes.get('/preguntas', authMiddleware, authAdminMiddleware, getAllFormPreguntas);
+
+
+
+/**
+ * @swagger
+ * /pesv/admin/preguntas:
+ *   post:
+ *     summary: Crea una nueva pregunta en el sistema.
+ *     description: Permite a un administrador registrar una nueva pregunta.
+ *     tags:
+ *       - PESV Administración de Preguntas
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               claseVehiculo:
+ *                 type: string
+ *                 example: "60a2f4981b865c1a4cfb65e3"
+ *               titulo:
+ *                 type: string
+ *                 example: "¿Cuál es el estado del vehículo?"
+ *               descripcion:
+ *                 type: string
+ *                 example: "Pregunta para evaluación del vehículo"
+ *     responses:
+ *       201:
+ *         description: Pregunta creada exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Pregunta creada exitosamente"
+ *       400:
+ *         description: Datos inválidos o clase de vehículo no encontrada.
+ *       401:
+ *         description: No autorizado, token no válido o no presente.
+ *       403:
+ *         description: El usuario no tiene permisos para esta acción.
+ *       500:
+ *         description: Error interno del servidor.
+ */
 adminRoutes.post('/preguntas', authMiddleware, authAdminMiddleware, validateSchema(regiterPreguntasSchema), createFormPregunta);
+
+//UserVehiculos
+
+/**
+ * @swagger
+ * /admin/user/{id}/vehiculos:
+ *   get:
+ *     summary: Obtiene los vehículos asociados a un usuario.
+ *     description: Retorna la lista de vehículos registrados para un usuario específico.
+ *     tags:
+ *       - PESV User Vehiculos
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del usuario del cual se quieren obtener los vehículos.
+ *     responses:
+ *       200:
+ *         description: Lista de vehículos obtenida correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                         example: "60a2f4981b865c1a4cfb65e3"
+ *                       ownerId:
+ *                         type: string
+ *                         example: "60a2f4981b865c1a4cfb65e1"
+ *                       claseVehiculo:
+ *                         type: string
+ *                         example: "10a2f4981b865c1a4cfb65b3"
+ *                       zona:
+ *                         type: string
+ *                         example: "50a2f4981v865c1a4cfb65b1"
+ *                       tipoVehiculo:
+ *                         type: string
+ *                         example: "20a2f4981b865c1a4cfb65e1"
+ *                       servicio:
+ *                         type: string
+ *                         example: "Público"
+ *                       capacidadVehiculo:
+ *                         type: integer
+ *                         example: 4
+ *                       noChasis:
+ *                         type: string
+ *                         example: "CHS1234567890"
+ *                       noMotor:
+ *                         type: string
+ *                         example: "MTR9876543210"
+ *                       modeloVehiculo:
+ *                         type: integer
+ *                         example: 2022
+ *                       color:
+ *                         type: string
+ *                         example: "Azul"
+ *                       fechaMatricula:
+ *                         type: string
+ *                         format: date
+ *                         example: "2021-06-15"
+ *                       placa:
+ *                         type: string
+ *                         example: "ABC-123"
+ *                       VehicleEmpresa:
+ *                         type: string
+ *                         example: "Empresa de Transporte XYZ"
+ *                       estadoVehiculo:
+ *                         type: string
+ *                         example: "Activo"
+ *                       fechaCreacion:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2023-01-01T10:30:00Z"
+ *       400:
+ *         description: ID de usuario inválido.
+ *       401:
+ *         description: No autorizado, token no válido o no presente.
+ *       403:
+ *         description: El usuario no tiene permisos para acceder a esta información.
+ *       404:
+ *         description: El usuario no tiene vehículos registrados.
+ *       500:
+ *         description: Error interno del servidor.
+ */
+adminRoutes.get('/user/:id/vehiculos', authMiddleware, authAdminMiddleware, getVehiclosByUser);
+
+
+
 
 export default adminRoutes;

@@ -1,8 +1,22 @@
-import { findAllUsers, updateUser, createFormPreguntas, changeEstadoPregunta, findAllPreguntas } from "../services/admin.service.js";
+import { findAllUsers, updateUser, createFormPreguntas, changeEstadoPregunta, findAllPreguntas, findUserById, findVehiculosByUserId } from "../services/admin.service.js";
 
 export const getAllUsers = async (req, res) => {
   try {
     const response = await findAllUsers();
+    res.status(200).json(response);
+
+  } catch (error) {
+    console.log(error);
+    res
+      .status(400)
+      .json({ message: "Something went wrong in getAllUsers", error });
+  }
+};
+
+export const getUserById = async (req, res) => {
+  try {
+    const id_user = req.params.id
+    const response = await findUserById(id_user);
     res.status(200).json(response);
 
   } catch (error) {
@@ -59,6 +73,20 @@ export const changeStatusPregunta = async (id_pregunta) => {
       .status(400)
       .json({ message: "Something went wrong in changeEstadoPregunta", error });
   }
+}
+
+export const getVehiclosByUser = async (req, res) => {
+  try {
+    const idUser = req.params.id;
+    const response = await findVehiculosByUserId(idUser);
+    res.status(200).json(response);
+
+  } catch (error) {
+    res
+      .status(400)
+      .json({ message: "Something went wrong in getVehiuclosByUser", error });
+  }
+
 }
 
 
