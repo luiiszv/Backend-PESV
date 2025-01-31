@@ -22,14 +22,12 @@ const insertUser = async (user) => {
     await UserRepository.findUserByIdentificationNumber(numeroDocumento);
   const emailExist = await UserRepository.findUserByEamil(email);
 
-
   if (!roleExist) {
     return {
       success: false,
       data: "Role not found",
     };
   }
-
 
   if (!roleExist) {
     return {
@@ -99,9 +97,6 @@ const deleteUser = async (_id) => {
   };
 };
 
-
-
-
 /**
  * Login user
  * @params email, password
@@ -109,7 +104,7 @@ const deleteUser = async (_id) => {
  */
 
 const loginUser = async (email, password) => {
-  const userExist = await UserRepository.findUserByEamil(email);
+  const userExist = await UserRepository.findUserByEmail(email);
   if (!userExist) {
     return {
       success: false,
@@ -133,6 +128,7 @@ const loginUser = async (email, password) => {
   const token = await createAccessToken(payload);
   return {
     success: true,
+    message: "logged user",
     token: token,
   };
 };
@@ -144,16 +140,20 @@ const VerifyAuthUser = async (token) => {
     console.log(responseValidation);
     return {
       success: false,
-      data: "Token is't valid"
-    }
+      data: "Token is't valid",
+    };
   }
 
   return {
     success: true,
-    data: responseValidation 
-  }
-
-}
-export { insertUser, getUser, findUsers, deleteUser, loginUser, VerifyAuthUser };
-
-
+    data: responseValidation,
+  };
+};
+export {
+  insertUser,
+  getUser,
+  findUsers,
+  deleteUser,
+  loginUser,
+  VerifyAuthUser,
+};

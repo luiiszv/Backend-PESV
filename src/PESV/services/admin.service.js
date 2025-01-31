@@ -5,7 +5,7 @@ import VehiculosRepository from "../repositories/vehiculo.repository.js";
 
 /**
  * Get All Usuarios
- * @params 
+ * @params
  * @returns users
  */
 export const findAllUsers = async () => {
@@ -19,13 +19,13 @@ export const findAllUsers = async () => {
 
   return {
     sucess: true,
-    data: response
-  }
+    data: response,
+  };
 };
 
 /**
  * Get All Usuarios
- * @params 
+ * @params
  * @returns users
  */
 export const findUserById = async (id_user) => {
@@ -40,56 +40,55 @@ export const findUserById = async (id_user) => {
 
   return {
     success: true,
-    data: response
-  }
+    data: response,
+  };
 };
 
 /**
  * Update Usuarios
  * @params id_user
- * @returns 
+ * @returns
  */
 export const updateUser = async (user_data) => {
   const response = await UserRepository.UpdateUser(user_data);
   if (response.matchedCount === 0) {
     return {
       sucess: false,
-      message: 'Documento no encontrado'
+      message: "Documento no encontrado",
     };
   }
   return {
     sucess: true,
-    message: `Documento Acualizado, ${response}`
-  }
-}
-
+    message: `Documento Acualizado, ${response}`,
+  };
+};
 
 /**
  * create FormPreguntas
  * @params idUserAdmin, Preguntas
- * @returns 
+ * @returns
  */
 export const createFormPreguntas = async (id_user, preguntas) => {
   const { calseVehiculo } = preguntas;
   if (!claseVehiculoExist) {
     return {
       success: false,
-      message: "ClaseVehiculo no fue encontrado"
-    }
+      message: "ClaseVehiculo no fue encontrado",
+    };
   }
-  const claseVehiculoExist = await ClaseVehiculoRepository.findClaseVehiculoById(calseVehiculo);
+  const claseVehiculoExist =
+    await ClaseVehiculoRepository.findClaseVehiculoById(calseVehiculo);
   const newPregunta = { ...preguntas, idUsuarioCreador: id_user };
   const response = await PreguntasRepository.insertPreguntas(newPregunta);
   return {
     success: true,
-    message: `Documento Acualizado, ${response}`
-  }
-}
-
+    message: `Documento Acualizado, ${response}`,
+  };
+};
 
 /**
  * create  Preguntas
- * @params 
+ * @params
  * @returns All Preguntas con usuario y clase de vehiculo
  */
 
@@ -98,18 +97,36 @@ export const findAllPreguntas = async () => {
   if (!preguntas) {
     return {
       sucess: false,
-      messsage: 'No Hay Preguntas Registradas aun'
-    }
+      messsage: "No Hay Preguntas Registradas aun",
+    };
   }
 
   return {
     sucess: true,
-    data: preguntas
+    data: preguntas,
+  };
+};
+
+/**
+ * create  Preguntas
+ * @params
+ * @returns All Preguntas con usuario y clase de vehiculo
+ */
+
+export const findPreguntaById = async (id_pregunta) => {
+  const pregunta = await PreguntasRepository.findPreguntaById(id_pregunta);
+  if (!pregunta) {
+    return {
+      sucess: false,
+      messsage: "Pregunta no encontrada",
+    };
   }
 
-}
-
-
+  return {
+    sucess: true,
+    data: pregunta,
+  };
+};
 
 /**
  * Change estado Preguntas
@@ -118,16 +135,21 @@ export const findAllPreguntas = async () => {
  */
 
 export const changeEstadoPregunta = async (id_pregunta) => {
-  const responsePregunta = await PreguntasRepository.findPreguntaById(id_pregunta);
+  const responsePregunta = await PreguntasRepository.findPreguntaById(
+    id_pregunta
+  );
   if (!responsePregunta) {
     return {
       sucess: false,
-      data: 'Pregunta not found'
-    }
+      data: "Pregunta not found",
+    };
   }
 
   const nuevoEstado = !responsePregunta.estado;
-  const responseEstado = await PreguntasRepository.changeEstadoPregunta(id_pregunta, nuevoEstado);
+  const responseEstado = await PreguntasRepository.changeEstadoPregunta(
+    id_pregunta,
+    nuevoEstado
+  );
   console.log(responseEstado);
 
   if (responseEstado.modifiedCount > 0) {
@@ -136,11 +158,8 @@ export const changeEstadoPregunta = async (id_pregunta) => {
       message: "El estado de la pregunta ha sido actualizado",
       nuevoEstado,
     };
-
   }
-
-}
-
+};
 
 /**
  * get vehiculos by user
@@ -154,21 +173,20 @@ export const findVehiculosByUserId = async (id_user) => {
   if (!userExist) {
     return {
       success: false,
-      message: 'Usuario no existe'
-    }
+      message: "Usuario no existe",
+    };
   }
 
   const vehiculos = await VehiculosRepository.findAllVehiculosByIdUser(id_user);
   if (!vehiculos) {
     return {
       success: false,
-      message: 'El usuario no tiene vehiculo registrados'
-    }
+      message: "El usuario no tiene vehiculo registrados",
+    };
   }
 
   return {
     success: true,
-    data: vehiculos
-  }
-
-}
+    data: vehiculos,
+  };
+};

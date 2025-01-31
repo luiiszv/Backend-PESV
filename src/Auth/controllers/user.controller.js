@@ -3,11 +3,10 @@ import {
   insertUser,
   findUsers,
   loginUser,
-  VerifyAuthUser
+  VerifyAuthUser,
 } from "../services/user.service.js";
 
 export const registerUsers = async ({ body }, res) => {
-
   console.log("hola");
   try {
     const user = await insertUser(body);
@@ -43,34 +42,37 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-
-
 export const login = async ({ body }, res) => {
   try {
-    const { success, token } = await loginUser(body.email, body.password);
+    const response = await loginUser(body.email, body.password);
 
-    res.cookie("accessToken", token, {
-      httpOnly: true,
-      secure: true,
-    });
+    if (response.success) {
+      res.cookie("accessToken", response.token, {
+        httpOnly: true,
+        secure: true,
+      });
 
-    res.status(200).json({ success, token });
+      return res.status(200).json(response);
+    }
+
+    return res.status(401).json(response);
   } catch (error) {
     res.status(400).json({ message: "Something went wrong in login", error });
   }
 };
 
-
 export const verifyToken = async (req, res) => {
-
   try {
-    const authorization = req.headers.authorization || req.headers["cookie"]?.split("=")[1];
-    if (!authorization) return res.status(401).json({ message: "Token not Provided" })
+    const authorization =
+      req.headers.authorization || req.headers["cookie"]?.split("=")[1];
+    if (!authorization)
+      return res.status(401).json({ message: "Token not Provided" });
 
     const response = await VerifyAuthUser(authorization);
     res.status(200).json(response);
-
   } catch (error) {
-    res.status(400).json({ message: "Something went wrong in verifyToken", error });
+    res
+      .status(400)
+      .json({ message: "Something went wrong in verifyToken", error });
   }
-}
+};

@@ -10,7 +10,7 @@ const createUser = async (user) => {
   return await newUser.save();
 };
 
-const findUserByEamil = async (email) => {
+const findUserByEmail = async (email) => {
   return await UserModel.findOne({ email });
 };
 
@@ -24,7 +24,7 @@ const delteOneUser = async (_id) => {
 
 export default {
   delteOneUser,
-  findUserByEamil,
+  findUserByEmail,
   createUser,
   getAll,
   findUserByIdentificationNumber,

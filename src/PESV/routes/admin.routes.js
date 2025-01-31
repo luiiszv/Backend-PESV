@@ -6,12 +6,11 @@ import {
   changeStatusPregunta,
   getAllFormPreguntas,
   getUserById,
-  getVehiclosByUser
-
+  getVehiclosByUser,
+  getPreguntaById,
 } from "../controllers/admin.controller.js";
 
 const adminRoutes = Router();
-
 
 //AuthMiddlewares
 import { authMiddleware } from "../../Middleware/ValidateAuth.js";
@@ -20,7 +19,6 @@ import { authAdminMiddleware } from "../../Middleware/ValidateAdmin.js";
 //Validate Schema
 import { regiterPreguntasSchema } from "../schemas/Preguntas.schema.js";
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
-
 
 /**
  * @swagger
@@ -109,9 +107,7 @@ import { validateSchema } from "../../Middleware/ValitarorSchema.js";
  *                   example: Invalid data provided
  */
 
-adminRoutes.put('/users', authMiddleware, updateOneUser);
-
-
+adminRoutes.put("/users", authMiddleware, updateOneUser);
 
 /**
  * @swagger
@@ -140,7 +136,7 @@ adminRoutes.put('/users', authMiddleware, updateOneUser);
  *         description: Bad request
  */
 
-adminRoutes.get('/users', authMiddleware, getAllUsers);
+adminRoutes.get("/users", authMiddleware, getAllUsers);
 
 /**
  * @swagger
@@ -196,9 +192,7 @@ adminRoutes.get('/users', authMiddleware, getAllUsers);
  *       500:
  *         description: Error interno del servidor.
  */
-adminRoutes.get('/users/:id', authMiddleware, getUserById);
-
-
+adminRoutes.get("/users/:id", authMiddleware, getUserById);
 
 /**
  * @swagger
@@ -245,7 +239,12 @@ adminRoutes.get('/users/:id', authMiddleware, getUserById);
  *       500:
  *         description: Error interno del servidor.
  */
-adminRoutes.put('/preguntas/:id', authMiddleware, authAdminMiddleware, changeStatusPregunta);
+adminRoutes.put(
+  "/preguntas/:id",
+  authMiddleware,
+  authAdminMiddleware,
+  changeStatusPregunta
+);
 
 /**
  * @swagger
@@ -294,9 +293,88 @@ adminRoutes.put('/preguntas/:id', authMiddleware, authAdminMiddleware, changeSta
  *       500:
  *         description: Error interno del servidor.
  */
-adminRoutes.get('/preguntas', authMiddleware, authAdminMiddleware, getAllFormPreguntas);
+adminRoutes.get(
+  "/preguntas",
+  authMiddleware,
+  authAdminMiddleware,
+  getAllFormPreguntas
+);
 
+/**
+ * @swagger
+ * /pesv/admin/preguntas/{id}:
+ *   get:
+ *     summary: Obtener una pregunta por ID
+ *     tags:
+ *       - PESV Administración de Preguntas
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de la pregunta a obtener
+ *     responses:
+ *       200:
+ *         description: Pregunta obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "64c2f930ae634c2e947b6c99"
+ *                     pregunta:
+ *                       type: string
+ *                       example: "¿Cómo te sientes hoy?"
+ *                     opciones:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                       example: ["Bien", "Regular", "Mal"]
+ *       400:
+ *         description: Solicitud incorrecta, ID inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "ID inválido"
+ *       404:
+ *         description: Pregunta no encontrada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Pregunta no encontrada"
+ */
 
+adminRoutes.get(
+  "/preguntas/:id",
+  authMiddleware,
+  authAdminMiddleware,
+  getPreguntaById
+);
 
 /**
  * @swagger
@@ -314,16 +392,23 @@ adminRoutes.get('/preguntas', authMiddleware, authAdminMiddleware, getAllFormPre
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - claseVehiculo
+ *               - preguntaTexto
+ *               - determinancia
  *             properties:
  *               claseVehiculo:
  *                 type: string
+ *                 description: ID de la clase de vehículo asociado a la pregunta.
  *                 example: "60a2f4981b865c1a4cfb65e3"
- *               titulo:
+ *               preguntaTexto:
  *                 type: string
+ *                 description: Texto de la pregunta a registrar.
  *                 example: "¿Cuál es el estado del vehículo?"
- *               descripcion:
- *                 type: string
- *                 example: "Pregunta para evaluación del vehículo"
+ *               determinancia:
+ *                 type: boolean
+ *                 description: Indica si la pregunta es determinante.
+ *                 example: true
  *     responses:
  *       201:
  *         description: Pregunta creada exitosamente.
@@ -339,7 +424,18 @@ adminRoutes.get('/preguntas', authMiddleware, authAdminMiddleware, getAllFormPre
  *                   type: string
  *                   example: "Pregunta creada exitosamente"
  *       400:
- *         description: Datos inválidos o clase de vehículo no encontrada.
+ *         description: Datos inválidos o ID de clase de vehículo incorrecto.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Id Vehiculo no es valido"
  *       401:
  *         description: No autorizado, token no válido o no presente.
  *       403:
@@ -347,7 +443,14 @@ adminRoutes.get('/preguntas', authMiddleware, authAdminMiddleware, getAllFormPre
  *       500:
  *         description: Error interno del servidor.
  */
-adminRoutes.post('/preguntas', authMiddleware, authAdminMiddleware, validateSchema(regiterPreguntasSchema), createFormPregunta);
+
+adminRoutes.post(
+  "/preguntas",
+  authMiddleware,
+  authAdminMiddleware,
+  validateSchema(regiterPreguntasSchema),
+  createFormPregunta
+);
 
 //UserVehiculos
 
@@ -445,9 +548,11 @@ adminRoutes.post('/preguntas', authMiddleware, authAdminMiddleware, validateSche
  *       500:
  *         description: Error interno del servidor.
  */
-adminRoutes.get('/user/:id/vehiculos', authMiddleware, authAdminMiddleware, getVehiclosByUser);
-
-
-
+adminRoutes.get(
+  "/user/:id/vehiculos",
+  authMiddleware,
+  authAdminMiddleware,
+  getVehiclosByUser
+);
 
 export default adminRoutes;
