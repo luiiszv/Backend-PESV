@@ -3,7 +3,13 @@ import { getProfile } from "../controllers/users.controller.js";
 
 //Auth
 import { authMiddleware } from "../../Middleware/ValidateAuth.js";
-import { getPreguntasByUserVehiculesActive } from "../controllers/users.controller.js";
+import {
+  getPreguntasByUserVehiculesActive,
+  createVehiculo,
+} from "../controllers/users.controller.js";
+
+import { validateSchema } from "../../Middleware/ValitarorSchema.js";
+import { regiterUserVehiculosSchema } from "../schemas/Vehiculos.schema.js";
 
 const routerUser = Router();
 
@@ -73,11 +79,14 @@ const routerUser = Router();
 
 routerUser.get("/profile", authMiddleware, getProfile);
 
-
-
+routerUser.post(
+  "/vehiculos",
+  authMiddleware,
+  validateSchema(regiterUserVehiculosSchema),
+  createVehiculo
+);
 
 //preguntas de acuerdo al los vehiculos que tiene asignados y que esten en un estado activo 👇
-routerUser.get("/preguntas",authMiddleware, getPreguntasByUserVehiculesActive);
-
+routerUser.get("/preguntas", authMiddleware, getPreguntasByUserVehiculesActive);
 
 export default routerUser;

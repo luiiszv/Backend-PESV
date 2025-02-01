@@ -23,6 +23,12 @@ app.use('/pesv', PESVRoutes);
 
 app.set("port", process.env.PORT || 4000);
 
+app.use((req, res, next) => {
+    res.status(404).json({
+      message: "PESV EndPont Not Found",
+    });
+  });
+
 
 
 export default app;

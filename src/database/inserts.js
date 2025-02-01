@@ -41,6 +41,34 @@ db.clase_vehiculos.insertMany([
   },
 ]);
 
+db.tipo_vehiculos.insertMany([
+  {
+    nombreTipo: "Transporte personal",
+    description: "Vehículos destinados para el transporte de personas de manera privada o familiar.",
+  },
+  {
+    nombreTipo: "Uso personal",
+    description: "Vehículos utilizados para fines personales o privados, sin fines comerciales.",
+  },
+  {
+    nombreTipo: "Vehículo de apoyo",
+    description: "Vehículos utilizados para el apoyo de actividades operativas o logísticas.",
+  },
+  {
+    nombreTipo: "Motocicleta",
+    description: "Vehículo motorizado de dos ruedas utilizado para el transporte de personas o carga ligera.",
+  },
+  {
+    nombreTipo: "Buseta",
+    description: "Vehículo de transporte público de pequeño tamaño, utilizado para el transporte colectivo de personas.",
+  },
+  {
+    nombreTipo: "Transporte de herramienta",
+    description: "Vehículos destinados al transporte de herramientas y equipos para trabajos específicos.",
+  },
+]);
+
+
 db.roles.insertMany([
   {
     name: "SuperAdmin",

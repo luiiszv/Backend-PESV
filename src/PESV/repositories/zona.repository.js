@@ -1,7 +1,7 @@
 import ZonaModel from "../models/Zona.model.js";
 
 const findZonaById = async (id_zona) => {
-    return await ZonaModel.findZonaById(id_zona);
+    return await ZonaModel.findById(id_zona);
 
 }
 

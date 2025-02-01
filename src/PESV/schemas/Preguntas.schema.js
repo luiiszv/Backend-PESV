@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { z } from "zod";
 
 
-const isValid = (value) => mongoose.Types.ObjectId.isValid(value)
+const isValid = (value) => mongoose.Types.ObjectId.isValid(value);
 
 const regiterPreguntasSchema = z.object({
     calseVehiculo: z.string({required_error: "claseVehiculo es requerido"}).refine(isValid, { message: 'Id Vehiculo no es valido' }),
