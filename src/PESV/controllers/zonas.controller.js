@@ -1,5 +1,6 @@
 import { findAllZonas } from "../services/zona.service.js";
 
+
 export const getAllZonas = async (req, res) => {
 
     try {
@@ -10,4 +11,5 @@ export const getAllZonas = async (req, res) => {
     }
 
 }
+
 

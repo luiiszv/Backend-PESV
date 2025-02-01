@@ -14,3 +14,18 @@ export const userProfile = async (id_user) => {
         data: profileUser
     }
 }
+
+//Encontrar las preguntas realcionadas al usuario
+export const findPreguntasByUserVehiculesActive = async (user) => {
+
+    if (!user) {
+        return {
+            success: false,
+            message: "User not found "
+        }
+    }
+
+
+
+
+}

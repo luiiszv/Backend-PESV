@@ -9,6 +9,9 @@ import {
   findPreguntaById,
 } from "../services/admin.service.js";
 
+import { findPreguntasByIdClaseVehiculo } from "../services/preguntas.service.js";
+
+
 export const getAllUsers = async (req, res) => {
   try {
     const response = await findAllUsers();
@@ -103,3 +106,17 @@ export const getVehiclosByUser = async (req, res) => {
       .json({ message: "Something went wrong in getVehiuclosByUser", error });
   }
 };
+
+
+export const findPreguntasByClaseVehiculo = async (req, res) => {
+  console.log("clase vehiculo preguntas", req.params.id);
+  try {
+      const idClaseVehiculo = req.params.id; //idVehiuclo envaido desde params
+      const response = await findPreguntasByIdClaseVehiculo(idClaseVehiculo);
+      res.status(200).json(response);
+  } catch (error) {
+      console.log(error);
+      res.status(400).json({ message: "Something went wrong in findPreguntasByClaseVehiculo" });
+
+  }
+}

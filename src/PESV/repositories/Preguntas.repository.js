@@ -34,11 +34,18 @@ const changeEstadoPregunta = async (id_pregunta, nuevoEstado) => {
 
 }
 
+const findPreguntasByIdClaseVehiculo = async (id_clase_vehiculo) => {
+    return await PreguntasModel.find({ calseVehiculo: id_clase_vehiculo });
+
+
+}
+
 
 export default {
     findAllPreguntas,
     insertPreguntas,
     updatePregunta,
     findPreguntaById,
-    changeEstadoPregunta
+    changeEstadoPregunta,
+    findPreguntasByIdClaseVehiculo
 }

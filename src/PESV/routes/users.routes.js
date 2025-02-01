@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { getProfile } from "../controllers/users.controlles.js";
+import { getProfile } from "../controllers/users.controller.js";
 
 //Auth
 import { authMiddleware } from "../../Middleware/ValidateAuth.js";
+import { getPreguntasByUserVehiculesActive } from "../controllers/users.controller.js";
 
 const routerUser = Router();
 
@@ -71,5 +72,12 @@ const routerUser = Router();
  */
 
 routerUser.get("/profile", authMiddleware, getProfile);
+
+
+
+
+//preguntas de acuerdo al los vehiculos que tiene asignados y que esten en un estado activo 👇
+routerUser.get("/preguntas",authMiddleware, getPreguntasByUserVehiculesActive);
+
 
 export default routerUser;

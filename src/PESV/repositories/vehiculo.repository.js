@@ -10,6 +10,11 @@ const findVehiculeById = async (id_vehicule) => {
   return await VehiculosModel.findById(id_vehicule).populate("documentos_vehiculos");
 };
 
+const findUserVehiuclesActives = async (id_user) => {
+  return await VehiculosModel.find({ idUsuario: id_user, estadoVehiculo: true });
+
+}
+
 export default {
   findAllVehiculosByIdUser,
   findVehiculeById,
