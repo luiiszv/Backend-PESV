@@ -633,4 +633,9 @@ adminRoutes.get(
   getVehiclosByUser
 );
 
+
+
+
+adminRoutes.get("/vehiculos",authMiddleware, authAdminMiddleware, getVehiclosByUser);
+
 export default adminRoutes;

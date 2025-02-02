@@ -6,6 +6,8 @@ const findAllVehiculosByIdUser = async (id_user) => {
   });
 };
 
+
+
 const findVehiculeById = async (id_vehicule) => {
   return await VehiculosModel.findById(id_vehicule).populate(
     "documentos_vehiculos"

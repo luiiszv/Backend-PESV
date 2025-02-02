@@ -10,7 +10,7 @@ const UsuariosSchema = new Schema(
       type: String,
       require: true,
     },
-    cargo: {
+    idCargo: {
       type: Schema.Types.ObjectId,
       ref: "cargos",
       require: false,
@@ -38,9 +38,9 @@ const UsuariosSchema = new Schema(
       type: String,
       required: true,
     },
-    role: {
+    idRole: {
       type: Schema.Types.ObjectId,
-      ref: "rol",
+      ref: "roles",
       require: true,
     },
     createdAt: {

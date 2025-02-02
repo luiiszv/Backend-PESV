@@ -6,6 +6,7 @@ import { authMiddleware } from "../../Middleware/ValidateAuth.js";
 import {
   getPreguntasByUserVehiculesActive,
   createVehiculo,
+  getUserVehiculos
 } from "../controllers/users.controller.js";
 
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
@@ -85,6 +86,12 @@ routerUser.post(
   validateSchema(regiterUserVehiculosSchema),
   createVehiculo
 );
+
+routerUser.get(
+    "/vehiculos",
+    authMiddleware,
+    getUserVehiculos
+  );
 
 //preguntas de acuerdo al los vehiculos que tiene asignados y que esten en un estado activo 👇
 routerUser.get("/preguntas", authMiddleware, getPreguntasByUserVehiculesActive);

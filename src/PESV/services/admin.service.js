@@ -1,6 +1,9 @@
 import UserRepository from "../repositories/user.respository.js";
 import PreguntasRepository from "../repositories/Preguntas.repository.js";
 import ClaseVehiculoRepository from "../repositories/claseVehiculos.repository.js";
+import TipoVehiculoRepository from "../repositories/tipoVehiculo.repository.js";
+import ZonaRepository from "../repositories/zona.repository.js";
+
 import VehiculosRepository from "../repositories/vehiculo.repository.js";
 
 /**
@@ -184,6 +187,76 @@ export const findVehiculosByUserId = async (id_user) => {
       message: "El usuario no tiene vehiculo registrados",
     };
   }
+
+  return {
+    success: true,
+    data: vehiculos,
+  };
+};
+
+/**
+ * register vehiculos desde el admin como vehiculos de empresa
+ * @params IdUser
+ * @returns Vehiculos
+ */
+
+export const insertAdminVehiculos = async (id_admin, vehiculo_empresa_data) => {
+  const { idUsuarioAsignado, placa, idClaseVehiculo, idTipoVehiculo, idZona } =
+    vehiculo_empresa_data;
+
+  const userExist = await UserRepository.getUserById(idUsuarioAsignado);
+  if (!userExist) {
+    return {
+      success: false,
+      message: "UsuarioAsignado no existe",
+    };
+  }
+  const placaUperCase = placa.toUpperCase();
+
+  const palcaVehiculoExist = await VehiculosRepository.findVehiculeByPlaca(
+    placaUperCase
+  );
+  if (palcaVehiculoExist) {
+    return {
+      success: false,
+      message: "La palca del vehiculo ya existe",
+    };
+  }
+
+  const idClaseExist = await ClaseVehiculoRepository.findClaseVehiculoById(
+    idClaseVehiculo
+  );
+  if (!idClaseExist) {
+    return {
+      success: false,
+      message: "ClaseVehiculo not Encontrada",
+    };
+  }
+
+  const idTipoExist = await TipoVehiculoRepository.findTipoVehiculoById(
+    idTipoVehiculo
+  );
+  if (!idTipoExist) {
+    return {
+      success: false,
+      message: "idTipoVehiculo not Encontrado",
+    };
+  }
+  const idZonaExist = await ZonaRepository.findZonaById(idZona);
+  if (!idZonaExist) {
+    return {
+      success: false,
+      message: "idZona not Encontrada",
+    };
+  }
+  const newAdminVehicule = await {
+    ...vehiculo_empresa_data,
+    idUsuario: id_admin,
+    VehicleEmpresa: true,
+    placa: placaUperCase
+  };
+
+  
 
   return {
     success: true,

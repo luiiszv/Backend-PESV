@@ -205,7 +205,7 @@ router.post("/verify", verifyToken);
  *         description: Unauthorized (token no enviado o inválido)
 
  */
-router.post("/", authMiddleware, validateSchema(registerUserSchema), registerUsers);
+router.post("/", validateSchema(registerUserSchema), registerUsers);
 
 
 export default router;

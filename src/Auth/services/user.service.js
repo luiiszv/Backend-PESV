@@ -12,15 +12,15 @@ import { validateToken } from "../../Middleware/ValidateAuth.js";
  */
 
 const insertUser = async (user) => {
-  const { role, tipoIdentificacion, numeroDocumento, email } = user;
+  const { idRole, tipoIdentificacion, numeroDocumento, email } = user;
   const passwordHashed = await hash(user.password, 10);
   const userPassHashed = { ...user, password: passwordHashed };
 
   //ROLE
-  const roleExist = await RoleRepository.findRoleById(role);
+  const roleExist = await RoleRepository.findRoleById(idRole);
   const numeroDocumentoExist =
     await UserRepository.findUserByIdentificationNumber(numeroDocumento);
-  const emailExist = await UserRepository.findUserByEamil(email);
+  const emailExist = await UserRepository.findUserByEmail(email);
 
   if (!roleExist) {
     return {

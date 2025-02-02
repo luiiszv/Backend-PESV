@@ -67,6 +67,16 @@ export const insertVehiculo = async (id_user, vehiuclo) => {
   };
 };
 
-export const findAllVehiuclosByUser= ()=>{
-  
-}
+export const findAllVehiculosByIdUser = async (id_user) => {
+  const vehiculos = await VehiculeRepository.findAllVehiculosByIdUser(id_user);
+  if (vehiculos.length <= 0) {
+    return {
+      success: false,
+      message: "No hay Vehiulos asociados aun ",
+    };
+  }
+  return {
+    success: true,
+    data: vehiculos,
+  };
+};

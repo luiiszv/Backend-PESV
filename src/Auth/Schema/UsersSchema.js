@@ -18,12 +18,16 @@ const registerUserSchema = z.object({
   password: z
     .string({ required_error: "password is required" })
     .min(4, { message: "password must be at least 4 characters" }),
-  role: z.string().refine((value) => mongoose.Types.ObjectId.isValid(value), {
-    message: "Id Rol is not valid",
-  }),
-  cargo: z.string().refine((value) => mongoose.Types.ObjectId.isValid(value), {
-    message: "Id cargo is not valid",
-  }),
+  idRole: z
+    .string({ required_error: "idRole es requerido" })
+    .refine((value) => mongoose.Types.ObjectId.isValid(value), {
+      message: "Id Rol is not valid",
+    }),
+  idCargo: z
+    .string({ required_error: "idCargo es requerido" })
+    .refine((value) => mongoose.Types.ObjectId.isValid(value), {
+      message: "Id cargo is not valid",
+    }),
   numeroDocumento: z
     .string({ required_error: "numeroDocumento is required" })
     .min(7, { message: "numeroDocumento must be at least 7 characters" }),

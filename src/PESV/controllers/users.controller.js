@@ -3,7 +3,10 @@ import {
   findPreguntasByUserVehiculesActive,
 } from "../services/users.service.js";
 
-import { insertVehiculo } from "../services/vehicule.service.js";
+import {
+  insertVehiculo,
+  findAllVehiculosByIdUser,
+} from "../services/vehicule.service.js";
 
 export const getProfile = async (req, res) => {
   try {
@@ -43,9 +46,10 @@ export const getPreguntasByUserVehiculesActive = async (req, res) => {
   }
 };
 
-export const getVehiculos = async (req, res) => {
+export const getUserVehiculos = async (req, res) => {
   try {
-    const response = await findVehiculos();
+    const {userId} = req.user;
+    const response = await findAllVehiculosByIdUser(userId);
     res.status(200).json(response);
   } catch (error) {
     res.status(400).json({
