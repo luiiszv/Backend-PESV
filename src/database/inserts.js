@@ -1,9 +1,5 @@
 db.clase_vehiculos.insertMany([
   {
-    name: "Todos",
-    description: "Categoría general que incluye todos los tipos de vehículos.",
-  },
-  {
     name: "Motocicleta",
     description: "Vehículo de dos ruedas impulsado por un motor.",
   },

@@ -48,12 +48,13 @@ export const updateOneUser = async ({ body }, res) => {
   }
 };
 
-export const createFormPregunta = async ({ body }, res) => {
+export const createFormPregunta = async (req, res) => {
   const { userId } = req.user; //Auth
   try {
-    const response = await createFormPreguntas(userId, body);
+    const response = await createFormPreguntas(userId, req.body);
     res.status(200).json(response);
   } catch (error) {
+    console.log(error);
     res
       .status(400)
       .json({ message: "Something went wrong in createFormPregunta", error });

@@ -72,20 +72,43 @@ export const updateUser = async (user_data) => {
  * @returns
  */
 export const createFormPreguntas = async (id_user, preguntas) => {
-  const { calseVehiculo } = preguntas;
+  const { idClaseVehiculo, preguntaTexto } = preguntas;
+
+  const claseVehiculoExist =
+    await ClaseVehiculoRepository.findClaseVehiculoById(idClaseVehiculo);
+
   if (!claseVehiculoExist) {
     return {
       success: false,
       message: "ClaseVehiculo no fue encontrado",
     };
   }
-  const claseVehiculoExist =
-    await ClaseVehiculoRepository.findClaseVehiculoById(calseVehiculo);
+
+  // Validar cada idClaseVehiculo
+  for (const idVehiculo of idClaseVehiculo) {
+    const claseVehiculoExist = await ClaseVehiculoRepository.findClaseVehiculoById(idVehiculo);
+
+    if (!claseVehiculoExist) {
+      return {
+        success: false,
+        message: `ClaseVehiculo con ID ${idVehiculo} no fue encontrado`,
+      };
+    }
+
+  }
+
+  const textoPreguntaExist = await PreguntasRepository.findPreguintaByPreguntaTexto(preguntaTexto);
+  if (textoPreguntaExist) {
+    return {
+      success: false,
+      message: 'La pregunta ya existe'
+    }
+  }
   const newPregunta = { ...preguntas, idUsuarioCreador: id_user };
-  const response = await PreguntasRepository.insertPreguntas(newPregunta);
+  await PreguntasRepository.insertPreguntas(newPregunta);
   return {
     success: true,
-    message: `Documento Acualizado, ${response}`,
+    message: `Pregunta Creada`,
   };
 };
 

@@ -1,6 +1,6 @@
 import {
   userProfile,
-  findPreguntasByUserVehiculesActive,
+  findPreguntasByClaseVehiculesActive,
 } from "../services/users.service.js";
 
 import {
@@ -34,11 +34,13 @@ export const createVehiculo = async (req, res) => {
   }
 };
 
-export const getPreguntasByUserVehiculesActive = async (req, res) => {
+export const getPreguntasByVehiculesActive = async (req, res) => {
   try {
-    const response = await findPreguntasByUserVehiculesActive(req.user);
+    const idClaseVehiculo = req.params.id;
+    const response = await findPreguntasByClaseVehiculesActive(idClaseVehiculo);
     res.status(200).json(response);
   } catch (error) {
+    console.log(error);
     res.status(400).json({
       message: "Something went wrong in getPreguntasByUserVehiculesActive",
       error,
@@ -48,7 +50,7 @@ export const getPreguntasByUserVehiculesActive = async (req, res) => {
 
 export const getUserVehiculos = async (req, res) => {
   try {
-    const {userId} = req.user;
+    const { userId } = req.user;
     const response = await findAllVehiculosByIdUser(userId);
     res.status(200).json(response);
   } catch (error) {

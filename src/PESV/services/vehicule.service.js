@@ -55,7 +55,7 @@ export const insertVehiculo = async (id_user, vehiuclo) => {
     idUsuario: id_user,
   };
 
-  const response = await VehiculeRepository.insertVehiculo(
+  await VehiculeRepository.insertVehiculo(
     vehiculoWithAuthUser
   );
 

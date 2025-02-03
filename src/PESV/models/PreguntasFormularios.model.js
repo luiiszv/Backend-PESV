@@ -7,14 +7,17 @@ const PreguntasFormulariosSchema = new Schema(
       ref: "usuarios",
       required: true,
     },
-    calseVehiculo: {
-      type: Schema.Types.ObjectId,
-      ref: "clase_vehiculos",
-      required: true,
-    },
+    idClaseVehiculo: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "clase_vehiculos",
+        required: true,
+      }
+    ],
     preguntaTexto: {
       type: String,
       require: true,
+      trim: true
     },
     determinancia: {
       type: Boolean,

@@ -1,7 +1,7 @@
 import VehiculosModel from "../models/Vehiculos.model.js";
 
 const findAllVehiculosByIdUser = async (id_user) => {
-  return await VehiculosModel.find({ idUsuario: id_user });
+  return await VehiculosModel.find({ idUsuario: id_user } );
 };
 
 
@@ -18,9 +18,9 @@ const findVehiculeByPlaca = async (placa_vehicule) => {
 
 const findUserVehiuclesActives = async (id_user) => {
   return await VehiculosModel.find({
-    estadoVehiculo: true, // Solo vehículos activos
+    vehiculoEnUso: true, // Solo vehículos activos
     $or: [{ idUsuario: id_user }, { usuarioAsignado: id_user }], // Creados por él o asignados
-  }).select("usuarioAsignado idUsuario tipoVehiculo _id");
+  }).select("idClaseVehiculo usuarioAsignado idUsuario tipoVehiculo _id");
 };
 
 const insertVehiculo = async (vehiculo_data) => {

@@ -1,5 +1,7 @@
+import PreguntasRepository from "../repositories/Preguntas.repository.js";
 import userRespository from "../repositories/user.respository.js";
 import VehicleRepository from "../repositories/vehiculo.repository.js";
+import mongoose from "mongoose";
 
 export const userProfile = async (id_user) => {
   const profileUser = await userRespository.getUserById(id_user);
@@ -17,34 +19,25 @@ export const userProfile = async (id_user) => {
 
 
 
-//Encontrar las preguntas realcionadas al usuario
-export const findPreguntasByUserVehiculesActive = async (user) => {
-  if (!user) {
+//Encontrar las preguntas realcionadas vehicuilo del usuario
+export const findPreguntasByClaseVehiculesActive = async (id_clase_vehiculo) => {
+
+  if (!mongoose.Types.ObjectId.isValid(id_clase_vehiculo)) {
     return {
       success: false,
-      message: "User not found ",
+      message: 'El ID proporcionado no es válido',
     };
   }
 
-  const { userId } = user;
-  const userVehiculos = await VehicleRepository.findUserVehiuclesActives(
-    userId
-  );
-
-  if (userVehiculos.length < 1) {
-    return {
-      success: false,
-      message: "No hay vehiculos aun",
-    };
-  }
 
   //llega un Array de vehiculos
 
-  
+  const preguntasForm = await PreguntasRepository.findPreguntasByIdClaseVehiculo(id_clase_vehiculo);
 
-  return {
+  console.log(preguntasForm);
+ return {
     success: true,
-    data: userVehiculos,
+    data: preguntasForm,
   };
 };
 

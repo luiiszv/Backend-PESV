@@ -3,7 +3,10 @@ import ClaseVehiuclosModel from "../models/ClaseVehiuclos.model.js";
 import UserModel from "../../Auth/models/UserModel.js";
 
 const findAllPreguntas = async () => {
-    return await PreguntasModel.find().populate('idUsuarioCreador').populate('calseVehiculo');
+    return await PreguntasModel.find().select("-_id -idUsuarioCreador").populate({
+        path: 'idClaseVehiculo',
+        select: 'name -_id '
+    });
 
 }
 
@@ -35,8 +38,13 @@ const changeEstadoPregunta = async (id_pregunta, nuevoEstado) => {
 }
 
 const findPreguntasByIdClaseVehiculo = async (id_clase_vehiculo) => {
-    return await PreguntasModel.find({ calseVehiculo: id_clase_vehiculo });
+    return await PreguntasModel.find({ idClaseVehiculo: id_clase_vehiculo });
 
+
+}
+
+const findPreguintaByPreguntaTexto = async (pregunta_texto) => {
+    return await PreguntasModel.findOne({ preguntaTexto: pregunta_texto });
 
 }
 
@@ -47,5 +55,6 @@ export default {
     updatePregunta,
     findPreguntaById,
     changeEstadoPregunta,
-    findPreguntasByIdClaseVehiculo
+    findPreguntasByIdClaseVehiculo,
+    findPreguintaByPreguntaTexto
 }

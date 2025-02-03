@@ -15,3 +15,4 @@ export const findPreguntasByIdClaseVehiculo = async (id_vehiculo) => {
         data: preguntas
     }
 }
+
