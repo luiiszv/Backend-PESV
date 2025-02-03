@@ -6,7 +6,7 @@ import { authMiddleware } from "../../Middleware/ValidateAuth.js";
 import {
   getPreguntasByUserVehiculesActive,
   createVehiculo,
-  getUserVehiculos
+  getUserVehiculos,
 } from "../controllers/users.controller.js";
 
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
@@ -80,6 +80,73 @@ const routerUser = Router();
 
 routerUser.get("/profile", authMiddleware, getProfile);
 
+
+/**
+ * @swagger
+ * paths:
+ *   /pesv/user/vehiculos:
+ *     post:
+ *       summary: Registrar un nuevo vehículo.
+ *       description: Ruta para registrar un vehículo asociado a un usuario.
+ *       operationId: createVehiculo
+ *       tags:
+ *         - PESV User Vehiculos
+ *       security:
+ *         - BearerAuth: []
+ *       parameters:
+ *         - in: body
+ *           name: vehicle
+ *           description: Vehículo a registrar.
+ *           required: true
+ *           schema:
+ *             type: object
+ *             required:
+ *               - placa
+ *               - idZona
+ *               - idTipoVehiculo
+ *               - idClaseVehiculo
+ *             properties:
+ *               placa:
+ *                 type: string
+ *                 description: Placa del vehículo.
+ *               idZona:
+ *                 type: string
+ *                 description: Zona del vehículo.
+ *               idTipoVehiculo:
+ *                 type: string
+ *                 description: Tipo de vehículo.
+ *               idClaseVehiculo:
+ *                 type: string
+ *                 description: Clase de vehículo.
+ *       responses:
+ *         200:
+ *           description: Vehículo registrado correctamente.
+ *           schema:
+ *             type: object
+ *             properties:
+ *               success:
+ *                 type: boolean
+ *                 example: true
+ *               message:
+ *                 type: string
+ *                 example: Vehículo registrado.
+ *         400:
+ *           description: Error al registrar el vehículo.
+ *           schema:
+ *             type: object
+ *             properties:
+ *               success:
+ *                 type: boolean
+ *                 example: false
+ *               message:
+ *                 type: string
+ *                 example: La placa ya existe.
+ *               error:
+ *                 type: string
+ *                 example: Error al registrar.
+ */
+
+
 routerUser.post(
   "/vehiculos",
   authMiddleware,
@@ -87,13 +154,66 @@ routerUser.post(
   createVehiculo
 );
 
-routerUser.get(
-    "/vehiculos",
-    authMiddleware,
-    getUserVehiculos
-  );
+/**
+ * @swagger
+ * paths:
+ *   /pesv/user/vehiculos:
+ *     get:
+ *       summary: Obtiene los vehículos Propios y asignados de un usuario
+ *       description: Retorna la lista de vehículos asociados al usuario autenticado.
+ *       tags:
+ *         - PESV User Vehiculos
+ *       security:
+ *         - BearerAuth: []
+ *       responses:
+ *         "200":
+ *           description: Lista de vehículos obtenida exitosamente
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       format: uuid
+ *                       description: ID del vehículo
+ *                     marca:
+ *                       type: string
+ *                       description: Marca del vehículo
+ *                     modelo:
+ *                       type: string
+ *                       description: Modelo del vehículo
+ *                     placa:
+ *                       type: string
+ *                       description: Placa del vehículo
+ *         "400":
+ *           description: Error al obtener los vehículos
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   message:
+ *                     type: string
+ *                     example: Something went wrong in getVehiculos
+ *                   error:
+ *                     type: object
+ *                     description: Detalles del error
+ *       parameters:
+ *         - in: header
+ *           name: Authorization
+ *           required: true
+ *           schema:
+ *             type: string
+ *             example: Bearer <token>
+ *           description: Token de autenticación del usuario
+ */
+
+routerUser.get("/vehiculos", authMiddleware, getUserVehiculos);
 
 //preguntas de acuerdo al los vehiculos que tiene asignados y que esten en un estado activo 👇
-routerUser.get("/preguntas", authMiddleware, getPreguntasByUserVehiculesActive);
+routerUser.get("/preguntas", authMiddleware, getPreguntasByUserVehiculesActive); //pendinete
 
 export default routerUser;

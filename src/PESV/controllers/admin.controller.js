@@ -133,7 +133,7 @@ export const registerAdminVehiculos = async (req, res) => {
     res
       .status(400)
       .json({
-        message: "Something went wrong in findPreguntasByClaseVehiculo",
+        message: "Something went wrong in registerAdminVehiculos",
       });
   }
 };

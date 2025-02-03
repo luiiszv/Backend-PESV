@@ -7,7 +7,6 @@ import {
 } from "../services/user.service.js";
 
 export const registerUsers = async ({ body }, res) => {
-  console.log("hola");
   try {
     const user = await insertUser(body);
     res.status(200).json(user);

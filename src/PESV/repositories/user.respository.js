@@ -6,7 +6,7 @@ const getAllUsers = async () => {
 
 const getUserById = async (id_user) => {
   return await UserModel.findById(id_user).populate({
-    path: 'cargo',
+    path: 'idCargo',
   });
 };
 

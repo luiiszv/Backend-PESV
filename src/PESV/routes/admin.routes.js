@@ -8,7 +8,8 @@ import {
   getUserById,
   getVehiclosByUser,
   getPreguntaById,
-  findPreguntasByClaseVehiculo
+  findPreguntasByClaseVehiculo,
+  registerAdminVehiculos,
 } from "../controllers/admin.controller.js";
 
 const adminRoutes = Router();
@@ -20,6 +21,7 @@ import { authAdminMiddleware } from "../../Middleware/ValidateAdmin.js";
 //Validate Schema
 import { regiterPreguntasSchema } from "../schemas/Preguntas.schema.js";
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
+import { regiterAdminVehiculosSchema } from "../schemas/Vehiculos.schema.js";
 
 /**
  * @swagger
@@ -247,7 +249,6 @@ adminRoutes.put(
   changeStatusPregunta
 );
 
-
 /**
  * @swagger
  * /admin/preguntas/claseVehiculo/{id}:
@@ -324,7 +325,12 @@ adminRoutes.put(
  *       500:
  *         description: Error interno del servidor.
  */
-adminRoutes.get('/preguntas/claseVehiculo/:id', authMiddleware, authAdminMiddleware, findPreguntasByClaseVehiculo);
+adminRoutes.get(
+  "/preguntas/claseVehiculo/:id",
+  authMiddleware,
+  authAdminMiddleware,
+  findPreguntasByClaseVehiculo
+);
 
 /**
  * @swagger
@@ -539,7 +545,7 @@ adminRoutes.post(
  *     summary: Obtiene los vehículos asociados a un usuario.
  *     description: Retorna la lista de vehículos registrados para un usuario específico.
  *     tags:
- *       - PESV User Vehiculos
+ *       - PESV Admin Vehiculos
  *     security:
  *       - BearerAuth: []
  *     parameters:
@@ -634,8 +640,81 @@ adminRoutes.get(
 );
 
 
+/**
+ * @swagger
+ * paths:
+ *   /admin/vehiculos:
+ *     post:
+ *       summary: Registrar un nuevo vehículo asignado a una empresa.
+ *       description: Ruta para registrar un vehículo para una empresa, asignado a un usuario, por un administrador.
+ *       operationId: registerAdminVehiculos
+ *       tags:
+ *         - PESV Admin Vehiculos
+ *       security:
+ *         - BearerAuth: []
+ *       parameters:
+ *         - in: body
+ *           name: vehicle
+ *           description: Vehículo a registrar para la empresa.
+ *           required: true
+ *           schema:
+ *             type: object
+ *             required:
+ *               - idUsuarioAsignado
+ *               - placa
+ *               - idClaseVehiculo
+ *               - idTipoVehiculo
+ *               - idZona
+ *             properties:
+ *               idUsuarioAsignado:
+ *                 type: string
+ *                 description: ID del usuario asignado al vehículo.
+ *               placa:
+ *                 type: string
+ *                 description: Placa del vehículo.
+ *               idClaseVehiculo:
+ *                 type: string
+ *                 description: Clase de vehículo.
+ *               idTipoVehiculo:
+ *                 type: string
+ *                 description: Tipo de vehículo.
+ *               idZona:
+ *                 type: string
+ *                 description: Zona del vehículo.
+ *       responses:
+ *         200:
+ *           description: Vehículo registrado correctamente.
+ *           schema:
+ *             type: object
+ *             properties:
+ *               success:
+ *                 type: boolean
+ *                 example: true
+ *               message:
+ *                 type: string
+ *                 example: Vehículo registrado.
+ *         400:
+ *           description: Error al registrar el vehículo.
+ *           schema:
+ *             type: object
+ *             properties:
+ *               success:
+ *                 type: boolean
+ *                 example: false
+ *               message:
+ *                 type: string
+ *                 example: Usuario asignado no existe.
+ *               error:
+ *                 type: string
+ *                 example: Error en el registro del vehículo.
+ */
 
-
-adminRoutes.get("/vehiculos",authMiddleware, authAdminMiddleware, getVehiclosByUser);
+adminRoutes.post(
+  "/vehiculos",
+  authMiddleware,
+  validateSchema(regiterAdminVehiculosSchema),
+  authAdminMiddleware,
+  registerAdminVehiculos
+);
 
 export default adminRoutes;

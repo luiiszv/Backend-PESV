@@ -196,21 +196,22 @@ export const findVehiculosByUserId = async (id_user) => {
 
 /**
  * register vehiculos desde el admin como vehiculos de empresa
- * @params IdUser
- * @returns Vehiculos
- */
+ * @params IdAdmin vehiculoData
+ * @returns
+ * */
 
 export const insertAdminVehiculos = async (id_admin, vehiculo_empresa_data) => {
-  const { idUsuarioAsignado, placa, idClaseVehiculo, idTipoVehiculo, idZona } =
-    vehiculo_empresa_data;
+  const { idUsuarioAsignado, placa, idClaseVehiculo, idTipoVehiculo, idZona } = vehiculo_empresa_data;
 
   const userExist = await UserRepository.getUserById(idUsuarioAsignado);
+
   if (!userExist) {
     return {
       success: false,
       message: "UsuarioAsignado no existe",
     };
   }
+
   const placaUperCase = placa.toUpperCase();
 
   const palcaVehiculoExist = await VehiculosRepository.findVehiculeByPlaca(
@@ -242,6 +243,7 @@ export const insertAdminVehiculos = async (id_admin, vehiculo_empresa_data) => {
       message: "idTipoVehiculo not Encontrado",
     };
   }
+
   const idZonaExist = await ZonaRepository.findZonaById(idZona);
   if (!idZonaExist) {
     return {
@@ -249,17 +251,18 @@ export const insertAdminVehiculos = async (id_admin, vehiculo_empresa_data) => {
       message: "idZona not Encontrada",
     };
   }
+
   const newAdminVehicule = await {
     ...vehiculo_empresa_data,
     idUsuario: id_admin,
     VehicleEmpresa: true,
-    placa: placaUperCase
+    placa: placaUperCase,
   };
 
-  
+  await VehiculosRepository.insertVehiculo(newAdminVehicule);
 
   return {
     success: true,
-    data: vehiculos,
+    message: "Vehiculo registrado",
   };
 };

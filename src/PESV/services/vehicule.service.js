@@ -59,7 +59,6 @@ export const insertVehiculo = async (id_user, vehiuclo) => {
     vehiculoWithAuthUser
   );
 
-  console.log(response);
 
   return {
     success: true,
