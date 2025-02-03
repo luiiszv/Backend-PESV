@@ -1,6 +1,7 @@
 import express from "express";
 import { config } from "dotenv";
 import swaggerUi from "swagger-ui-express";
+import cors from "cors";
 
 //Routes
 import authRoutes from "./Auth/index.js";
@@ -13,6 +14,13 @@ config();
 const app = express();
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 //SwaggerDocs
 app.use("/api-docs",swaggerUi.serve, swaggerUi.setup(specs));
