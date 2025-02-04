@@ -2,6 +2,7 @@ import express from "express";
 import { config } from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import cors from "cors";
+import morgan from "morgan";
 
 //Routes
 import authRoutes from "./Auth/index.js";
@@ -14,6 +15,9 @@ config();
 const app = express();
 
 app.use(express.json());
+
+
+app.use(morgan("dev"));
 
 app.use(
   cors({

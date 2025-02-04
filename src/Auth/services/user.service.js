@@ -108,7 +108,7 @@ const loginUser = async (email, password) => {
   if (!userExist) {
     return {
       success: false,
-      message: "User not found",
+      message: "Usuario no Encontrado",
     };
   }
 
