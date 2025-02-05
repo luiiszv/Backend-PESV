@@ -139,7 +139,6 @@ const VerifyAuthUser = async (token) => {
   const responseValidation = validateToken(tokenSplit);
 
   if (!responseValidation) {
-    console.log(responseValidation);
     return {
       success: false,
       data: "Token is't valid",

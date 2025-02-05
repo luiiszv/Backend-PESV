@@ -12,37 +12,35 @@ import mongoose from "mongoose";
  * @returns users
  */
 export const findUsersPagination = async (lastId, limit) => {
-  try {
 
-    if(lastId){
-      if (!mongoose.Types.ObjectId.isValid(lastId)) {
-        return {
-          success: false,
-          message: "lastId  no es válido",
-        };
-      }
 
-    }
- 
-
-    const response = await UserRepository.findUsersPagination(
-      lastId,
-      parseInt(limit)
-    );
-
-    if (response && response.length > 1) {
+  if (lastId) {
+    if (!mongoose.Types.ObjectId.isValid(lastId)) {
       return {
-        success: true,
-        data: response,
+        success: false,
+        message: "lastId  no es válido",
       };
     }
-  } catch (error) {
-    console.error(error);
-    res.status(400).json({
-      message: "Something went wrong in getUsersPagination",
-      error,
-    });
+
   }
+
+
+  const response = await UserRepository.findUsersPagination(
+    lastId,
+    parseInt(limit)
+  );
+  if (response && response.length > 1) {
+    const totalUsers = await UserRepository.findTotalUsers();
+
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    return {
+      success: true,
+      data: response,
+      total: totalPages
+    };
+  }
+
 };
 
 /**

@@ -17,7 +17,6 @@ export const getUsersPagination = async (req, res) => {
   try {
     // Obtener `lastId` y `limit` desde req.query
     const { lastId, limit } = req.query;
-    console.log("hola",req.query)
     console.log(lastId, limit);
     const response = await findUsersPagination(lastId, parseInt(limit));
     res.status(200).json(response);
@@ -25,7 +24,7 @@ export const getUsersPagination = async (req, res) => {
     console.log(error);
     res
       .status(400)
-      .json({ message: "Something went wrong in getAllUsers", error });
+      .json({ message: "Something went wrong in getAllUsersPagination", error });
   }
 };
 

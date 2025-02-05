@@ -4,10 +4,14 @@ const getAllUsers = async () => {
   return await UserModel.find().populate("idCargo");
 };
 
-const findUsersPagination = async (lastId , limit) => {
+const findUsersPagination = async (lastId, limit) => {
   const query = lastId ? { _id: { $gt: lastId } } : {}; //$gt mayor que / grather than
-  return await UserModel.find(query).sort({ _id: 1 }).limit(limit).lean().populate({path: "idCargo", select: "-description"});
+  return await UserModel.find(query).sort({ _id: 1 }).limit(limit).lean().populate({ path: "idCargo", select: "-description" });
 };
+
+const findTotalUsers = async () => {
+  return await UserModel.countDocuments();
+}
 
 const getUserById = async (id_user) => {
   return await UserModel.findById(id_user).populate({
@@ -28,4 +32,6 @@ export default {
   getUserById,
   UpdateUser,
   findUsersPagination,
+  findTotalUsers
+  
 };
