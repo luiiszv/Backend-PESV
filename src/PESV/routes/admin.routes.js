@@ -10,6 +10,7 @@ import {
   getPreguntaById,
   findPreguntasByClaseVehiculo,
   registerAdminVehiculos,
+  getUsersPagination,
 } from "../controllers/admin.controller.js";
 
 const adminRoutes = Router();
@@ -140,6 +141,11 @@ adminRoutes.put("/users", authMiddleware, updateOneUser);
  */
 
 adminRoutes.get("/users", authMiddleware, getAllUsers);
+
+adminRoutes.get("/users/pagination", authMiddleware, getUsersPagination);
+
+
+
 
 /**
  * @swagger

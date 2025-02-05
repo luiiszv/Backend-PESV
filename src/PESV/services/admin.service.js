@@ -3,8 +3,42 @@ import PreguntasRepository from "../repositories/Preguntas.repository.js";
 import ClaseVehiculoRepository from "../repositories/claseVehiculos.repository.js";
 import TipoVehiculoRepository from "../repositories/tipoVehiculo.repository.js";
 import ZonaRepository from "../repositories/zona.repository.js";
-
 import VehiculosRepository from "../repositories/vehiculo.repository.js";
+import mongoose from "mongoose";
+
+/**
+ * Get All Usuarios Paginados
+ * @params
+ * @returns users
+ */
+export const findUsersPagination = async (lastId, limit) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(lastId)) {
+      return {
+        success: false,
+        message: "lastId  no es válido",
+      };
+    }
+
+    const response = await UserRepository.findUsersPagination(
+      lastId,
+      parseInt(limit)
+    );
+
+    if (response && response.length > 1) {
+      return {
+        success: true,
+        data: response,
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      message: "Something went wrong in getUsersPagination",
+      error,
+    });
+  }
+};
 
 /**
  * Get All Usuarios
@@ -86,7 +120,8 @@ export const createFormPreguntas = async (id_user, preguntas) => {
 
   // Validar cada idClaseVehiculo
   for (const idVehiculo of idClaseVehiculo) {
-    const claseVehiculoExist = await ClaseVehiculoRepository.findClaseVehiculoById(idVehiculo);
+    const claseVehiculoExist =
+      await ClaseVehiculoRepository.findClaseVehiculoById(idVehiculo);
 
     if (!claseVehiculoExist) {
       return {
@@ -94,15 +129,15 @@ export const createFormPreguntas = async (id_user, preguntas) => {
         message: `ClaseVehiculo con ID ${idVehiculo} no fue encontrado`,
       };
     }
-
   }
 
-  const textoPreguntaExist = await PreguntasRepository.findPreguintaByPreguntaTexto(preguntaTexto);
+  const textoPreguntaExist =
+    await PreguntasRepository.findPreguintaByPreguntaTexto(preguntaTexto);
   if (textoPreguntaExist) {
     return {
       success: false,
-      message: 'La pregunta ya existe'
-    }
+      message: "La pregunta ya existe",
+    };
   }
   const newPregunta = { ...preguntas, idUsuarioCreador: id_user };
   await PreguntasRepository.insertPreguntas(newPregunta);
@@ -224,7 +259,8 @@ export const findVehiculosByUserId = async (id_user) => {
  * */
 
 export const insertAdminVehiculos = async (id_admin, vehiculo_empresa_data) => {
-  const { idUsuarioAsignado, placa, idClaseVehiculo, idTipoVehiculo, idZona } = vehiculo_empresa_data;
+  const { idUsuarioAsignado, placa, idClaseVehiculo, idTipoVehiculo, idZona } =
+    vehiculo_empresa_data;
 
   const userExist = await UserRepository.getUserById(idUsuarioAsignado);
 
