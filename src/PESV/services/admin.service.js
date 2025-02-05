@@ -13,12 +13,17 @@ import mongoose from "mongoose";
  */
 export const findUsersPagination = async (lastId, limit) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(lastId)) {
-      return {
-        success: false,
-        message: "lastId  no es válido",
-      };
+
+    if(lastId){
+      if (!mongoose.Types.ObjectId.isValid(lastId)) {
+        return {
+          success: false,
+          message: "lastId  no es válido",
+        };
+      }
+
     }
+ 
 
     const response = await UserRepository.findUsersPagination(
       lastId,
