@@ -46,7 +46,7 @@ export const login = async ({ body }, res) => {
     const response = await loginUser(body.email, body.password);
 
     if (response.success) {
-      res.cookie("accessToken", response.token, {
+      res.cookie("token", response.token, {
         httpOnly: true,
         secure: true,
       });
@@ -61,15 +61,18 @@ export const login = async ({ body }, res) => {
 };
 
 export const verifyToken = async (req, res) => {
+
+  console.log(req.headers["cookie"]?.split("=")[1]);
   try {
     const authorization =
-      req.headers.authorization || req.headers["cookie"]?.split("=")[1];
+      req.headers.authorization || req.headers["cookie"];
     if (!authorization)
       return res.status(401).json({ message: "Token not Provided" });
 
     const response = await VerifyAuthUser(authorization);
     res.status(200).json(response);
   } catch (error) {
+    console.log(error);
     res
       .status(400)
       .json({ message: "Something went wrong in verifyToken", error });

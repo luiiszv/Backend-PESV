@@ -22,9 +22,12 @@ app.use(morgan("dev"));
 app.use(
   cors({
     origin: "http://localhost:5173",
-    credentials: true,
+    credentials: true,  
+    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
+
 
 //SwaggerDocs
 app.use("/api-docs",swaggerUi.serve, swaggerUi.setup(specs));

@@ -3,7 +3,7 @@ import UserRepository from "../repositories/user.repository.js";
 import RoleRepository from "../repositories/role.repository.js";
 
 import { createAccessToken } from "../libs/jwt.js";
-import { validateToken } from "../../Middleware/ValidateAuth.js";
+import { validateToken, authMiddleware } from "../../Middleware/ValidateAuth.js";
 
 /**
  * Registar usuario
@@ -135,7 +135,8 @@ const loginUser = async (email, password) => {
 };
 
 const VerifyAuthUser = async (token) => {
-  const responseValidation = validateToken(token);
+  const tokenSplit = token.split("=")?.[1]; //Raroo
+  const responseValidation = validateToken(tokenSplit);
 
   if (!responseValidation) {
     console.log(responseValidation);
@@ -144,6 +145,7 @@ const VerifyAuthUser = async (token) => {
       data: "Token is't valid",
     };
   }
+
 
   return {
     success: true,

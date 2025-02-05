@@ -23,6 +23,7 @@ export const authMiddleware = (req, res, next) => {
       return;
     }
 
+
     const validation = validateToken(authorization);
 
     if (!validation) {
