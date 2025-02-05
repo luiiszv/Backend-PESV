@@ -4,7 +4,7 @@ const getAllUsers = async () => {
   return await UserModel.find().populate("idCargo");
 };
 
-const findUsersPagination = async (lastId, limit) => {
+const findUsersPagination = async (lastId , limit) => {
   const query = lastId ? { _id: { $gt: lastId } } : {}; //$gt mayor que / grather than
   return await UserModel.find(query).sort({ _id: 1 }).limit(limit).lean().populate({path: "idCargo", select: "-description"});
 };

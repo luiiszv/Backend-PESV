@@ -16,7 +16,8 @@ import { findPreguntasByIdClaseVehiculo } from "../services/preguntas.service.js
 export const getUsersPagination = async (req, res) => {
   try {
     // Obtener `lastId` y `limit` desde req.query
-    const { lastId, limit = 10 } = req.query;
+    const { lastId, limit } = req.query;
+    console.log("hola",req.query)
     console.log(lastId, limit);
     const response = await findUsersPagination(lastId, parseInt(limit));
     res.status(200).json(response);
