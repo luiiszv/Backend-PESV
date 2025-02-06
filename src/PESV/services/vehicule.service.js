@@ -3,6 +3,25 @@ import ClaseVehiculoRepository from "../repositories/claseVehiculos.repository.j
 import TipoVehiculoRepository from "../repositories/tipoVehiculo.repository.js";
 import zonaRepository from "../repositories/zona.repository.js";
 
+
+
+export const findAllVehiculos = async () => {
+  const vehiculos = await VehiculeRepository.findAllVehiculos();
+  if (!vehiculos) {
+    return {
+      success: false,
+      message: "No hay Vehiculos aun"
+    }
+  }
+
+  return {
+    success: true,
+    data: vehiculos
+  }
+
+}
+
+
 export const insertVehiculo = async (id_user, vehiuclo) => {
   if (!id_user) {
     return {

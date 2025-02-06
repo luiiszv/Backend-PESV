@@ -17,8 +17,9 @@ export const getUsersPagination = async (req, res) => {
   try {
     // Obtener `lastId` y `limit` desde req.query
     const { lastId, limit } = req.query;
-    console.log(lastId, limit);
-    const response = await findUsersPagination(lastId, parseInt(limit));
+
+    console.log("controller", limit);
+    const response = await findUsersPagination(lastId, limit);
     res.status(200).json(response);
   } catch (error) {
     console.log(error);

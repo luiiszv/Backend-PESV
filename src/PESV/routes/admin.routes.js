@@ -23,6 +23,7 @@ import { authAdminMiddleware } from "../../Middleware/ValidateAdmin.js";
 import { regiterPreguntasSchema } from "../schemas/Preguntas.schema.js";
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
 import { regiterAdminVehiculosSchema } from "../schemas/Vehiculos.schema.js";
+import { getAllVehiculos } from "../controllers/vehiculos.controller.js";
 
 /**
  * @swagger
@@ -644,6 +645,81 @@ adminRoutes.get(
   authAdminMiddleware,
   getVehiclosByUser
 );
+
+
+/**
+ * @swagger
+ * paths:
+ *   /pesv/admin/vehiculos:
+ *     get:
+ *       summary: Obtener todos los vehículos
+ *       description: Ruta para obtener todos los vehículos registrados, con la información del usuario asignado y el usuario que hizo la asignación.
+ *       operationId: findAllVehiculos
+ *       tags:
+ *         - PESV Admin Vehiculos
+ *       security:
+ *         - BearerAuth: []
+ *       responses:
+ *         200:
+ *           description: Vehículos obtenidos correctamente.
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   description: ID del vehículo.
+ *                 placa:
+ *                   type: string
+ *                   description: Placa del vehículo.
+ *                 idClaseVehiculo:
+ *                   type: string
+ *                   description: ID de la clase de vehículo.
+ *                 idTipoVehiculo:
+ *                   type: string
+ *                   description: ID del tipo de vehículo.
+ *                 idZona:
+ *                   type: string
+ *                   description: ID de la zona del vehículo.
+ *                 idUsuario:
+ *                   type: object
+ *                   description: Información del usuario propietario del vehículo.
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       description: ID del usuario.
+ *                     nombre:
+ *                       type: string
+ *                       description: Nombre del usuario.
+ *                 idUsuarioAsignado:
+ *                   type: object
+ *                   description: Información del usuario asignado al vehículo.
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       description: ID del usuario asignado.
+ *                     nombre:
+ *                       type: string
+ *                       description: Nombre del usuario asignado.
+ *         400:
+ *           description: Error al obtener los vehículos.
+ *           schema:
+ *             type: object
+ *             properties:
+ *               success:
+ *                 type: boolean
+ *                 example: false
+ *               message:
+ *                 type: string
+ *                 example: Error al obtener los vehículos.
+ *               error:
+ *                 type: string
+ *                 example: Error en la consulta de vehículos.
+ */
+
+
+adminRoutes.get("/vehiculos", authMiddleware, authAdminMiddleware, getAllVehiculos);
 
 
 /**

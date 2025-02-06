@@ -61,8 +61,6 @@ export const login = async ({ body }, res) => {
 };
 
 export const verifyToken = async (req, res) => {
-
-  console.log(req.headers["cookie"]?.split("=")[1]);
   try {
     const authorization =
       req.headers.authorization || req.headers["cookie"];

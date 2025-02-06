@@ -1,8 +1,19 @@
 import VehiculosModel from "../models/Vehiculos.model.js";
 
 const findAllVehiculosByIdUser = async (id_user) => {
-  return await VehiculosModel.find({ idUsuario: id_user } );
+  return await VehiculosModel.find({ idUsuario: id_user });
 };
+
+const findAllVehiculos = async () => {
+  return await VehiculosModel.find().populate({
+    path: 'idUsuario',
+    select: '-fechaNacimiento -password -email -createdAt -updatedAt -idRole'
+  }).populate({
+    path: 'idUsuarioAsignado',
+    select: '-fechaNacimiento -password -email -createdAt -updatedAt -idRole'
+  })
+
+}
 
 
 
@@ -33,7 +44,8 @@ export default {
   findVehiculeById,
   findUserVehiuclesActives,
   findVehiculeByPlaca,
-  insertVehiculo
+  insertVehiculo,
+  findAllVehiculos
 };
 
 // .populate({

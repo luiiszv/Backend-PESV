@@ -11,7 +11,7 @@ import mongoose from "mongoose";
  * @params
  * @returns users
  */
-export const findUsersPagination = async (searchTerm,lastId, limit) => {
+export const findUsersPagination = async (lastId, limit) => {
 
 
   if (lastId) {
@@ -25,13 +25,15 @@ export const findUsersPagination = async (searchTerm,lastId, limit) => {
   }
 
 
-  const response = await UserRepository.findUsersWithFilterPagination(
-    searchTerm,
+  const response = await UserRepository.findUsersPagination(
+
     lastId,
     parseInt(limit)
   );
   if (response && response.length > 1) {
     const totalUsers = await UserRepository.findTotalUsers();
+
+    console.log('Total', totalUsers, limit);
 
     const totalPages = Math.ceil(totalUsers / limit);
 
