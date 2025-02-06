@@ -11,7 +11,7 @@ import mongoose from "mongoose";
  * @params
  * @returns users
  */
-export const findUsersPagination = async (lastId, limit) => {
+export const findUsersPagination = async (searchTerm,lastId, limit) => {
 
 
   if (lastId) {
@@ -25,7 +25,8 @@ export const findUsersPagination = async (lastId, limit) => {
   }
 
 
-  const response = await UserRepository.findUsersPagination(
+  const response = await UserRepository.findUsersWithFilterPagination(
+    searchTerm,
     lastId,
     parseInt(limit)
   );
