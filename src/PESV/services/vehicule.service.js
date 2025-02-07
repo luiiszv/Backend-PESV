@@ -2,6 +2,7 @@ import VehiculeRepository from "../repositories/vehiculo.repository.js";
 import ClaseVehiculoRepository from "../repositories/claseVehiculos.repository.js";
 import TipoVehiculoRepository from "../repositories/tipoVehiculo.repository.js";
 import zonaRepository from "../repositories/zona.repository.js";
+import ZonaModel from "../models/Zona.model.js";
 
 
 
@@ -98,3 +99,34 @@ export const findAllVehiculosByIdUser = async (id_user) => {
     data: vehiculos,
   };
 };
+
+export const findSelectInformationVehiculos = async () => {
+  const selectTipoVehiuclo = await TipoVehiculoRepository.findAllTipoVehiculos();
+  if (!selectTipoVehiuclo) {
+    return {
+      success: false,
+      messasge: "No se encontro Tipo de vehiculos"
+    }
+  }
+
+  const selectClaseVehiculos = await ClaseVehiculoRepository.findAllClaseVehiculos();
+  if (!selectTipoVehiuclo) {
+    return {
+      success: false,
+      messasge: "No se encontro Clases de vehiculos"
+    }
+  }
+  const selectZonas = await zonaRepository.findAllZonas();
+  if (!selectZonas) {
+    return {
+      success: false,
+      messasge: "No se encontro Zonas"
+    }
+  }
+  return {
+    success: true,
+    zonas: selectZonas,
+    clases: selectClaseVehiculos,
+    tipos: selectTipoVehiuclo
+  }
+}

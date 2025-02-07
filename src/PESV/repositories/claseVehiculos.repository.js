@@ -5,6 +5,13 @@ const findClaseVehiculoById = async (id_clase) => {
     return await ClaseVehiculosModel.findById(id_clase);
 }
 
+const findAllClaseVehiculos = async () => {
+    return await ClaseVehiculosModel.find();
+
+
+}
+
 export default {
-    findClaseVehiculoById
+    findClaseVehiculoById,
+    findAllClaseVehiculos
 }
