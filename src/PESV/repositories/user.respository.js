@@ -1,7 +1,7 @@
 import UserModel from "../../Auth/models/UserModel.js";
 import CargoModel from "../models/Cargos.model.js";
 const getAllUsers = async () => {
-  return await UserModel.find().populate("idCargo");
+  return await UserModel.find().populate("idCargo").select('-password');
 };
 
 const findUsersPagination = async (lastId, limit) => {

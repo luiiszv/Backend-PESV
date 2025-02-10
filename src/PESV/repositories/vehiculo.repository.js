@@ -45,13 +45,22 @@ const insertVehiculo = async (vehiculo_data) => {
   return newVehiculo.save();
 };
 
+const findEnumValues = () => {
+  return VehiculosModel.schema.path("servicio").enumValues.map(value => ({
+    _id: value, 
+    name: value,             
+  }));
+};
+
+
 export default {
   findAllVehiculosByIdUser,
   findVehiculeById,
   findUserVehiuclesActives,
   findVehiculeByPlaca,
   insertVehiculo,
-  findAllVehiculos
+  findAllVehiculos,
+  findEnumValues
 };
 
 // .populate({

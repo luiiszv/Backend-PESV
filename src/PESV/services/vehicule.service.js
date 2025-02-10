@@ -4,24 +4,20 @@ import TipoVehiculoRepository from "../repositories/tipoVehiculo.repository.js";
 import zonaRepository from "../repositories/zona.repository.js";
 import ZonaModel from "../models/Zona.model.js";
 
-
-
 export const findAllVehiculos = async () => {
   const vehiculos = await VehiculeRepository.findAllVehiculos();
   if (!vehiculos) {
     return {
       success: false,
-      message: "No hay Vehiculos aun"
-    }
+      message: "No hay Vehiculos aun",
+    };
   }
 
   return {
     success: true,
-    data: vehiculos
-  }
-
-}
-
+    data: vehiculos,
+  };
+};
 
 export const insertVehiculo = async (id_user, vehiuclo) => {
   if (!id_user) {
@@ -75,10 +71,7 @@ export const insertVehiculo = async (id_user, vehiuclo) => {
     idUsuario: id_user,
   };
 
-  await VehiculeRepository.insertVehiculo(
-    vehiculoWithAuthUser
-  );
-
+  await VehiculeRepository.insertVehiculo(vehiculoWithAuthUser);
 
   return {
     success: true,
@@ -101,32 +94,37 @@ export const findAllVehiculosByIdUser = async (id_user) => {
 };
 
 export const findSelectInformationVehiculos = async () => {
-  const selectTipoVehiuclo = await TipoVehiculoRepository.findAllTipoVehiculos();
+  const selectTipoVehiuclo =
+    await TipoVehiculoRepository.findAllTipoVehiculos();
   if (!selectTipoVehiuclo) {
     return {
       success: false,
-      messasge: "No se encontro Tipo de vehiculos"
-    }
+      messasge: "No se encontro Tipo de vehiculos",
+    };
   }
 
-  const selectClaseVehiculos = await ClaseVehiculoRepository.findAllClaseVehiculos();
+  const selectClaseVehiculos =
+    await ClaseVehiculoRepository.findAllClaseVehiculos();
   if (!selectTipoVehiuclo) {
     return {
       success: false,
-      messasge: "No se encontro Clases de vehiculos"
-    }
+      messasge: "No se encontro Clases de vehiculos",
+    };
   }
   const selectZonas = await zonaRepository.findAllZonas();
   if (!selectZonas) {
     return {
       success: false,
-      messasge: "No se encontro Zonas"
-    }
+      messasge: "No se encontro Zonas",
+    };
   }
+  const servicioEnum = await VehiculeRepository.findEnumValues();
+
   return {
     success: true,
     zonas: selectZonas,
     clases: selectClaseVehiculos,
-    tipos: selectTipoVehiuclo
-  }
-}
+    tipos: selectTipoVehiuclo,
+    servicio: servicioEnum,
+  };
+};
