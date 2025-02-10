@@ -59,9 +59,9 @@ export const regiterUserVehiculosSchema = z.object({
 });
 
 export const regiterAdminVehiculosSchema = z.object({
-  idUsuarioAsignado: z.string().refine(isValid, {
-    message: "idUsuarioAsignado no es invalido",
-  }),
+  // idUsuarioAsignado: z.string().refine(isValid, {
+  //   message: "idUsuarioAsignado no es invalido",
+  // }),
   idClaseVehiculo: z
     .string({ required_error: "idClaseVehiculo es requerido" })
     .refine(isValid, {
