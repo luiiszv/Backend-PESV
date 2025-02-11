@@ -46,12 +46,12 @@ export const uploadUserDocument = async (req, res) => {
 
 export const uploadVehiculeDocument = async (req, res) => {
   try {
-
+    console.log(req.uploadedFiles);
 
 
     res.status(200).send({
       message: "Archivo subido exitosamente",
-      fileUrl: req.fileUrl 
+      fileUrl: req.fileUrl
     });
   } catch (error) {
     res.status(500).send({ error: error.message });

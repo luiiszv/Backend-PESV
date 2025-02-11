@@ -47,23 +47,23 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export const uploadVehiculeMiddleware = async (req, res, next) => {
   try {
-    const { file1, file2, file3, file4 } = req.files;
+    const { tarjetaPropiedadDoc, soatDoc } = req.files;
 
     // Validar que los archivos se hayan subido
-    if (!file1 || !file2 || !file3 || !file4) {
+    if (!tarjetaPropiedadDoc || !soatDoc) {
       return res.status(400).json({ error: "Faltan archivos, asegúrate de subir todos los archivos requeridos" });
     }
 
-    const { idVehiculo } = req.body;
+ 
 
-    if (!idVehiculo) {
-      return res.status(400).json({ error: "El ID del vehículo es obligatorio" });
-    }
+    // if (!idVehiculo) {
+    //   return res.status(400).json({ error: "El ID del vehículo es obligatorio" });
+    // }
 
     const uploadedFiles = [];
 
     // Función para procesar cada archivo
-    const files = [file1, file2, file3, file4];
+    const files = [tarjetaPropiedadDoc, soatDoc];
     for (const file of files) {
       if (!file.mimetype) {
         return res.status(400).json({ error: `Archivo no válido: ${file.name}` });
