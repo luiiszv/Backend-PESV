@@ -48,7 +48,7 @@ export const uploadVehiculeDocument = async (req, res) => {
   try {
 
 
-    console.log(req.fileUrl);
+
     res.status(200).send({
       message: "Archivo subido exitosamente",
       fileUrl: req.fileUrl 

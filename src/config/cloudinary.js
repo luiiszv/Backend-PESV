@@ -12,22 +12,24 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const uploadCloudinary = async (filePath) => {
+export const uploadCloudinary = async (filePath, fileName) => {
   try {
     const res = await cloudinary.uploader.upload(filePath, {
       resource_type: 'raw',
+      public_id: `vehiculo_${fileName}_${Date.now()}`,
       transformation: [
         { quality: "auto:low" },
       ],
       format: "pdf", // Asegurar que el archivo sea PDF
     });
-
-    console.log('Archivo subido a Cloudinary:', res);
     return res.secure_url;
   } catch (error) {
     console.error('Error en Cloudinary:', error);
     throw new Error('Error al subir archivo a Cloudinary');
   }
 };
+
+
+
 
 
