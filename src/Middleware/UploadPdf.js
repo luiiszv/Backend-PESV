@@ -1,33 +1,44 @@
-import multer from 'multer';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
-import cloudinary from '../config/cloudinary';
+import { uploadCloudinary } from '../config/cloudinary.js';
+import fs from 'fs';
 
-const personalStorage = new CloudinaryStorage({
-  cloudinary,
-  params: (req, file) => ({
-    folder: `usuarios/${req.body.idUsuario}/documentos/`,
-    resource_type: 'raw',
-  }),
-});
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-const vehicleStorage = new CloudinaryStorage({
-  cloudinary,
-  params: (req, file) => ({
-    folder: `usuarios/${req.body.idUsuario}/vehiculos/${req.body.idVehiculo}/`,
-    resource_type: 'raw',
-  }),
-});
+export const uploadVehiculeMiddleware = async (req, res, next) => {
+  try {
+    if (!req.files || !req.files.file) {
+      return res.status(400).json({ error: 'No se ha subido ningún archivo' });
+    }
 
-export const uploadMiddleware = (req, res, next) => { //Agregar Validaciones mi bro
-  const { tipoDocumentoId } = req.body; //Desestrucure no esta completo
+    const file = req.files.file;
 
-  if (tipoDocumentoId == 'Persona') {
-    return multer({ storage: personalStorage }).single('file')(req, res, next);  //Retoirna la url
-  } else if (tipoDocumentoId == 'Vehiculo') {
-    return multer({ storage: vehicleStorage }).single('file')(req, res, next);
+    // Validar que el archivo sea un PDF
+    if (file.mimetype !== 'application/pdf') {
+      return res.status(400).json({ error: 'Solo se permiten archivos PDF' });
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      return res.status(400).json({ error: `El archivo supera el límite de ${MAX_FILE_SIZE / (1024 * 1024)}MB` });
+    }
+
+    const { idVehiculo } = req.body;
+    if(!idVehiculo){
+      return res.status(400).json({ error: `El Id supera el límite de ${MAX_FILE_SIZE / (1024 * 1024)}MB` });
+
+
+    }
+
+    // Subir el archivo a Cloudinary
+    const fileUrl = await uploadCloudinary(file.tempFilePath, idVehiculo);
+
+    // Eliminar el archivo temporal después de la subida
+    fs.unlinkSync(file.tempFilePath);
+
+    // Guardar la URL en req.fileUrl para el controlador
+    req.fileUrl = fileUrl;
+
+    next();
+  } catch (error) {
+    console.error('Error al subir el archivo:', error);
+    return res.status(500).json({ error: 'Error al subir el archivo', details: error.message });
   }
-
-  return res.status(400).send({ error: 'Tipo de documento no válido' });
 };
-
-

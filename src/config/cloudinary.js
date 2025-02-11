@@ -1,5 +1,5 @@
-import { v2 as cloudinary } from 'cloudinary';
-import multer from 'multer';
+import { v2 as cloudinary } from "cloudinary";
+
 import dotenv from 'dotenv';
 
 // Cargar variables de entorno
@@ -12,6 +12,22 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+export const uploadCloudinary = async (filePath) => {
+  try {
+    const res = await cloudinary.uploader.upload(filePath, {
+      resource_type: 'raw',
+      transformation: [
+        { quality: "auto:low" },
+      ],
+      format: "pdf", // Asegurar que el archivo sea PDF
+    });
+
+    console.log('Archivo subido a Cloudinary:', res);
+    return res.secure_url;
+  } catch (error) {
+    console.error('Error en Cloudinary:', error);
+    throw new Error('Error al subir archivo a Cloudinary');
+  }
+};
 
 
-export default cloudinary;

@@ -3,6 +3,7 @@ import { config } from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import cors from "cors";
 import morgan from "morgan";
+import fileUpload from "express-fileupload";
 
 //Routes
 import authRoutes from "./Auth/index.js";
@@ -22,7 +23,7 @@ app.use(morgan("dev"));
 app.use(
   cors({
     origin: "http://localhost:5173",
-    credentials: true,  
+    credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
@@ -30,19 +31,23 @@ app.use(
 
 
 //SwaggerDocs
-app.use("/api-docs",swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use(fileUpload({
+  useTempFiles: true, // IMPORTANTE para trabajar con archivos temporales
+  tempFileDir: '/tmp/', // Carpeta temporal donde guarda los archivos
+}));
 
-app.use('/auth', authRoutes); 
+app.use('/auth', authRoutes);
 app.use('/pesv', PESVRoutes);
 
 
 app.set("port", process.env.PORT || 4000);
 
 app.use((req, res, next) => {
-    res.status(404).json({
-      message: "PESV EndPont Not Found",
-    });
+  res.status(404).json({
+    message: "PESV EndPont Not Found",
   });
+});
 
 
 

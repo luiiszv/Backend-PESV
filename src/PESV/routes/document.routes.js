@@ -2,10 +2,13 @@ import { Router } from "express";
 import {
   uploadUserDocument,
   uploadVehiculeDocument,
+  getAllDocuments
 } from "../controllers/document.controller.js";
-import { uploadMiddleware } from "../../Middleware/UploadPdf.js";
+import { uploadVehiculeMiddleware } from "../../Middleware/UploadPdf.js";
 
 const routerDocuments = Router();
+
+routerDocuments.get('/', getAllDocuments);
 
 /**
  * @swagger
@@ -66,11 +69,11 @@ const routerDocuments = Router();
  *                   type: string
  *                   example: "Bad request"
  */
-routerDocuments.post("/uploadUserFile", uploadMiddleware, uploadUserDocument);
+// routerDocuments.post("/uploadUserFile", uploadPersonalMiddleware, uploadUserDocument);
 
 /**
  * @swagger
- * /pesv/vehiculos/{id_user}/documents:
+ * /pesv/vehiculos/uploadVehiculeFile:
  *   post:
  *     summary: Upload a vehicle document
  *     tags: [PESV Documents]
@@ -120,6 +123,8 @@ routerDocuments.post("/uploadUserFile", uploadMiddleware, uploadUserDocument);
  *                   type: string
  *                   example: "Bad request"
  */
-routerDocuments.post("/uploadVehiculeFile", uploadMiddleware, uploadVehiculeDocument);
+routerDocuments.post("/uploadVehiculeFile", uploadVehiculeMiddleware, uploadVehiculeDocument);
+
+
 
 export default routerDocuments;
