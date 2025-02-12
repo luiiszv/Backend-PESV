@@ -100,16 +100,8 @@ export const regiterAdminVehiculosSchema = z.object({
   color: z.string({ required_error: "Color es requerido" }),
 
   fechaMatricula: z
-    .string({ required_error: "Fecha de matrícula es requerida" })
-    .refine(
-      (date) => {
-        const fecha = new Date(date); // Convertir la cadena a un objeto Date
-        return fecha <= new Date(); // Comparar si la fecha no es futura
-      },
-      {
-        message: "Fecha de matrícula no puede ser futura",
-      }
-    ),
+    .string({ required_error: "Fecha de matrícula es requerida" }),
+   
 
   placa: z
     .string({ required_error: "Placa es requerida" })

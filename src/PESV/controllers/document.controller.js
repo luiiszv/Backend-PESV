@@ -56,7 +56,7 @@ export const uploadVehiculeDocument = async (req, res) => {
     const response = await saveDocumentVehiculeToDatabase(infoDocs);
  
     res.status(200).send({
-      message: "Archivo subido exitosamente",
+      message: "Registro exitoso",
       data: response
     });
   } catch (error) {

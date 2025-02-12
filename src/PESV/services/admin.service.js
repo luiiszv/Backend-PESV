@@ -265,23 +265,28 @@ export const findVehiculosByUserId = async (id_user) => {
  * */
 
 export const insertAdminVehiculos = async (id_admin, vehiculo_empresa_data) => {
-  const { placa, idClaseVehiculo, idTipoVehiculo, idZona } =
+  const { placa, idClaseVehiculo, idTipoVehiculo, idZona, fechaMatricula } =
     vehiculo_empresa_data;
 
-  // const userExist = await UserRepository.getUserById(idUsuarioAsignado);
+  const fecha = new Date(fechaMatricula); 
+  const fechaActual = new Date();
 
-  // if (!userExist) {
-  //   return {
-  //     success: false,
-  //     message: "UsuarioAsignado no existe",
-  //   };
-  // }
+  if (fecha > fechaActual) {
+    return {
+      success: false,
+      message: "Fecha de matrícula no puede ser futura",
+    };
+  }
+
+
 
   const placaUperCase = placa.toUpperCase();
 
   const palcaVehiculoExist = await VehiculosRepository.findVehiculeByPlaca(
     placaUperCase
   );
+
+
   if (palcaVehiculoExist) {
     return {
       success: false,

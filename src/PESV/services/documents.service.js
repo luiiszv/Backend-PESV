@@ -16,20 +16,25 @@ export const saveDocumentVehiculeToDatabase = async (documentData) => {
   try {
     const savedDocuments = await Promise.all(
       documentData.map(async (doc) => {
-        const response = await DocumentsRepository.saveVehiculeDocument(doc);
+        try {
+          const response = await DocumentsRepository.saveVehiculeDocument(doc);
 
-        if (response.affectedRows > 0) {
-          return { success: true, message: "Documento guardado correctamente", doc };
-        } else {
-          return { success: false, message: "No se pudo guardar el documento", doc };
+          if (response?.affectedRows > 0) {
+            return { success: true, message: "Documento guardado correctamente", doc };
+          } else {
+            return { success: false, message: "No se pudo guardar el documento", doc };
+          }
+        } catch (error) {
+          console.error(`Error al guardar el documento ${doc.tipoDocumentoId}:`, error);
+          return { success: false, message: "Error al guardar el documento", doc, error: error.message };
         }
       })
     );
 
     return savedDocuments;
   } catch (error) {
-    console.error("Error al guardar los documentos:", error);
-    throw new Error("Error al guardar los documentos en la base de datos");
+    console.error("Error general al guardar los documentos:", error);
+    throw new Error("Error general al guardar los documentos en la base de datos");
   }
 };
 

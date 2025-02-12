@@ -48,6 +48,8 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 export const uploadVehiculeMiddleware = async (req, res, next) => {
   try {
 
+    console.log(req.files || req.file);
+
     const { idVehiculo } = req.body;
     if (!idVehiculo) {
       return {
@@ -57,10 +59,18 @@ export const uploadVehiculeMiddleware = async (req, res, next) => {
     }
     const targPropiedad = JSON.parse(req.body.targPropiedad);
     const soat = JSON.parse(req.body.soat);
+    const tecnoMecanica = JSON.parse(req.body.tecnoMecanica);
+    const poliza = JSON.parse(req.body.poliza);
+    const targOperacion = JSON.parse(req.body.targOperacion);
+
 
     const filesData = [
       { key: "tarjetaPropiedadDoc", meta: targPropiedad },
-      { key: "soatDoc", meta: soat }
+      { key: "soatDoc", meta: soat },
+      { key: "tecnomecanicaDoc", meta: tecnoMecanica },
+      { key: "polizaDoc", meta: poliza },
+      { key: "tarjetaOperacionDoc", meta: targOperacion }
+
     ];
 
 
@@ -90,31 +100,7 @@ export const uploadVehiculeMiddleware = async (req, res, next) => {
         fechaExpiracion: fileData.meta.fechaExpiracion
       });
     }
-    // for (const file of files) {
-    //   if (!file.mimetype) {
-    //     return res.status(400).json({ error: `Archivo no válido: ${file.name}` });
-    //   }
-
-    //   if (file.mimetype !== "application/pdf") {
-    //     return res.status(400).json({ error: `El archivo ${file.name} no es un PDF` });
-    //   }
-
-    //   if (file.size > MAX_FILE_SIZE) {
-    //     return res.status(400).json({
-    //       error: `El archivo ${file.name} supera el límite de ${MAX_FILE_SIZE / (1024 * 1024)}MB`,
-    //     });
-    //   }
-
-    //   // Subir a Cloudinary
-    //   const fileUrl = await uploadVehiculosCloudinary(file.tempFilePath, file.name);
-
-    //   // Eliminar archivo temporal
-    //   await fs.unlinkSync(file.tempFilePath);  // Uso de fs.promises.unlink
-
-    //   uploadedFiles.push({ name: file.name, url: fileUrl });
-    // }
-
-    // Pasar datos al controlador
+ 
     req.uploadedFiles = uploadedFiles;
 
     next();

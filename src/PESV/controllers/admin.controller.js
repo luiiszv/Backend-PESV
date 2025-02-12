@@ -142,6 +142,7 @@ export const findPreguntasByClaseVehiculo = async (req, res) => {
 export const registerAdminVehiculos = async (req, res) => {
   try {
     const userAdmin = req.user;
+    console.log(req.body);
     const response = await insertAdminVehiculos(userAdmin.userId, req.body);
     res.status(200).json(response);
   } catch (error) {
