@@ -265,17 +265,17 @@ export const findVehiculosByUserId = async (id_user) => {
  * */
 
 export const insertAdminVehiculos = async (id_admin, vehiculo_empresa_data) => {
-  const { idUsuarioAsignado, placa, idClaseVehiculo, idTipoVehiculo, idZona } =
+  const { placa, idClaseVehiculo, idTipoVehiculo, idZona } =
     vehiculo_empresa_data;
 
-  const userExist = await UserRepository.getUserById(idUsuarioAsignado);
+  // const userExist = await UserRepository.getUserById(idUsuarioAsignado);
 
-  if (!userExist) {
-    return {
-      success: false,
-      message: "UsuarioAsignado no existe",
-    };
-  }
+  // if (!userExist) {
+  //   return {
+  //     success: false,
+  //     message: "UsuarioAsignado no existe",
+  //   };
+  // }
 
   const placaUperCase = placa.toUpperCase();
 
@@ -324,10 +324,11 @@ export const insertAdminVehiculos = async (id_admin, vehiculo_empresa_data) => {
     placa: placaUperCase,
   };
 
-  await VehiculosRepository.insertVehiculo(newAdminVehicule);
+  const resVehicule = await VehiculosRepository.insertVehiculo(newAdminVehicule);
 
   return {
     success: true,
     message: "Vehiculo registrado",
+    data: resVehicule
   };
 };

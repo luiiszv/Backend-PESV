@@ -6,6 +6,10 @@ const DocumentosVehiculeModel = new Schema({
     ref: "vehiculos",
     require: true,
   },
+  name: {
+    type: String,
+    require: true,
+  },
   tipoDocumentoId: {
     type: Schema.Types.ObjectId,
     ref: "tipos_documentos",
@@ -23,7 +27,7 @@ const DocumentosVehiculeModel = new Schema({
     type: String,
     require: true,
   },
-  
+
 });
 
 DocumentosVehiculeModel.index({ idVehiculo: 1 });

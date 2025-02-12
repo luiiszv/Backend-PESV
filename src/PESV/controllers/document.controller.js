@@ -1,3 +1,4 @@
+import { json } from "express";
 import {
   saveDocumentUserToDatabase,
   saveDocumentVehiculeToDatabase,
@@ -46,12 +47,17 @@ export const uploadUserDocument = async (req, res) => {
 
 export const uploadVehiculeDocument = async (req, res) => {
   try {
-    console.log(req.uploadedFiles);
 
+    const infoDocs = req.uploadedFiles;
+    if (infoDocs.lenght < 1) {
+      return res.status(400).json({ message: 'Error upload' })
+    }
 
+    const response = await saveDocumentVehiculeToDatabase(infoDocs);
+ 
     res.status(200).send({
       message: "Archivo subido exitosamente",
-      fileUrl: req.fileUrl
+      data: response
     });
   } catch (error) {
     res.status(500).send({ error: error.message });

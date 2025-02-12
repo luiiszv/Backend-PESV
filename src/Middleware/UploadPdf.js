@@ -1,4 +1,4 @@
-import { uploadCloudinary } from '../config/cloudinary.js';
+import { uploadVehiculosCloudinary } from '../config/cloudinary.js';
 import fs from 'fs';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -47,49 +47,76 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export const uploadVehiculeMiddleware = async (req, res, next) => {
   try {
-    const { tarjetaPropiedadDoc, soatDoc } = req.files;
 
-    // Validar que los archivos se hayan subido
-    if (!tarjetaPropiedadDoc || !soatDoc) {
-      return res.status(400).json({ error: "Faltan archivos, asegúrate de subir todos los archivos requeridos" });
-    }
-
- 
-
-    // if (!idVehiculo) {
-    //   return res.status(400).json({ error: "El ID del vehículo es obligatorio" });
-    // }
-
-    const uploadedFiles = [];
-
-    // Función para procesar cada archivo
-    const files = [tarjetaPropiedadDoc, soatDoc];
-    for (const file of files) {
-      if (!file.mimetype) {
-        return res.status(400).json({ error: `Archivo no válido: ${file.name}` });
+    const { idVehiculo } = req.body;
+    if (!idVehiculo) {
+      return {
+        success: false,
+        message: 'Id del Vehiculo es requerido'
       }
+    }
+    const targPropiedad = JSON.parse(req.body.targPropiedad);
+    const soat = JSON.parse(req.body.soat);
 
-      if (file.mimetype !== "application/pdf") {
+    const filesData = [
+      { key: "tarjetaPropiedadDoc", meta: targPropiedad },
+      { key: "soatDoc", meta: soat }
+    ];
+
+
+    let uploadedFiles = [];
+
+    for (const fileData of filesData) {
+      const file = req.files[fileData.key];
+
+      // Validar archivo PDF
+      if (!file.mimetype || file.mimetype !== "application/pdf") {
         return res.status(400).json({ error: `El archivo ${file.name} no es un PDF` });
       }
 
-      if (file.size > MAX_FILE_SIZE) {
-        return res.status(400).json({
-          error: `El archivo ${file.name} supera el límite de ${MAX_FILE_SIZE / (1024 * 1024)}MB`,
-        });
-      }
-
       // Subir a Cloudinary
-      const fileUrl = await uploadCloudinary(file.tempFilePath, file.name);
+      const fileUrl = await uploadVehiculosCloudinary(file.tempFilePath, file.name);
 
       // Eliminar archivo temporal
-      await fs.unlinkSync(file.tempFilePath);  // Uso de fs.promises.unlink
+      fs.unlinkSync(file.tempFilePath);
 
-      uploadedFiles.push({ name: file.name, url: fileUrl });
+      // Agregar archivo y metadatos al JSON de respuesta
+      uploadedFiles.push({
+        idVehiculo,
+        name: file.name,
+        ruta: fileUrl,
+        tipoDocumentoId: fileData.meta.tipoDocumentoId,
+        numeroDocumento: fileData.meta.numeroDocumento,
+        fechaExpiracion: fileData.meta.fechaExpiracion
+      });
     }
+    // for (const file of files) {
+    //   if (!file.mimetype) {
+    //     return res.status(400).json({ error: `Archivo no válido: ${file.name}` });
+    //   }
+
+    //   if (file.mimetype !== "application/pdf") {
+    //     return res.status(400).json({ error: `El archivo ${file.name} no es un PDF` });
+    //   }
+
+    //   if (file.size > MAX_FILE_SIZE) {
+    //     return res.status(400).json({
+    //       error: `El archivo ${file.name} supera el límite de ${MAX_FILE_SIZE / (1024 * 1024)}MB`,
+    //     });
+    //   }
+
+    //   // Subir a Cloudinary
+    //   const fileUrl = await uploadVehiculosCloudinary(file.tempFilePath, file.name);
+
+    //   // Eliminar archivo temporal
+    //   await fs.unlinkSync(file.tempFilePath);  // Uso de fs.promises.unlink
+
+    //   uploadedFiles.push({ name: file.name, url: fileUrl });
+    // }
 
     // Pasar datos al controlador
     req.uploadedFiles = uploadedFiles;
+
     next();
   } catch (error) {
     console.error("Error al subir archivos:", error);
