@@ -25,34 +25,28 @@ const insertUser = async (user) => {
   if (!roleExist) {
     return {
       success: false,
-      data: "Role not found",
-    };
-  }
-
-  if (!roleExist) {
-    return {
-      success: false,
-      data: "Role not found",
+      message: "Role not found",
     };
   }
   if (numeroDocumentoExist) {
     return {
       success: false,
-      data: "Identification number is already registered",
+      message: "Número de Identifiacion ya Existe",
     };
   }
   if (emailExist) {
     return {
       success: false,
-      data: "Email is already registered",
+      message: "Email ya Existe",
     };
   }
 
-  await UserRepository.createUser(userPassHashed);
+  const userRistred = await UserRepository.createUser(userPassHashed);
 
   return {
     success: true,
-    data: "User registered",
+    message: "Usuario Registrado",
+    data: userRistred
   };
 };
 

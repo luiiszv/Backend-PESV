@@ -15,33 +15,20 @@ export const getAllDocuments = async (req, res) => {
 }
 
 export const uploadUserDocument = async (req, res) => {
-  if (!req.file) {
-    return res.status(400).send({ error: "Archivo no proporcionado" });
-  }
-
-  // La URL del archivo en Cloudinary es proporcionada automáticamente por Multer y CloudinaryStorage
-  const fileUrl = req.file.path;
-
-  // Datos del documento que se guardarán en la base de datos
-  const documentUserData = {
-    idUsuario: req.body.idUsuario,
-    tipoDocumentoId: req.body.tipoDocumentoId,
-    numeroDocumento: req.body.numeroDocumento,
-    fechaExpiracion: req.body.fechaExpiracion,
-    ruta: fileUrl, // URL del archivo en Cloudinary
-  };
-
   try {
-    const savedDocument = await saveDocumentUserToDatabase(
-      documentUserData
-    );
 
+    const infoDocs = req.uploadedFiles;
+    if (infoDocs.lenght < 1) {
+      return res.status(400).json({ message: 'Error upload' })
+    }
+
+    console.log(infoDocs); 
     res.status(200).send({
-      message: "Archivo subido exitosamente",
-      fileUrl: savedDocument.ruta, // URL del archivo en Cloudinary
+      message: "Registro exitoso",
+      data: response
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).send({ error: error.message });
   }
 };
 

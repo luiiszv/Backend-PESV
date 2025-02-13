@@ -16,8 +16,8 @@ export const uploadVehiculosCloudinary = async (filePath, fileName) => {
   try {
     const res = await cloudinary.uploader.upload(filePath, {
       resource_type: 'raw',
-      folder:'docVehiculos',
-      public_id: `${fileName}`,
+      folder: 'docVehiculos',
+      public_id: `${fileName}-${Date.now()}`,
       transformation: [
         { quality: "auto:low" },
       ],
@@ -35,8 +35,8 @@ export const uploadUsuariosCloudinary = async (filePath, fileName) => {
   try {
     const res = await cloudinary.uploader.upload(filePath, {
       resource_type: 'raw',
-      folder:'docUsuarios',
-      public_id: `${fileName}`,
+      folder: 'docUsuarios',
+      public_id: `${fileName}-${Date.now()}`,
       transformation: [
         { quality: "auto:low" },
       ],

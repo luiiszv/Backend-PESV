@@ -1,6 +1,7 @@
 import {
   userProfile,
   findPreguntasByClaseVehiculesActive,
+  getAllSelctUser
 } from "../services/users.service.js";
 
 import {
@@ -55,8 +56,20 @@ export const getUserVehiculos = async (req, res) => {
     res.status(200).json(response);
   } catch (error) {
     res.status(400).json({
-      message: "Something went wrong in getVehiculos",
+      message: "Something went wrong in getUserVehiculos",
       error,
     });
   }
 };
+
+export const getSelectRegisterUser = async (req, res) => {
+  try {
+    const response = await getAllSelctUser();
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(400).json({
+      message: "Something went wrong in getSelectRegisterUser",
+      error,
+    });
+  }
+}

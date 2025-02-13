@@ -7,6 +7,7 @@ import {
   getPreguntasByVehiculesActive,
   createVehiculo,
   getUserVehiculos,
+  getSelectRegisterUser
 } from "../controllers/users.controller.js";
 
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
@@ -272,5 +273,67 @@ routerUser.get("/vehiculos", authMiddleware, getUserVehiculos);
 
 
 routerUser.get("/preguntas/clase-vehiculo/:id", authMiddleware, getPreguntasByVehiculesActive); //pendinete
+
+
+
+
+
+/**
+ * @swagger
+ * /pesv/user/select-register:
+ *   get:
+ *     summary: Obtiene las opciones de selección para el registro de usuarios.
+ *     description: Retorna listas de cargos, roles y tipos de licencia para ser usados en el formulario de registro.
+ *     tags:
+ *       - PESV User
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Datos obtenidos correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     selectCargos:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: string
+ *                             example: "60b8d6f5f2d4b00f88888888"
+ *                           nombre:
+ *                             type: string
+ *                             example: "Administrador"
+ *                     selectRoles:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: string
+ *                             example: "60b8d6f5f2d4b00f99999999"
+ *                           nombre:
+ *                             type: string
+ *                             example: "Supervisor"
+ *                     selectTipoLicencia:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                         example: "A2"
+ *       401:
+ *         description: No autorizado. Se requiere un token válido.
+ *       500:
+ *         description: Error interno del servidor.
+ */
+routerUser.get('/select-register', authMiddleware, getSelectRegisterUser)
 
 export default routerUser;

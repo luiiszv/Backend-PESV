@@ -29,6 +29,7 @@ const UsuariosSchema = new Schema(
       require: true,
       unique: true, //  correo único
       match: /.+\@.+\..+/, // Validación básica para el formato del correo
+      require: true
     },
     numeroDocumento: {
       type: String,

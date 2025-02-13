@@ -2,6 +2,9 @@ import PreguntasRepository from "../repositories/Preguntas.repository.js";
 import userRespository from "../repositories/user.respository.js";
 import VehicleRepository from "../repositories/vehiculo.repository.js";
 import mongoose from "mongoose";
+import CargoRepository from "../repositories/cargo.respository.js";
+import RoleRepository from "../../Auth/repositories/role.repository.js";
+import UserModel from "../../Auth/models/UserModel.js";
 
 export const userProfile = async (id_user) => {
   const profileUser = await userRespository.getUserById(id_user);
@@ -34,11 +37,28 @@ export const findPreguntasByClaseVehiculesActive = async (id_clase_vehiculo) => 
 
   const preguntasForm = await PreguntasRepository.findPreguntasByIdClaseVehiculo(id_clase_vehiculo);
 
-  console.log(preguntasForm);
- return {
+
+  return {
     success: true,
     data: preguntasForm,
   };
 };
+
+export const getAllSelctUser = async () => {
+  const selectCargos = await CargoRepository.findAllCargos();
+  const selectRoles = await RoleRepository.findAllRoles();
+  const selectTipoLicencia = await userRespository.findTipoLicenciaEnum();
+
+  const selectValues = {
+    selectCargos,
+    selectRoles,
+    selectTipoLicencia
+  }
+  return {
+    success: true,
+    data: selectValues
+  }
+
+}
 
 

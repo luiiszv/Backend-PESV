@@ -17,14 +17,14 @@ const findUsersPagination = async (lastId, limit) => {
 const findUsersWithFilterPagination = async (searchTerm, lastId, limit) => {
   const query = {
     $and: [
-      searchTerm ? { 
+      searchTerm ? {
         $or: [
           { name: { $regex: `^${searchTerm}`, $options: "i" } }, // Filtro por nombre
           { numeroDocumento: { $regex: `^${searchTerm}`, $options: "i" } }, // Filtro por cédula
         ]
       } : {}, // Si hay término de búsqueda, aplicar el filtro de nombre o cédula
 
-      
+
     ]
   };
 
@@ -62,6 +62,13 @@ const UpdateUser = async (user_data) => {
   );
 };
 
+const findTipoLicenciaEnum = async () => {
+  return UserModel.schema.path("tipoLicencia").enumValues.map(value => ({
+    _id: value,
+    name: value,
+  }));
+
+}
 
 
 export default {
@@ -70,5 +77,6 @@ export default {
   UpdateUser,
   findUsersPagination,
   findTotalUsers,
-  findUsersWithFilterPagination
+  findUsersWithFilterPagination,
+  findTipoLicenciaEnum
 };

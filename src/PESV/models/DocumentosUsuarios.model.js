@@ -6,6 +6,10 @@ const DocumentosUsuariosSchema = new Schema({
     ref: "usuarios",
     require: true,
   },
+  name: {
+    type: String,
+    require: true,
+  },
   tipoDocumentoId: {
     type: Schema.Types.ObjectId,
     ref: "tipos_documentos",

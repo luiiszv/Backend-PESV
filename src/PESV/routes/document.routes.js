@@ -4,7 +4,7 @@ import {
   uploadVehiculeDocument,
   getAllDocuments
 } from "../controllers/document.controller.js";
-import { uploadVehiculeMiddleware } from "../../Middleware/UploadPdf.js";
+import { uploadVehiculeMiddleware, uploadUserMiddleware } from "../../Middleware/UploadPdf.js";
 
 const routerDocuments = Router();
 
@@ -69,7 +69,7 @@ routerDocuments.get('/', getAllDocuments);
  *                   type: string
  *                   example: "Bad request"
  */
-// routerDocuments.post("/uploadUserFile", uploadPersonalMiddleware, uploadUserDocument);
+routerDocuments.post("/uploadUserFile", uploadUserMiddleware, uploadUserDocument);
 
 /**
  * @swagger

@@ -22,10 +22,12 @@ const delteOneUser = async (_id) => {
   return await UserModel.deleteOne({ _id });
 };
 
+
+
 export default {
   delteOneUser,
   findUserByEmail,
   createUser,
   getAll,
-  findUserByIdentificationNumber,
+  findUserByIdentificationNumber
 };
