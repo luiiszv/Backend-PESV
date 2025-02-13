@@ -6,7 +6,16 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 export const uploadUserMiddleware = async (req, res, next) => {
   try {
 
-    console.log(JSON.stringify(req.files));
+    const targPropiedad = JSON.parse(req.body.targPropiedad);
+    const soat = JSON.parse(req.body.soat);
+
+    const filesData = [
+      { key: "tarjetaPropiedadDoc", meta: targPropiedad },
+      { key: "soatDoc", meta: soat },
+
+
+    ];
+
     // if (!req.files || !req.files.files) {
     //   return res.status(400).json({ error: 'No se ha subido ningún archivo' });
     // }
