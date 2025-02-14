@@ -4,6 +4,7 @@ import {
   findUsers,
   loginUser,
   VerifyAuthUser,
+  findUserById
 } from "../services/user.service.js";
 
 export const registerUsers = async ({ body }, res) => {
@@ -29,6 +30,18 @@ export const getUserDetail = async ({ body }, res) => {
       .json({ message: "Something went wrong in getUserDetail", error });
   }
 };
+
+export const getUserById = async (req, res) => {
+  try {
+    const id_user = req.params.id;
+    const response = await findUserById(id_user);
+    res.status(200).json(response);
+
+  } catch (error) {
+
+  }
+
+}
 
 export const getAllUsers = async (req, res) => {
   try {

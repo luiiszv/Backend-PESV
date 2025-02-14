@@ -14,6 +14,12 @@ const findUserByEmail = async (email) => {
   return await UserModel.findOne({ email });
 };
 
+const findUserById = async (id_user) => {
+  return await UserModel.findById(id_user).select('-password')
+  ;
+
+}
+
 const findUserByIdentificationNumber = async (numeroDocumento) => {
   return await UserModel.findOne({ numeroDocumento });
 };
@@ -29,5 +35,6 @@ export default {
   findUserByEmail,
   createUser,
   getAll,
-  findUserByIdentificationNumber
+  findUserByIdentificationNumber,
+  findUserById
 };

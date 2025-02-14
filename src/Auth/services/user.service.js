@@ -4,7 +4,7 @@ import RoleRepository from "../repositories/role.repository.js";
 
 import { createAccessToken } from "../libs/jwt.js";
 import { validateToken, authMiddleware } from "../../Middleware/ValidateAuth.js";
-
+import mongoose from "mongoose";
 /**
  * Registar usuario
  * @params user
@@ -56,7 +56,7 @@ const insertUser = async (user) => {
  * @returns
  */
 const getUser = async (email) => {
-  const response = await UserRepository.findUserByEamil(email);
+  const response = await UserRepository.findUserByEmail(email);
   return {
     success: true,
     message: "User Found",
@@ -145,6 +145,32 @@ const VerifyAuthUser = async (token) => {
     data: responseValidation,
   };
 };
+
+const findUserById = async (id_user) => {
+  if (!id_user) {
+    return {
+      success: false,
+      message: "Id del usuario es requerido"
+    }
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(id_user)) {
+    return { success: false, message: 'Id Usuario no es valido' };
+  }
+
+  const response = await UserRepository.findUserById(id_user);
+  if (!response) {
+    return {
+      success: false,
+      message: "Usuario no encontrado"
+    }
+  }
+  return {
+    success: true,
+    data: response
+  }
+
+}
 export {
   insertUser,
   getUser,
@@ -152,4 +178,5 @@ export {
   deleteUser,
   loginUser,
   VerifyAuthUser,
+  findUserById
 };

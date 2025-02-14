@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { registerUsers, getAllUsers, login, verifyToken } from "../controllers/user.controller.js";
+import { registerUsers, getAllUsers, login, verifyToken, getUserById } from "../controllers/user.controller.js";
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
 import { registerUserSchema, loginSchema } from "../Schema/UsersSchema.js";
 import { authMiddleware } from "../../Middleware/ValidateAuth.js";
@@ -206,6 +206,9 @@ router.post("/verify", verifyToken);
 
  */
 router.post("/", validateSchema(registerUserSchema), registerUsers);
+
+
+router.get("/:id", authMiddleware, getUserById)
 
 
 export default router;
