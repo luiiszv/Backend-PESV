@@ -16,15 +16,15 @@ export const getAllDocuments = async (req, res) => {
 
 export const uploadUserDocument = async (req, res) => {
   try {
-
     const infoDocs = req.uploadedFiles;
     if (infoDocs.lenght < 1) {
       return res.status(400).json({ message: 'Error upload' })
     }
 
-    console.log(infoDocs); 
+    console.log('controllers', infoDocs);
+    const response = await saveDocumentUserToDatabase(infoDocs);
     res.status(200).send({
-      message: "Registro exitoso",
+      message: "Registro exitoso 🚙",
       data: response
     });
   } catch (error) {
@@ -40,8 +40,9 @@ export const uploadVehiculeDocument = async (req, res) => {
       return res.status(400).json({ message: 'Error upload' })
     }
 
+
     const response = await saveDocumentVehiculeToDatabase(infoDocs);
- 
+
     res.status(200).send({
       message: "Registro exitoso",
       data: response

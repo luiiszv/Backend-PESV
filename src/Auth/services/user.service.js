@@ -31,7 +31,7 @@ const insertUser = async (user) => {
   if (numeroDocumentoExist) {
     return {
       success: false,
-      message: "Número de Identifiacion ya Existe",
+      message: "Número de Documento ya Existe",
     };
   }
   if (emailExist) {

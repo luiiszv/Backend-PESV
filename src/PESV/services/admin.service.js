@@ -277,15 +277,11 @@ export const insertAdminVehiculos = async (id_admin, vehiculo_empresa_data) => {
       message: "Fecha de matrícula no puede ser futura",
     };
   }
-
-
-
   const placaUperCase = placa.toUpperCase();
 
   const palcaVehiculoExist = await VehiculosRepository.findVehiculeByPlaca(
     placaUperCase
   );
-
 
   if (palcaVehiculoExist) {
     return {
