@@ -276,8 +276,6 @@ routerUser.get("/preguntas/clase-vehiculo/:id", authMiddleware, getPreguntasByVe
 
 
 
-
-
 /**
  * @swagger
  * /pesv/user/select-register:
@@ -334,6 +332,8 @@ routerUser.get("/preguntas/clase-vehiculo/:id", authMiddleware, getPreguntasByVe
  *       500:
  *         description: Error interno del servidor.
  */
-routerUser.get('/select-register', authMiddleware, getSelectRegisterUser)
+routerUser.get('/select-register', authMiddleware, getSelectRegisterUser);
+
+
 
 export default routerUser;

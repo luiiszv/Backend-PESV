@@ -25,9 +25,9 @@ export const uploadUserMiddleware = async (req, res, next) => {
     for (const fileData of filesData) {
       const file = req.files[fileData.key];
       // Validar archivo PDF
-      if (!file.mimetype || file.mimetype !== "application/pdf") {
-        return res.status(400).json({ error: `El archivo ${file.name} no es un PDF` });
-      }
+      // if (!file.mimetype || file.mimetype !== "application/pdf") {
+      //   return res.status(400).json({ error: `El archivo ${file.name} no es un PDF` });
+      // }
 
       if (file.size > MAX_FILE_SIZE) {
         return res.status(400).json({ error: `El archivo supera el límite de ${MAX_FILE_SIZE / (1024 * 1024)}MB` });
@@ -59,9 +59,6 @@ export const uploadUserMiddleware = async (req, res, next) => {
 ///✔
 export const uploadVehiculeMiddleware = async (req, res, next) => {
   try {
-
-    console.log(req.files || req.file);
-
     const { idVehiculo } = req.body;
     if (!idVehiculo) {
       return {
@@ -77,24 +74,26 @@ export const uploadVehiculeMiddleware = async (req, res, next) => {
 
 
     const filesData = [
-      { key: "tarjetaPropiedadDoc", meta: targPropiedad },
+      { key: "targPropiedadDoc", meta: targPropiedad },
       { key: "soatDoc", meta: soat },
-      { key: "tecnomecanicaDoc", meta: tecnoMecanica },
+      { key: "tecnoMecanicaDoc", meta: tecnoMecanica },
       { key: "polizaDoc", meta: poliza },
-      { key: "tarjetaOperacionDoc", meta: targOperacion }
+      { key: "targOperacionDoc", meta: targOperacion }
 
     ];
 
 
     let uploadedFiles = [];
+    console.log('files',req.files)
 
     for (const fileData of filesData) {
       const file = req.files[fileData.key];
 
       // Validar archivo PDF
-      if (!file.mimetype || file.mimetype !== "application/pdf") {
-        return res.status(400).json({ error: `El archivo ${file.name} no es un PDF` });
-      }
+      // if (!file.mimetype || file.mimetype !== "application/pdf") {
+      //   return res.status(400).json({ error: `El archivo ${file.name} no es un PDF` });
+      // }
+
 
       // Subir a Cloudinary
       const fileUrl = await uploadVehiculosCloudinary(file.tempFilePath, file.name);

@@ -4,7 +4,8 @@ import {
   findUsers,
   loginUser,
   VerifyAuthUser,
-  findUserById
+  findUserById,
+  updateUser,
 } from "../services/user.service.js";
 
 export const registerUsers = async ({ body }, res) => {
@@ -36,12 +37,8 @@ export const getUserById = async (req, res) => {
     const id_user = req.params.id;
     const response = await findUserById(id_user);
     res.status(200).json(response);
-
-  } catch (error) {
-
-  }
-
-}
+  } catch (error) {}
+};
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -75,8 +72,7 @@ export const login = async ({ body }, res) => {
 
 export const verifyToken = async (req, res) => {
   try {
-    const authorization =
-      req.headers.authorization || req.headers["cookie"];
+    const authorization = req.headers.authorization || req.headers["cookie"];
     if (!authorization)
       return res.status(401).json({ message: "Token not Provided" });
 
@@ -87,5 +83,16 @@ export const verifyToken = async (req, res) => {
     res
       .status(400)
       .json({ message: "Something went wrong in verifyToken", error });
+  }
+};
+
+export const editUser = async (req, res) => {
+  try {
+    const response = await updateUser(req.params.id, req.body);
+    res.status(200).json(response);
+  } catch (error) {
+    res
+      .status(400)
+      .json({ message: "Something went wrong in editUser", error });
   }
 };

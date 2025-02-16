@@ -1,5 +1,12 @@
 import { Router } from "express";
-import { registerUsers, getAllUsers, login, verifyToken, getUserById } from "../controllers/user.controller.js";
+import {
+  registerUsers,
+  getAllUsers,
+  login,
+  verifyToken,
+  getUserById,
+  editUser,
+} from "../controllers/user.controller.js";
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
 import { registerUserSchema, loginSchema } from "../Schema/UsersSchema.js";
 import { authMiddleware } from "../../Middleware/ValidateAuth.js";
@@ -207,8 +214,73 @@ router.post("/verify", verifyToken);
  */
 router.post("/", validateSchema(registerUserSchema), registerUsers);
 
+router.get("/:id", authMiddleware, getUserById);
 
-router.get("/:id", authMiddleware, getUserById)
+/**
+ * @swagger
+ * /auth/users/edit/{id_user}:
+ *   put:
+ *     summary: Actualiza un usuario por su ID
+ *     description: Permite actualizar la información de un usuario en la base de datos.
+ *     tags:
+ *       - Auth
+ *     parameters:
+ *       - in: path
+ *         name: id_user
+ *         required: true
+ *         description: ID del usuario a actualizar.
+ *         schema:
+ *           type: string
+ *       - in: body
+ *         name: user_data
+ *         required: true
+ *         description: Datos a actualizar del usuario.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string
+ *               example: "Nuevo Nombre"
+ *             email:
+ *               type: string
+ *               example: "nuevo@email.com"
+ *     responses:
+ *       200:
+ *         description: Usuario actualizado correctamente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "Usuario actualizado correctamente"
+ *               data:
+ *                 _id: "65b123..."
+ *                 name: "Nuevo Nombre"
+ *                 email: "nuevo@email.com"
+ *                 updatedAt: "2025-02-16T12:00:00Z"
+ *       400:
+ *         description: Error en la solicitud (ID o datos faltantes).
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "El ID del usuario es requerido"
+ *       404:
+ *         description: Usuario no encontrado o no actualizado.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Usuario no encontrado o no actualizado"
+ *       500:
+ *         description: Error en el servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Error al actualizar el usuario"
+ *               error: "Detalle del error"
+ */
 
+router.put("/edit/:id", authMiddleware, editUser);
 
 export default router;

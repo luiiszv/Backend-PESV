@@ -3,7 +3,10 @@ import UserRepository from "../repositories/user.repository.js";
 import RoleRepository from "../repositories/role.repository.js";
 
 import { createAccessToken } from "../libs/jwt.js";
-import { validateToken, authMiddleware } from "../../Middleware/ValidateAuth.js";
+import {
+  validateToken,
+  authMiddleware,
+} from "../../Middleware/ValidateAuth.js";
 import mongoose from "mongoose";
 /**
  * Registar usuario
@@ -46,7 +49,7 @@ const insertUser = async (user) => {
   return {
     success: true,
     message: "Usuario Registrado",
-    data: userRistred
+    data: userRistred,
   };
 };
 
@@ -119,7 +122,6 @@ const loginUser = async (email, password) => {
     roleId: userExist.idRole,
   };
 
-
   const token = await createAccessToken(payload);
   return {
     success: true,
@@ -139,7 +141,6 @@ const VerifyAuthUser = async (token) => {
     };
   }
 
-
   return {
     success: true,
     data: responseValidation,
@@ -150,27 +151,78 @@ const findUserById = async (id_user) => {
   if (!id_user) {
     return {
       success: false,
-      message: "Id del usuario es requerido"
-    }
+      message: "Id del usuario es requerido",
+    };
   }
 
   if (!mongoose.Types.ObjectId.isValid(id_user)) {
-    return { success: false, message: 'Id Usuario no es valido' };
+    return { success: false, message: "Id Usuario no es valido" };
   }
 
   const response = await UserRepository.findUserById(id_user);
   if (!response) {
     return {
       success: false,
-      message: "Usuario no encontrado"
-    }
+      message: "Usuario no encontrado",
+    };
   }
   return {
     success: true,
-    data: response
-  }
+    data: response,
+  };
+};
 
-}
+const updateUser = async (id_user, user_data) => {
+  try {
+    if (!id_user) {
+      return { success: false, message: "El ID del usuario es requerido" };
+    }
+    if (!mongoose.Types.ObjectId.isValid(id_user)) {
+      return { success: false, message: "ID de usuario no es válido" };
+    }
+    if (!user_data || Object.keys(user_data).length === 0) {
+      return { success: false, message: "No hay cambios para actualizar" };
+    }
+
+    let updateFields = { ...user_data };
+
+    // 🔹 Si hay contraseña en los datos enviados, la hasheamos
+    if (user_data.password) {
+      updateFields.password = await hash(user_data.password, 10);
+    }
+
+    const userExist= await UserRepository.findUserById(id_user);
+    if(!userExist){
+      return{
+        success: false,
+        message: 'El Usuario no Existe'
+      }
+    }
+
+    // 🔹 Intentar actualizar el usuario
+    const userUpdated = await UserRepository.updateUser(id_user, updateFields);
+
+    if (!userUpdated) {
+      return {
+        success: false,
+        message: "Usuario no encontrado o no actualizado",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Usuario actualizado correctamente",
+      data: userUpdated,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Error al actualizar el usuario",
+      error: error.message,
+    };
+  }
+};
+
 export {
   insertUser,
   getUser,
@@ -178,5 +230,6 @@ export {
   deleteUser,
   loginUser,
   VerifyAuthUser,
-  findUserById
+  findUserById,
+  updateUser,
 };
