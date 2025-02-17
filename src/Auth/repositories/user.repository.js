@@ -17,7 +17,16 @@ const findUserByEmail = async (email) => {
 };
 
 const findUserById = async (id_user) => {
-  return await UserModel.findById(id_user).select("-password");
+  return await UserModel.findById(id_user)
+    .select("-password")
+    .populate({
+      path: "idRole",
+      select: "-description ",
+    })
+    .populate({
+      path: "idCargo",
+      select: "-description ",
+    });
 };
 
 const findUserByIdentificationNumber = async (numeroDocumento) => {
