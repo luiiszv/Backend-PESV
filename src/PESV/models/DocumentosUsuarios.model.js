@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { string } from "zod";
 
 const DocumentosUsuariosSchema = new Schema({
   idUsuario: {
@@ -22,6 +23,10 @@ const DocumentosUsuariosSchema = new Schema({
   fechaExpiracion: {
     type: Date,
     require: true,
+  },
+  assetId: {
+    type: String,
+    require: true
   },
   ruta: {
     type: String,

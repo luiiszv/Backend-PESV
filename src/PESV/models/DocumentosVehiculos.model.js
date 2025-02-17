@@ -23,6 +23,10 @@ const DocumentosVehiculeModel = new Schema({
     type: Date,
     require: true,
   },
+  assetId: {
+    type: String,
+    require: true
+  },
   ruta: {
     type: String,
     require: true,

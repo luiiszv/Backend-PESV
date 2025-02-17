@@ -23,7 +23,10 @@ export const uploadVehiculosCloudinary = async (filePath, fileName) => {
       ],
       format: "pdf", // Asegurar que el archivo sea PDF
     });
-    return res.secure_url;
+    return {
+      secure_url: res.secure_url, // URL segura para descargar
+      asset_id: res.asset_id,   // Asset ID o public_id
+    };
   } catch (error) {
     console.error('Error en Cloudinary:', error);
     throw new Error('Error al subir archivo a Cloudinary');
@@ -42,12 +45,30 @@ export const uploadUsuariosCloudinary = async (filePath, fileName) => {
       ],
       format: "pdf", // Archivo sea PDF
     });
-    return res.secure_url;
+
+    console.log(res);
+
+    return {
+      secure_url: res.secure_url, // URL segura para descargar
+      asset_id: res.asset_id,   // Asset ID o public_id
+    };;
   } catch (error) {
     console.error('Error en Cloudinary:', error);
     throw new Error('Error al subir archivo a Cloudinary');
   }
 };
+
+export const downloadFileCloudinary = async (asset_id) => {
+  try {
+    // Generar la URL de descarga usando el Asset ID
+    const url = ` https://res-console.cloudinary.com/pdfdocs/media_explorer_thumbnails/${asset_id}/download` //el name luego se pone desde el .env
+    return url;  // URL pública para descarga usando el Asset ID
+  } catch (error) {
+    console.error('Error al generar el enlace de descarga:', error);
+    return null;
+  }
+};
+
 
 
 

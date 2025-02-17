@@ -11,6 +11,7 @@ import {
   findPreguntasByClaseVehiculo,
   registerAdminVehiculos,
   getUsersPagination,
+  getVehiucleById
 } from "../controllers/admin.controller.js";
 
 const adminRoutes = Router();
@@ -798,5 +799,7 @@ adminRoutes.post(
   authAdminMiddleware,
   registerAdminVehiculos
 );
+
+adminRoutes.get('/vehiculo/:id', authMiddleware, getVehiucleById)
 
 export default adminRoutes;

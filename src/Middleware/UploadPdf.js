@@ -35,13 +35,18 @@ export const uploadUserMiddleware = async (req, res, next) => {
 
       // Subir a Cloudinary
       const fileUrl = await uploadUsuariosCloudinary(file.tempFilePath, file.name);
+      // Obtener el Asset ID (public_id)
+
       // Eliminar archivo temporal
       fs.unlinkSync(file.tempFilePath);
+
+
 
       uploadedFiles.push({
         idUsuario,
         name: file.name,
-        ruta: fileUrl,
+        ruta: fileUrl.secure_url,
+        assetId: fileUrl.asset_id,
         tipoDocumentoId: fileData.meta.tipoDocumentoId,
         numeroDocumento: fileData.meta.numeroDocumento,
         fechaExpiracion: fileData.meta.fechaExpiracion
@@ -84,7 +89,7 @@ export const uploadVehiculeMiddleware = async (req, res, next) => {
 
 
     let uploadedFiles = [];
-    console.log('files',req.files)
+    console.log('files', req.files)
 
     for (const fileData of filesData) {
       const file = req.files[fileData.key];
@@ -105,7 +110,8 @@ export const uploadVehiculeMiddleware = async (req, res, next) => {
       uploadedFiles.push({
         idVehiculo,
         name: file.name,
-        ruta: fileUrl,
+        ruta: fileUrl.secure_url,
+        assetId: fileUrl.asset_id,
         tipoDocumentoId: fileData.meta.tipoDocumentoId,
         numeroDocumento: fileData.meta.numeroDocumento,
         fechaExpiracion: fileData.meta.fechaExpiracion

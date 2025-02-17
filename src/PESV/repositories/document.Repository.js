@@ -1,5 +1,6 @@
 import DocumentosUsuarioModel from "../models/DocumentosUsuarios.model.js";
 import DocumentosVehiculoModel from "../models/DocumentosVehiculos.model.js";
+import TipoDocumentsModel from "../models/TipoDocumentos.model.js"
 
 const saveUserDocument = async (documentData) => {
   const newDocument = new DocumentosUsuarioModel(documentData);
@@ -13,4 +14,17 @@ const saveVehiculeDocument = async (documentData) => {
   return newDocument;
 };
 
-export default { saveUserDocument, saveVehiculeDocument };
+const getDocumentsByIdVehiculo = async (id_vehiculo) => {
+  return DocumentosVehiculoModel.find({ idVehiculo: id_vehiculo }).populate({
+    path: 'tipoDocumentoId',
+    select: '-categoria -descripcion'
+
+  })
+}
+
+const getDocumentsByIdUser = async (id_user) => {
+  return DocumentosUsuarioModel.find({ getDocumentsByIdUser: id_user });
+
+}
+
+export default { saveUserDocument, saveVehiculeDocument, getDocumentsByIdVehiculo, getDocumentsByIdUser };

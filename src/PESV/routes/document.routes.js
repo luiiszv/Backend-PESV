@@ -2,9 +2,10 @@ import { Router } from "express";
 import {
   uploadUserDocument,
   uploadVehiculeDocument,
-  getAllDocuments
+  getAllDocuments,
+  downloadDocumentByRuta
 } from "../controllers/document.controller.js";
-import { uploadVehiculeMiddleware, uploadUserMiddleware } from "../../Middleware/UploadPdf.js";
+import { uploadVehiculeMiddleware, uploadUserMiddleware, } from "../../Middleware/UploadPdf.js";
 
 const routerDocuments = Router();
 
@@ -124,6 +125,8 @@ routerDocuments.post("/uploadUserFile", uploadUserMiddleware, uploadUserDocument
  *                   example: "Bad request"
  */
 routerDocuments.post("/uploadVehiculeFile", uploadVehiculeMiddleware, uploadVehiculeDocument);
+
+routerDocuments.get('/download/:id', downloadDocumentByRuta);
 
 
 

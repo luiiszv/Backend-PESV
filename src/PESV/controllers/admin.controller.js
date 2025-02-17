@@ -10,8 +10,10 @@ import {
   insertAdminVehiculos,
   findUsersPagination,
 } from "../services/admin.service.js";
+import { findVehiculeById } from "../services/vehicule.service.js";
 
 import { findPreguntasByIdClaseVehiculo } from "../services/preguntas.service.js";
+import mongoose from "mongoose";
 
 export const getUsersPagination = async (req, res) => {
   try {
@@ -152,3 +154,16 @@ export const registerAdminVehiculos = async (req, res) => {
     });
   }
 };
+
+export const getVehiucleById = async (req, res) => {
+  try {
+    const response = await findVehiculeById(req.params.id);
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      message: "Something went wrong in getVehiucleById",
+    });
+  }
+
+}

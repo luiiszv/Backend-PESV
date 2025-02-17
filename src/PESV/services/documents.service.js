@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import DocumentsRepository from "../repositories/document.Repository.js";
 
 
@@ -53,5 +54,65 @@ export const saveDocumentVehiculeToDatabase = async (documentData) => {
     throw new Error("Error general al guardar los documentos en la base de datos");
   }
 };
+
+export const getDocuemntsByIdVehiculo = async (id_vehiculo) => {
+  if (!id_vehiculo) {
+    return {
+      success: false,
+      message: 'Id del Vehiculo es requerido'
+    }
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(id_vehiculo)) {
+    return {
+      suceess: false,
+      message: 'Id del Vehiculo no es valido'
+    }
+  }
+
+  const docsVehicule = await DocumentsRepository.getDocumentsByIdVehiculo(id_vehiculo);
+  if (!docsVehicule && docsVehicule.lenght < 0) {
+    return {
+      success: false,
+      message: 'No hay documentos aún'
+    }
+  }
+
+  return {
+    success: true,
+    data: docsVehicule
+  }
+
+
+}
+
+export const getDocuemntsByIdUser = async (id_user) => {
+  if (!id_user) {
+    return {
+      success: false,
+      message: 'Id del Usuario es requerido'
+    }
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(id_user)) {
+    return {
+      suceess: false,
+      message: 'Id del Usuario no es valido'
+    }
+  }
+
+  const docsUser = await DocumentsRepository.getDocumentsByIdUser(id_user);
+  if (!docsUser && docsUser.lenght < 0) {
+    return {
+      success: false,
+      message: 'No hay documentos aún'
+    }
+  }
+
+  return {
+    success: true,
+    data: docsUser
+  }
+}
 
 

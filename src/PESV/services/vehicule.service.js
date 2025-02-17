@@ -3,6 +3,7 @@ import ClaseVehiculoRepository from "../repositories/claseVehiculos.repository.j
 import TipoVehiculoRepository from "../repositories/tipoVehiculo.repository.js";
 import zonaRepository from "../repositories/zona.repository.js";
 import ZonaModel from "../models/Zona.model.js";
+import mongoose from "mongoose";
 
 export const findAllVehiculos = async () => {
   const vehiculos = await VehiculeRepository.findAllVehiculos();
@@ -128,3 +129,34 @@ export const findSelectInformationVehiculos = async () => {
     servicio: servicioEnum,
   };
 };
+
+export const findVehiculeById = async (id_vehiculo) => {
+  if (!id_vehiculo) {
+    return {
+      success: false,
+      message: 'Id del vehicuo es requerido'
+    }
+  }
+  if (!mongoose.Types.ObjectId.isValid(id_vehiculo)) {
+    return {
+      success: false,
+      message: "Id del Vehiculo no es válido",
+    };
+  }
+
+
+
+  const response = await VehiculeRepository.findVehiculeById(id_vehiculo);
+  if (!response) {
+    return {
+      success: false,
+      message: 'Vehiculo no Encontrado'
+    }
+  }
+  return {
+    success: true,
+    data: response
+  }
+
+
+}
