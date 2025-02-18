@@ -175,6 +175,14 @@ export const updateVehicule = async (id_vehiculo, vehiculo_data) => {
 
   const placaUpper = placa.toUpperCase();
 
+  const placaExist = await VehiculeRepository.findVehiculeByPlaca(placaUpper);
+  if (placaExist) {
+    return {
+      success: false,
+      message: 'Placa Ya Existe'
+    }
+  }
+
   const vehiuleUperPlaca = { ...vehiculo_data, placa: placaUpper };
 
   const response = await VehiculeRepository.updateVehicule(
