@@ -800,6 +800,9 @@ adminRoutes.post(
   registerAdminVehiculos
 );
 
-adminRoutes.get('/vehiculo/:id', authMiddleware, getVehiucleById)
+adminRoutes.get('/vehiculo/:id', authMiddleware, getVehiucleById);
+
+
+
 
 export default adminRoutes;

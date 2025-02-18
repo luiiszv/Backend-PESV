@@ -1,7 +1,8 @@
 import {
   userProfile,
   findPreguntasByClaseVehiculesActive,
-  getAllSelctUser
+  getAllSelctUser,
+  getDocuemntsByIdUser
 } from "../services/users.service.js";
 
 import {
@@ -72,4 +73,18 @@ export const getSelectRegisterUser = async (req, res) => {
       error,
     });
   }
-}
+};
+
+export const getDocsByIdUser = async (req, res) => {
+  try {
+    const id_user = req.params.id;
+    const response = await getDocuemntsByIdUser(id_user);
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      message: "Something went wrong in getDocuemntsByIdUser",
+      error,
+    });
+  }
+};

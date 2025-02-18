@@ -1,5 +1,7 @@
 import UserModel from "../../Auth/models/UserModel.js";
 import CargoModel from "../models/Cargos.model.js";
+
+
 const getAllUsers = async () => {
   return await UserModel.find().populate("idCargo").select('-password');
 };
@@ -68,6 +70,14 @@ const findTipoLicenciaEnum = async () => {
     name: value,
   }));
 
+}
+
+const getDocumentsByIdUser = async (id_vehiculo) => {
+  return DocumentosVehiculoModel.find({ idVehiculo: id_vehiculo }).populate({
+    path: 'tipoDocumentoId',
+    select: '-categoria -descripcion'
+
+  })
 }
 
 

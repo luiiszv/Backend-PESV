@@ -7,34 +7,33 @@ const findAllVehiculosByIdUser = async (id_user) => {
 const findAllVehiculos = async () => {
   return VehiculosModel.find()
     .populate({
-      path: 'idUsuario',
-      select: '-fechaNacimiento -password -email -createdAt -updatedAt -idRole'
+      path: "idUsuario",
+      select: "-fechaNacimiento -password -email -createdAt -updatedAt -idRole",
     })
     .populate({
-      path: 'idUsuarioAsignado',
-      select: '-fechaNacimiento -password -email -createdAt -updatedAt -idRole'
+      path: "idUsuarioAsignado",
+      select: "-fechaNacimiento -password -email -createdAt -updatedAt -idRole",
     })
     .populate({
-      path: 'idClaseVehiculo',
-      select: '-description'
+      path: "idClaseVehiculo",
+      select: "-description",
     });
 };
 
-
-
-
 const findVehiculeById = async (id_vehicule) => {
-  return await VehiculosModel.findById(id_vehicule).populate({
-    path: 'idClaseVehiculo',
-    select: ''
-  }).populate({
-    path: 'idTipoVehiculo',
-    select: ''
-  }).populate({
-    path: 'idZona',
-    select: '-codeZona'
-  })
-    ;
+  return await VehiculosModel.findById(id_vehicule)
+    .populate({
+      path: "idClaseVehiculo",
+      select: "",
+    })
+    .populate({
+      path: "idTipoVehiculo",
+      select: "",
+    })
+    .populate({
+      path: "idZona",
+      select: "-codeZona",
+    });
 };
 
 const findVehiculeByPlaca = async (placa_vehicule) => {
@@ -54,12 +53,15 @@ const insertVehiculo = async (vehiculo_data) => {
 };
 
 const findEnumValues = () => {
-  return VehiculosModel.schema.path("servicio").enumValues.map(value => ({
+  return VehiculosModel.schema.path("servicio").enumValues.map((value) => ({
     _id: value,
     name: value,
   }));
 };
 
+const updateVehicule = async (id_vehiculo, vehicule_data) => {
+  return await VehiculosModel.updateOne({ _id: id_vehiculo }, vehicule_data);
+};
 
 export default {
   findAllVehiculosByIdUser,
@@ -68,7 +70,8 @@ export default {
   findVehiculeByPlaca,
   insertVehiculo,
   findAllVehiculos,
-  findEnumValues
+  findEnumValues,
+  updateVehicule
 };
 
 // .populate({

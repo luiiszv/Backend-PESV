@@ -134,8 +134,8 @@ export const findVehiculeById = async (id_vehiculo) => {
   if (!id_vehiculo) {
     return {
       success: false,
-      message: 'Id del vehicuo es requerido'
-    }
+      message: "Id del vehicuo es requerido",
+    };
   }
   if (!mongoose.Types.ObjectId.isValid(id_vehiculo)) {
     return {
@@ -144,19 +144,53 @@ export const findVehiculeById = async (id_vehiculo) => {
     };
   }
 
-
-
   const response = await VehiculeRepository.findVehiculeById(id_vehiculo);
   if (!response) {
     return {
       success: false,
-      message: 'Vehiculo no Encontrado'
-    }
+      message: "Vehiculo no Encontrado",
+    };
   }
   return {
     success: true,
-    data: response
+    data: response,
+  };
+};
+
+export const updateVehicule = async (id_vehiculo, vehiculo_data) => {
+  const { placa } = vehiculo_data;
+  if (!id_vehiculo) {
+    return {
+      success: false,
+      message: "Id del Vehiculo es requerido",
+    };
   }
 
+  if (!mongoose.Types.ObjectId.isValid(id_vehiculo)) {
+    return {
+      suceess: false,
+      message: "Id del Vehiculo no es valido",
+    };
+  }
 
-}
+  const placaUpper = placa.toUpperCase();
+
+  const vehiuleUperPlaca = { ...vehiculo_data, placa: placaUpper };
+
+  const response = await VehiculeRepository.updateVehicule(
+    id_vehiculo,
+    vehiuleUperPlaca
+  );
+
+  if (!response) {
+    return {
+      suceess: false,
+      message: "Vehiculo no Encontrado",
+    };
+  }
+
+  return {
+    success: true,
+    message: "Vehiculo Actualizado",
+  };
+};

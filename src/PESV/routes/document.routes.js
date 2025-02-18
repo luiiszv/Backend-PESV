@@ -11,40 +11,58 @@ const routerDocuments = Router();
 
 routerDocuments.get('/', getAllDocuments);
 
-/**
- * @swagger
- * tags:
- *   name: PESV Documents
- *   description: Endpoints for PESV document operations
- */
+
 
 /**
  * @swagger
- * /pesv/users/{id_user}/documents:
+ * /pesv/users/uploadUserFile:
  *   post:
- *     summary: Upload a user document
- *     tags: [PESV Documents]
- *     parameters: 
- *       - in: path
- *         name: id_user
- *         required: true
- *         schema:
- *           type: string
- *         description: ID of the user
+ *     summary: Subir documentos de Usuario
+ *     description: |
+ *       Permite subir múltiples documentos de usuario, como:
+ *       - **Licencia de Conducción**
+ *       - **Documento de Identidad**
+ *       
+ *       Cada documento debe enviarse con metadatos en formato JSON y el archivo en formato PDF.
+ *     tags: [PESV Documents ]
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         multipart/form-data:
  *           schema:
  *             type: object
+ *             required:
+ *               - idUsuario
+ *               - licencia
+ *               - documento
+ *               - licenciaDoc
+ *               - documentoDoc
  *             properties:
- *               file:
+ *               idUsuario:
+ *                 type: string
+ *                 description: ID del usuario al que se asociarán los documentos.
+ *                 example: "65bfb39d5e7f4e001c8a1234"
+ *               licencia:
+ *                 type: string
+ *                 description: JSON con los metadatos de la Licencia de Conducción.
+ *                 example: '{"tipoDocumentoId": "679318760a92a8075e0d81a1", "numeroDocumento": "ABC123456", "fechaExpiracion": "2026-05-10"}'
+ *               documento:
+ *                 type: string
+ *                 description: JSON con los metadatos del Documento de Identidad.
+ *                 example: '{"tipoDocumentoId": "679318760a92a8075e0d81a2", "numeroDocumento": "987654321", "fechaExpiracion": "2030-12-31"}'
+ *               licenciaDoc:
  *                 type: string
  *                 format: binary
- *                 description: The file to upload
+ *                 description: Archivo PDF de la Licencia de Conducción.
+ *               documentoDoc:
+ *                 type: string
+ *                 format: binary
+ *                 description: Archivo PDF del Documento de Identidad.
  *     responses:
  *       200:
- *         description: File uploaded successfully
+ *         description: Documentos subidos exitosamente.
  *         content:
  *           application/json:
  *             schema:
@@ -55,9 +73,35 @@ routerDocuments.get('/', getAllDocuments);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "File uploaded successfully"
+ *                   example: "Registro exitoso 🚙"
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       idUsuario:
+ *                         type: string
+ *                         example: "65bfb39d5e7f4e001c8a1234"
+ *                       name:
+ *                         type: string
+ *                         example: "licencia.pdf"
+ *                       ruta:
+ *                         type: string
+ *                         example: "https://cloudinary.com/licencia.pdf"
+ *                       assetId:
+ *                         type: string
+ *                         example: "asd123fgh456"
+ *                       tipoDocumentoId:
+ *                         type: string
+ *                         example: "679318760a92a8075e0d81a1"
+ *                       numeroDocumento:
+ *                         type: string
+ *                         example: "ABC123456"
+ *                       fechaExpiracion:
+ *                         type: string
+ *                         example: "2026-05-10"
  *       400:
- *         description: Bad request, missing file or incorrect format
+ *         description: Solicitud incorrecta, datos faltantes o archivo inválido.
  *         content:
  *           application/json:
  *             schema:
@@ -68,37 +112,108 @@ routerDocuments.get('/', getAllDocuments);
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: "Bad request"
+ *                   example: "Id del Usuario es requerido"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Error al subir archivos"
  */
 routerDocuments.post("/uploadUserFile", uploadUserMiddleware, uploadUserDocument);
+
 
 /**
  * @swagger
  * /pesv/vehiculos/uploadVehiculeFile:
  *   post:
- *     summary: Upload a vehicle document
- *     tags: [PESV Documents]
- *     parameters:
- *       - in: path
- *         name: id_user
- *         required: true
- *         schema:
- *           type: string
- *         description: ID of the user
+ *     summary: Subir documentos de un vehículo
+ *     description: |
+ *       Permite subir múltiples documentos asociados a un vehículo, incluyendo:
+ *       - **Tarjeta de Propiedad**
+ *       - **SOAT**
+ *       - **Tecnomecánica**
+ *       - **Póliza**
+ *       - **Tarjeta de Operación**
+ *       
+ *       Cada documento incluye metadatos como el ID del tipo de documento, número de documento y fecha de expiración.
+ *     tags:
+ *       - PESV Documents
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         multipart/form-data:
  *           schema:
  *             type: object
+ *             required:
+ *               - idVehiculo
+ *               - targPropiedad
+ *               - soat
+ *               - tecnoMecanica
+ *               - poliza
+ *               - targOperacion
+ *               - targPropiedadDoc
+ *               - soatDoc
+ *               - tecnoMecanicaDoc
+ *               - polizaDoc
+ *               - targOperacionDoc
  *             properties:
- *               file:
+ *               idVehiculo:
+ *                 type: string
+ *                 description: ID del vehículo al que se asociarán los documentos.
+ *                 example: "65bfb39d5e7f4e001c8a1234"
+ *               targPropiedad:
+ *                 type: string
+ *                 description: JSON con los metadatos de la Tarjeta de Propiedad.
+ *                 example: '{"tipoDocumentoId": "679318760a92a8075e0d8199", "numeroDocumento": "12345", "fechaExpiracion": "2025-12-31"}'
+ *               soat:
+ *                 type: string
+ *                 description: JSON con los metadatos del SOAT.
+ *                 example: '{"tipoDocumentoId": "679318760a92a8075e0d819a", "numeroDocumento": "67890", "fechaExpiracion": "2024-06-30"}'
+ *               tecnoMecanica:
+ *                 type: string
+ *                 description: JSON con los metadatos de la Tecnomecánica.
+ *                 example: '{"tipoDocumentoId": "679318760a92a8075e0d819b", "numeroDocumento": "54321", "fechaExpiracion": "2024-11-15"}'
+ *               poliza:
+ *                 type: string
+ *                 description: JSON con los metadatos de la Póliza.
+ *                 example: '{"tipoDocumentoId": "679318760a92a8075e0d819c", "numeroDocumento": "98765", "fechaExpiracion": "2025-01-01"}'
+ *               targOperacion:
+ *                 type: string
+ *                 description: JSON con los metadatos de la Tarjeta de Operación.
+ *                 example: '{"tipoDocumentoId": "679318760a92a8075e0d819e", "numeroDocumento": "11223", "fechaExpiracion": "2026-03-10"}'
+ *               targPropiedadDoc:
  *                 type: string
  *                 format: binary
- *                 description: The file to upload
+ *                 description: Archivo PDF de la Tarjeta de Propiedad.
+ *               soatDoc:
+ *                 type: string
+ *                 format: binary
+ *                 description: Archivo PDF del SOAT.
+ *               tecnoMecanicaDoc:
+ *                 type: string
+ *                 format: binary
+ *                 description: Archivo PDF de la Tecnomecánica.
+ *               polizaDoc:
+ *                 type: string
+ *                 format: binary
+ *                 description: Archivo PDF de la Póliza.
+ *               targOperacionDoc:
+ *                 type: string
+ *                 format: binary
+ *                 description: Archivo PDF de la Tarjeta de Operación.
  *     responses:
  *       200:
- *         description: File uploaded successfully
+ *         description: Documentos subidos exitosamente.
  *         content:
  *           application/json:
  *             schema:
@@ -109,9 +224,35 @@ routerDocuments.post("/uploadUserFile", uploadUserMiddleware, uploadUserDocument
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "File uploaded successfully"
+ *                   example: "Registro exitoso"
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       idVehiculo:
+ *                         type: string
+ *                         example: "65bfb39d5e7f4e001c8a1234"
+ *                       name:
+ *                         type: string
+ *                         example: "soat.pdf"
+ *                       ruta:
+ *                         type: string
+ *                         example: "https://cloudinary.com/soat.pdf"
+ *                       assetId:
+ *                         type: string
+ *                         example: "asd123fgh456"
+ *                       tipoDocumentoId:
+ *                         type: string
+ *                         example: "679318760a92a8075e0d819a"
+ *                       numeroDocumento:
+ *                         type: string
+ *                         example: "67890"
+ *                       fechaExpiracion:
+ *                         type: string
+ *                         example: "2024-06-30"
  *       400:
- *         description: Bad request, missing file or incorrect format
+ *         description: Solicitud incorrecta, datos faltantes o archivo inválido.
  *         content:
  *           application/json:
  *             schema:
@@ -122,11 +263,82 @@ routerDocuments.post("/uploadUserFile", uploadUserMiddleware, uploadUserDocument
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: "Bad request"
+ *                   example: "Id del Vehiculo es requerido"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Error al subir archivos"
  */
 routerDocuments.post("/uploadVehiculeFile", uploadVehiculeMiddleware, uploadVehiculeDocument);
 
+
+/**
+ * @swagger
+ * /pesv/users/documents/download/{assetId}:
+ *   get:
+ *     summary: Descarga un Documento con assetId
+ *     description: Permite descargar un documento previamente subido a Cloudinary mediante su `assetId`.
+ *     tags: [PESV Documents]
+ *     parameters:
+ *       - in: path
+ *         name: assetId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del documento almacenado en Cloudinary.
+ *         example: "asd123fgh456"
+ *     responses:
+ *       200:
+ *         description: URL de descarga generada exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 downloadUrl:
+ *                   type: string
+ *                   example: "https://res-console.cloudinary.com/pdfdocs/media_explorer_thumbnails/asd123fgh456/download"
+ *       400:
+ *         description: Faltó el assetId en la solicitud.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "La Ruta es requerida"
+ *       500:
+ *         description: Error interno del servidor al generar la URL de descarga.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: "Error al generar el enlace de descarga"
+ */
 routerDocuments.get('/download/:id', downloadDocumentByRuta);
+
 
 
 

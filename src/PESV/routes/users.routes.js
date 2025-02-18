@@ -7,7 +7,8 @@ import {
   getPreguntasByVehiculesActive,
   createVehiculo,
   getUserVehiculos,
-  getSelectRegisterUser
+  getSelectRegisterUser,
+  getDocsByIdUser
 } from "../controllers/users.controller.js";
 
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
@@ -333,6 +334,11 @@ routerUser.get("/preguntas/clase-vehiculo/:id", authMiddleware, getPreguntasByVe
  *         description: Error interno del servidor.
  */
 routerUser.get('/select-register', authMiddleware, getSelectRegisterUser);
+
+
+
+routerUser.get("/documents/:id", authMiddleware, getDocsByIdUser);
+
 
 
 
