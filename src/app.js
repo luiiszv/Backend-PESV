@@ -20,19 +20,27 @@ app.use(express.json());
 
 app.use(morgan("dev"));
 
-const corsOptions = {
-  origin: '*',
-  methods: 'GET,POST,PATCH,DELETE',
+const allowedOrigins = ['https://backend-pesv.vercel.app', 'http://localhost:5173'];
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('CORS no permitido'));
+  },
   credentials: true,
-};
-app.use(cors(corsOptions));
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
 
-// app.use(cors({
-//   origin: "http://localhost:5173",
+// const corsOptions = {
+//   origin: '*',
+//   methods: 'GET,POST,PATCH,DELETE',
 //   credentials: true,
-//   allowedHeaders: ["Content-Type", "Authorization"],
-//   methods: ["GET", "POST", "PUT", "DELETE"],
-// }));
+// };
+// app.use(cors(corsOptions));
+
+
 
 
 //SwaggerDocs
@@ -42,12 +50,14 @@ app.use(fileUpload({
   tempFileDir: '/tmp/', // Carpeta temporal donde guarda los archivos
 }));
 
-app.use('/auth', authRoutes);
-app.use('/pesv', PESVRoutes);
-
 app.use('/', (req, res) => {
   res.send("Api Up")
 });
+
+app.use('/auth', authRoutes);
+app.use('/pesv', PESVRoutes);
+
+
 
 
 
