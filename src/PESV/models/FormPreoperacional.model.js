@@ -7,15 +7,10 @@ const FormPreoperacionalSchema = new Schema({
         ref: 'usuarios',
         require: true
     },
-    tipoFormulario: {
-        type: String,
-        enum: ["Pre-operacional", "Desplazamientos"],
-        required: true,
-    },
-    claseVehiculo: {
+    formularioId: {
         type: Schema.Types.ObjectId,
-        ref: "clase_vehiculos",
-        required: true,
+        ref: 'formularios',
+        require: true
     },
     respuestas: [
         {
@@ -33,13 +28,7 @@ const FormPreoperacionalSchema = new Schema({
     fechaRespuesta: {
         type: Date,
         default: Date.now, //  fecha por defecto
-    },
-    estadoForm: {
-        type: String, // Cambiado a String para soportar el enum
-        enum: ["Completado", "Completado con Errores"],
-        default: "Completado",
-    },
-
+    }
 
 })
 
