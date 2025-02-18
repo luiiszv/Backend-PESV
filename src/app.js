@@ -50,9 +50,7 @@ app.use(fileUpload({
   tempFileDir: '/tmp/', // Carpeta temporal donde guarda los archivos
 }));
 
-app.use('/', (req, res) => {
-  res.send("Api Up")
-});
+
 
 app.use('/auth', authRoutes);
 app.use('/pesv', PESVRoutes);
