@@ -3,25 +3,27 @@ import { Schema, model } from "mongoose";
 const FormulariosSchema = new Schema(
     {
         nombreFormulario: {
-            type: String, //Para Inactivarla en caso de que no se use mas
+            type: String,
             require: true,
         },
         preguntas: [
             {
                 type: Schema.Types.ObjectId,
                 ref: "preguntas_formularios",
-                default: null,
+
             },
         ],
-        idClaseVehiculo: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: "clase_vehiculos",
-                required: true,
-            }
-        ],
+        idClaseVehiculo: {
+            type: Schema.Types.ObjectId,
+            ref: "clase_vehiculos",
+            required: true,
+        },
+        version: {
+            type: Number,
+            required: true
+        },
         estadoFormulario: {
-            type: Boolean, //Para Inactivarla en caso de que no se use mas
+            type: Boolean,
             require: true,
             default: true,
         },

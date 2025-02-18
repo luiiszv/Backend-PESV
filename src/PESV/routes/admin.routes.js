@@ -8,7 +8,6 @@ import {
   getUserById,
   getVehiclosByUser,
   getPreguntaById,
-  findPreguntasByClaseVehiculo,
   registerAdminVehiculos,
   getUsersPagination,
   getVehiucleById
@@ -257,88 +256,7 @@ adminRoutes.put(
   changeStatusPregunta
 );
 
-/**
- * @swagger
- * /admin/preguntas/claseVehiculo/{id}:
- *   get:
- *     summary: Obtiene todas las preguntas relacionadas con una clase de vehículo.
- *     description: Retorna una lista de preguntas asociadas a un tipo de vehículo específico en el sistema.
- *     tags:
- *       - PESV Administración de Preguntas
- *     security:
- *       - BearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID de la clase de vehículo para obtener sus preguntas.
- *     responses:
- *       200:
- *         description: Preguntas obtenidas correctamente.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 data:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: string
- *                         example: "60a2f4981b865c1a4cfb65e3"
- *                       preguntaTexto:
- *                         type: string
- *                         example: "¿Cuál es la frecuencia de mantenimiento recomendada?"
- *                       determinancia:
- *                         type: boolean
- *                         example: false
- *                       estadoPregunta:
- *                         type: boolean
- *                         example: true
- *       400:
- *         description: ID de clase de vehículo inválido.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "ID de clase de vehículo inválido."
- *       404:
- *         description: No hay preguntas registradas para esta clase de vehículo.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "No hay preguntas registradas para esta clase de vehículo."
- *       401:
- *         description: No autorizado, token no válido o no presente.
- *       500:
- *         description: Error interno del servidor.
- */
-adminRoutes.get(
-  "/preguntas/claseVehiculo/:id",
-  authMiddleware,
-  authAdminMiddleware,
-  findPreguntasByClaseVehiculo
-);
+
 
 /**
  * @swagger

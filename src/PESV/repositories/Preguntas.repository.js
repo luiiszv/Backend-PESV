@@ -28,14 +28,7 @@ const updatePregunta = async (pregunta_data) => {
     )
 }
 
-const changeEstadoPregunta = async (id_pregunta, nuevoEstado) => {
-    return await PreguntasModel.updateOne(
-        { _id: id_pregunta },
-        { $set: { estadoPregunta: nuevoEstado } },
-        { runValidators: true }
-    )
 
-}
 
 const findPreguntasByIdClaseVehiculo = async (id_clase_vehiculo) => {
     return await PreguntasModel.find({ idClaseVehiculo: id_clase_vehiculo });
@@ -54,7 +47,7 @@ export default {
     insertPreguntas,
     updatePregunta,
     findPreguntaById,
-    changeEstadoPregunta,
+
     findPreguntasByIdClaseVehiculo,
     findPreguintaByPreguntaTexto
 }

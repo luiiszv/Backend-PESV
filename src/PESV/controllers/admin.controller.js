@@ -12,8 +12,7 @@ import {
 } from "../services/admin.service.js";
 import { findVehiculeById } from "../services/vehicule.service.js";
 
-import { findPreguntasByIdClaseVehiculo } from "../services/preguntas.service.js";
-import mongoose from "mongoose";
+
 
 export const getUsersPagination = async (req, res) => {
   try {
@@ -127,19 +126,7 @@ export const getVehiclosByUser = async (req, res) => {
   }
 };
 
-export const findPreguntasByClaseVehiculo = async (req, res) => {
-  console.log("clase vehiculo preguntas", req.params.id);
-  try {
-    const idClaseVehiculo = req.params.id; //idVehiuclo envaido desde params
-    const response = await findPreguntasByIdClaseVehiculo(idClaseVehiculo);
-    res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({
-      message: "Something went wrong in findPreguntasByClaseVehiculo",
-    });
-  }
-};
+
 
 export const registerAdminVehiculos = async (req, res) => {
   try {

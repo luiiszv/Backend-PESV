@@ -18,9 +18,7 @@ export const authMiddleware = (req, res, next) => {
     // const authorization =
     //   req.headers.authorization || req.headers["cookie"]?.split("=")[1];
 
-    const authorization = req.headers.authorization.split(' ')[1];
-
-
+    const authorization = req.headers.authorization?.split(' ')[1];
 
     if (!authorization) {
       res.status(401).json({ success: false, error: "Token no proporcionado" });
@@ -37,6 +35,7 @@ export const authMiddleware = (req, res, next) => {
     req.user = validation;
     return next();
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       success: false,
       error: "Error interno en el middleware de autenticación",
