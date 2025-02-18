@@ -16,9 +16,9 @@ export const validateToken = (token) => {
 export const authMiddleware = (req, res, next) => {
   try {
     const authorization =
-      req.headers.authorization || req.headers["cookie"]?.split("=")[1];
+      req.headers.authorization;
 
-   
+
 
     console.log(authorization);
 
