@@ -179,7 +179,7 @@ export const updateVehicule = async (id_vehiculo, vehiculo_data) => {
   if (placaExist) {
     return {
       success: false,
-      message: 'Placa Ya Existe'
+      message: 'Placa ya Existe'
     }
   }
 

@@ -72,8 +72,10 @@ export const login = async ({ body }, res) => {
 
 export const verifyToken = async (req, res) => {
   try {
-    const authorization = req.headers.authorization;
-    console.log(req.headers.authorization);
+    const authorization = req.headers.authorization.split(' ')[1] ;
+    // console.log(req.headers.authorization);
+    console.log(req.headers['authorization'].split(' ')[1]);
+
     if (!authorization)
       return res.status(401).json({ message: "Token not Provided" });
 

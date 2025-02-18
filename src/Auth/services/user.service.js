@@ -131,8 +131,7 @@ const loginUser = async (email, password) => {
 };
 
 const VerifyAuthUser = async (token) => {
-  const tokenSplit = token.split("=")?.[1]; //Raroo
-  const responseValidation = validateToken(tokenSplit);
+  const responseValidation = validateToken(token);
 
   if (!responseValidation) {
     return {
