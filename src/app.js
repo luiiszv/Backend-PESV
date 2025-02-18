@@ -20,12 +20,19 @@ app.use(express.json());
 
 app.use(morgan("dev"));
 
-app.use(cors({
-  origin: "http://localhost:5173",
+const corsOptions = {
+  origin: '*',
+  methods: 'GET,POST,PATCH,DELETE',
   credentials: true,
-  allowedHeaders: ["Content-Type", "Authorization"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-}));
+};
+app.use(cors(corsOptions));
+
+// app.use(cors({
+//   origin: "http://localhost:5173",
+//   credentials: true,
+//   allowedHeaders: ["Content-Type", "Authorization"],
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+// }));
 
 
 //SwaggerDocs
