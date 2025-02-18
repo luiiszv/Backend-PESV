@@ -20,14 +20,12 @@ app.use(express.json());
 
 app.use(morgan("dev"));
 
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-  })
-);
+app.use(cors({
+  origin: "*", // Permitir solicitudes desde cualquier origen
+  credentials: true, // Permitir el envío de cookies (si es necesario)
+  allowedHeaders: ["Content-Type", "Authorization"], // Cabeceras permitidas
+  methods: ["GET", "POST", "PUT", "DELETE"], // Métodos permitidos
+}));
 
 
 //SwaggerDocs
@@ -40,7 +38,7 @@ app.use(fileUpload({
 app.use('/auth', authRoutes);
 app.use('/pesv', PESVRoutes);
 
-app.use('/', (req, res) => {
+app.use('/', (req,res)=>{
   res.send("Api Up")
 });
 
