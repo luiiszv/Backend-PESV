@@ -20,12 +20,7 @@ app.use(express.json());
 
 app.use(morgan("dev"));
 
-const corsOptions = {
-  origin: '*',
-  methods: 'GET,POST,PATCH,DELETE',
-  credentials: true,
-};
-app.use(cors(corsOptions));
+
 
 app.use(cors({
   origin: "http://localhost:5173", 
