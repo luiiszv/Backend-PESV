@@ -1,3 +1,4 @@
+
 import VehiculosModel from "../models/vehiculos.model.js";
 import ClaseVehiculoModel from "../models/ClaseVehiuclos.model.js";
 const findAllVehiculosByIdUser = async (id_user) => {
