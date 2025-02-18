@@ -72,7 +72,7 @@ export const login = async ({ body }, res) => {
 
 export const verifyToken = async (req, res) => {
   try {
-    const authorization = req.headers.authorization || req.headers["cookie"];
+    const authorization = req.headers.authorization;
     console.log(req.headers.authorization);
     if (!authorization)
       return res.status(401).json({ message: "Token not Provided" });
