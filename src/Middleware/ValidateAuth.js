@@ -16,11 +16,9 @@ export const validateToken = (token) => {
 export const authMiddleware = (req, res, next) => {
   try {
     const authorization =
-      req.headers.authorization;
+      req.headers.authorization || req.headers["cookie"]?.split("=")[1];
 
 
-
-    console.log(authorization);
 
     if (!authorization) {
       res.status(401).json({ success: false, error: "Token no proporcionado" });
