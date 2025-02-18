@@ -37,7 +37,7 @@ export const getUserById = async (req, res) => {
     const id_user = req.params.id;
     const response = await findUserById(id_user);
     res.status(200).json(response);
-  } catch (error) {}
+  } catch (error) { }
 };
 
 export const getAllUsers = async (req, res) => {
@@ -73,6 +73,7 @@ export const login = async ({ body }, res) => {
 export const verifyToken = async (req, res) => {
   try {
     const authorization = req.headers.authorization || req.headers["cookie"];
+    console.log(req.headers.authorization);
     if (!authorization)
       return res.status(401).json({ message: "Token not Provided" });
 
