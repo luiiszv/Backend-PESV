@@ -28,8 +28,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(cors({
-  origin: "*",
-  credentials: false,
+  origin: "http://localhost:5173/", 
+  credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],
   methods: ["GET", "POST", "PUT", "DELETE"],
 }));
