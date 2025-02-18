@@ -1,10 +1,18 @@
 {
     "version": 2,
     "builds": [
-      { "src": "index.js", "use": "@vercel/node" }
+        {
+            "src": "src/index.js",
+            "use": "@vercel/node"
+        }
     ],
     "routes": [
-      { "src": "/(.*)", "dest": "/index.js" }
+        {
+            "src": "/(.*)",
+            "dest": "/src/index.js"
+        }
     ],
-    "regions": ["iad1"]
-  }
+    "regions": [
+        "iad1"
+    ]
+}
