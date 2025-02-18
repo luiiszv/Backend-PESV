@@ -40,6 +40,11 @@ app.use(fileUpload({
 app.use('/auth', authRoutes);
 app.use('/pesv', PESVRoutes);
 
+app.use('/', (req, res) => {
+  res.send("Api Up")
+});
+
+
 
 app.set("port", process.env.PORT || 4000);
 
