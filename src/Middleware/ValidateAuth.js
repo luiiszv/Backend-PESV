@@ -18,7 +18,9 @@ export const authMiddleware = (req, res, next) => {
     const authorization =
       req.headers.authorization || req.headers["cookie"]?.split("=")[1];
 
-      console.log(authorization);
+    console.log(req.headers.authorization);
+
+    console.log(authorization);
 
     if (!authorization) {
       res.status(401).json({ success: false, error: "Token no proporcionado" });
