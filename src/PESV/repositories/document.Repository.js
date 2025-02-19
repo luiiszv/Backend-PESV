@@ -29,49 +29,41 @@ const getDocumentsByIdUser = async (id_user) => {
 };
 
 export const findDocsPorExpirar = async (hoy, fechaLimite) => {
-  const [docsUserPorExp, docsVehiculePorExp, docsUserVencidos, docsVehiculeVencidos] = await Promise.all([
-    DocumentosUsuarioModel.find({
-      fechaExpiracion: { $gte: hoy, $lte: fechaLimite }
-    }).populate("idUsuario", "-password -idRole -createdAt -updatedAt -idCargo -tipoLicencia -telefono -fechaNacimiento")
-      .populate("tipoDocumentoId",  "-categoria -descripcion"),
-
-    DocumentosVehiculoModel.find({
-      fechaExpiracion: { $gte: hoy, $lte: fechaLimite }
-    }).populate("idVehiculo", "marca servicio placa")
+  const docs = await Promise.all([
+    DocumentosUsuarioModel.find().populate("idUsuario", "-password -idRole -createdAt -updatedAt -idCargo -tipoLicencia -telefono -fechaNacimiento")
       .populate("tipoDocumentoId", "-categoria -descripcion"),
-
-    DocumentosUsuarioModel.find({
-      fechaExpiracion: { $lt: hoy }
-    }).populate("idUsuario", "-password -idRole -createdAt -updatedAt -idCargo -tipoLicencia -telefono -fechaNacimiento")
-      .populate("tipoDocumentoId", "-categoria -descripcion"),
-
-    DocumentosVehiculoModel.find({
-      fechaExpiracion: { $lt: hoy }
-    }).populate("idVehiculo", "marca servicio placa")
+    DocumentosVehiculoModel.find().populate("idVehiculo", "marca servicio placa")
       .populate("tipoDocumentoId", "-categoria -descripcion")
   ]);
 
-  // Función para calcular días faltantes
-  const calcularDiasFaltantes = (fechaExpiracion) => {
-    const diferenciaMs = new Date(fechaExpiracion) - new Date(hoy);
-    return Math.ceil(diferenciaMs / (1000 * 60 * 60 * 24)); // Convertir ms a días
-  };
-
-  // Agregar la propiedad `diasFaltantes` a cada documento
-  docsUserPorExp.forEach(doc => {
-    doc._doc.diasFaltantes = calcularDiasFaltantes(doc.fechaExpiracion);
+  const allDocs = [...docs[0], ...docs[1]].map(doc => {
+    const diasFaltantes = Math.ceil((new Date(doc.fechaExpiracion) - new Date(hoy)) / (1000 * 60 * 60 * 24));
+    return {
+      ...doc._doc,
+      diasFaltantes,
+      estado: diasFaltantes < 0 ? "Expirado" : "Por Expirar"
+    };
   });
 
-  docsVehiculePorExp.forEach(doc => {
-    doc._doc.diasFaltantes = calcularDiasFaltantes(doc.fechaExpiracion);
-  });
+  const docsPorExpirar = allDocs.filter(doc => doc.diasFaltantes >= 0 && doc.diasFaltantes <= fechaLimite);
+  const docsExpirados = allDocs.filter(doc => doc.diasFaltantes < 0);
+
+  const totalProxVencer = docsPorExpirar.length;
+  const totalVencidos = docsExpirados.length;
+  const totalProxVencerUsuario = docsPorExpirar.filter(doc => doc.idUsuario).length;
+  const totalProxVencerVehiculo = docsPorExpirar.filter(doc => doc.idVehiculo).length;
+  const totalVencidosUsuario = docsExpirados.filter(doc => doc.idUsuario).length;
+  const totalVencidosVehiculo = docsExpirados.filter(doc => doc.idVehiculo).length;
 
   return {
-    docsUserPorExp,
-    docsVehiculePorExp,
-    docsUserVencidos,
-    docsVehiculeVencidos,
-    totalDocsVencidos: docsUserVencidos.length + docsVehiculeVencidos.length
+    documentosPorExpirar: docsPorExpirar,
+    documentosExpirados: docsExpirados,
+    totalProxVencer,
+    totalVencidos,
+    totalProxVencerUsuario,
+    totalProxVencerVehiculo,
+    totalVencidosUsuario,
+    totalVencidosVehiculo
   };
 };
 
