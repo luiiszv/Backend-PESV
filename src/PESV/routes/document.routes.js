@@ -3,9 +3,13 @@ import {
   uploadUserDocument,
   uploadVehiculeDocument,
   getAllDocuments,
-  downloadDocumentByRuta
+  downloadDocumentByRuta,
+  getDocumetosPorExpirar
 } from "../controllers/document.controller.js";
 import { uploadVehiculeMiddleware, uploadUserMiddleware, } from "../../Middleware/UploadPdf.js";
+//Middle
+import { authMiddleware } from "../../Middleware/ValidateAuth.js";
+
 
 const routerDocuments = Router();
 
@@ -338,6 +342,110 @@ routerDocuments.post("/uploadVehiculeFile", uploadVehiculeMiddleware, uploadVehi
  *                   example: "Error al generar el enlace de descarga"
  */
 routerDocuments.get('/download/:id', downloadDocumentByRuta);
+
+
+/**
+ * @swagger
+ * /pesv/documents/expirar:
+ *   get:
+ *     summary: Obtener documentos próximos a expirar
+ *     description: Retorna una lista de documentos de usuarios y vehículos que están por expirar en los próximos 60 días.
+ *     tags:
+ *       - PESV Documents
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de documentos próximos a expirar
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     docsUserExp:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           _id:
+ *                             type: string
+ *                             example: "65dfab12bcd..."
+ *                           idUsuario:
+ *                             type: object
+ *                             properties:
+ *                               _id:
+ *                                 type: string
+ *                                 example: "65aa98d5..."
+ *                               nombre:
+ *                                 type: string
+ *                                 example: "Juan Pérez"
+ *                           tipoDocumentoId:
+ *                             type: object
+ *                             properties:
+ *                               _id:
+ *                                 type: string
+ *                                 example: "6590f6a1..."
+ *                               nombre:
+ *                                 type: string
+ *                                 example: "Licencia de Conducción"
+ *                           fechaExpiracion:
+ *                             type: string
+ *                             format: date
+ *                             example: "2025-04-15"
+ *                           diasFaltantes:
+ *                             type: integer
+ *                             example: 30
+ *                     docsVehiculeExp:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           _id:
+ *                             type: string
+ *                             example: "65dfc34f5..."
+ *                           idVehiculo:
+ *                             type: object
+ *                             properties:
+ *                               _id:
+ *                                 type: string
+ *                                 example: "65ab2cd4..."
+ *                               marca:
+ *                                 type: string
+ *                                 example: "Toyota"
+ *                               servicio:
+ *                                 type: string
+ *                                 example: "Público"
+ *                               placa:
+ *                                 type: string
+ *                                 example: "ABC-123"
+ *                           tipoDocumentoId:
+ *                             type: object
+ *                             properties:
+ *                               _id:
+ *                                 type: string
+ *                                 example: "6590f6a1..."
+ *                               nombre:
+ *                                 type: string
+ *                                 example: "SOAT"
+ *                           fechaExpiracion:
+ *                             type: string
+ *                             format: date
+ *                             example: "2025-05-10"
+ *                           diasFaltantes:
+ *                             type: integer
+ *                             example: 55
+ *       401:
+ *         description: No autorizado, falta token de autenticación
+ *       500:
+ *         description: Error interno del servidor
+ */
+routerDocuments.get('/expirar', authMiddleware, getDocumetosPorExpirar);
 
 
 

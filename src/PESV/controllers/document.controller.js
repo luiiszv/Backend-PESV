@@ -2,6 +2,7 @@ import { json } from "express";
 import {
   saveDocumentUserToDatabase,
   saveDocumentVehiculeToDatabase,
+  findDocsPorExpirar
 } from "../services/documents.service.js";
 
 import { downloadFileCloudinary } from "../../config/cloudinary.js";
@@ -81,6 +82,19 @@ export const downloadDocumentByRuta = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+
+export const getDocumetosPorExpirar = async (req, res) => {
+  try {
+    const response = await findDocsPorExpirar();
+    res.status(200).json(response)
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+
+  }
+}
 
 
 

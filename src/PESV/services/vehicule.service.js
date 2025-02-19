@@ -202,3 +202,4 @@ export const updateVehicule = async (id_vehiculo, vehiculo_data) => {
     message: "Vehiculo Actualizado",
   };
 };
+

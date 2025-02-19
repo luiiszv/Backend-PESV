@@ -116,3 +116,24 @@ export const getDocuemntsByIdUser = async (id_user) => {
 }
 
 
+export const findDocsPorExpirar = async () => {
+  const hoy = new Date();
+  const fechaLimite = new Date();
+  fechaLimite.setDate(hoy.getDate() + 60);
+
+  const docs = await DocumentsRepository.findDocsPorExpirar(hoy, fechaLimite);
+  if (!docs) {
+    return {
+      success: false,
+      message: 'No hay documentos por expirar'
+    }
+  }
+
+  return {
+    success: true,
+    data: docs
+  };
+}
+
+
+
