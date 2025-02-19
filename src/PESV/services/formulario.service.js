@@ -70,6 +70,12 @@ export const findAllFomularios = async () => {
 };
 
 export const findFormualrioByID = async (id_formulario) => {
+  if (!mongoose.Types.ObjectId.isValid(id_formulario)) {
+    return {
+      success: false,
+      message: "Id del Formualrio no es valido"
+    }
+  }
   const response = await FormularioRepository.findFormualrioByID(id_formulario);
   if (!response) {
     return {
@@ -84,7 +90,7 @@ export const findFormualrioByID = async (id_formulario) => {
 };
 
 export const updateForm = async (id_form, new_data) => {
-  
+
   if (!id_form) {
     return {
       success: false,
