@@ -10,7 +10,6 @@ const FormulariosSchema = new Schema(
             {
                 type: Schema.Types.ObjectId,
                 ref: "preguntas_formularios",
-
             },
         ],
         idClaseVehiculo: {

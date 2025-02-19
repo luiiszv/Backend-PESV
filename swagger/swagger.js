@@ -23,8 +23,8 @@ const options = {
         ],
         servers: [
             {
-                url: 'https://backend-pesv.vercel.app/',
-                description: 'Serv',
+                url: 'http://localhost:4000',
+                description: 'Local server',
             },
         ],
     },

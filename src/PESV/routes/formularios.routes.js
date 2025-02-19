@@ -1,4 +1,9 @@
-import { getAllFormualarios, getFormularioById, registerFormualrio } from "../controllers/formularios.controller.js";
+import {
+  getAllFormualarios,
+  getFormularioById,
+  registerFormualrio,
+  uplaodFormulario,
+} from "../controllers/formularios.controller.js";
 import { Router } from "express";
 const formualriosRoutes = Router();
 import { authMiddleware } from "../../Middleware/ValidateAuth.js";
@@ -7,8 +12,6 @@ import { authAdminMiddleware } from "../../Middleware/ValidateAdmin.js";
 //Validate Shema
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
 import { regiterFormualarioSchema } from "../schemas/Formularios.schema.js";
-
-
 
 /**
  * @swagger
@@ -84,7 +87,12 @@ import { regiterFormualarioSchema } from "../schemas/Formularios.schema.js";
  *         description: Error interno del servidor
  */
 
-formualriosRoutes.get('/:id', authMiddleware, authAdminMiddleware, getFormularioById);
+formualriosRoutes.get(
+  "/:id",
+  authMiddleware,
+  authAdminMiddleware,
+  getFormularioById
+);
 
 /**
  * @swagger
@@ -150,14 +158,20 @@ formualriosRoutes.get('/:id', authMiddleware, authAdminMiddleware, getFormulario
  *         description: Error interno del servidor
  */
 
-formualriosRoutes.get('/', authMiddleware, authAdminMiddleware, getAllFormualarios);
-
+formualriosRoutes.get(
+  "/",
+  authMiddleware,
+  authAdminMiddleware,
+  getAllFormualarios
+);
 
 /**
  * @swagger
  * /pesv/formularios:
  *   post:
- *     summary: Registrar un nuevo formulario
+ *     summary: Crea un nuevo formulario y lo marca como activo.
+ *       Si ya existe un formulario activo de la misma clase de vehículo, este será desactivado automáticamente y el nuevo formulario tomará su lugar.
+ *       
  *     tags: [PESV Formularios]
  *     security:
  *       - BearerAuth: []
@@ -209,9 +223,105 @@ formualriosRoutes.get('/', authMiddleware, authAdminMiddleware, getAllFormualari
  *       500:
  *         description: Error interno del servidor
  */
-formualriosRoutes.post('/', authMiddleware, validateSchema(regiterFormualarioSchema), authAdminMiddleware, registerFormualrio);
+formualriosRoutes.post(
+  "/",
+  authMiddleware,
+  validateSchema(regiterFormualarioSchema),
+  authAdminMiddleware,
+  registerFormualrio
+);
 
+/**
+ * @swagger
+ * /pesv/formularios/update/{id}:
+ *   put:
+ *     summary: Actualizar un formulario existente
+ *     description: |
+ *       Permite actualizar la información de un formulario existente.
+ *       Se debe proporcionar el ID del formulario y los datos a modificar.
+ *       Solo se actualizarán los campos proporcionados en la solicitud.
+ *     tags: [PESV Formularios]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del formulario a actualizar.
+ *         example: "67b503ac3179215fba87d1a0"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombreFormulario:
+ *                 type: string
+ *                 description: 'Nombre del formulario (Ejemplo: "PreOperacional", "PostOperacional")'
+ *                 example: "PreOperacional"
+ *               idClaseVehiculo:
+ *                 type: string
+ *                 description: 'ID de la clase de vehículo asociada.'
+ *                 example: "67a50fff122183dc3aaddbb3"
+ *               preguntas:
+ *                 type: array
+ *                 description: 'Lista de IDs de preguntas asociadas.'
+ *                 items:
+ *                   type: string
+ *                 example: ["67a0f553be3516ce243fb140", "67a0f553be3516ce243fb141"]
+ *               estadoFormulario:
+ *                 type: boolean
+ *                 description: 'Estado del formulario (activo o inactivo).'
+ *                 example: true
+ *     responses:
+ *       200:
+ *         description: 'Formulario actualizado correctamente.'
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Formulario actualizado correctamente"
+ *                 data:
+ *                   type: object
+ *                   description: 'Datos actualizados del formulario.'
+ *       400:
+ *         description: 'Datos inválidos en la solicitud (Ejemplo: ID inválido o formato incorrecto).'
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "ID de formulario no es válido"
+ *       404:
+ *         description: 'Formulario no encontrado.'
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Formulario no encontrado"
+ *       500:
+ *         description: 'Error interno del servidor.'
+ */
 
+formualriosRoutes.put("/update/:id", authMiddleware, uplaodFormulario);
 export default formualriosRoutes;
-
-
