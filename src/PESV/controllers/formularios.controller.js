@@ -42,6 +42,7 @@ export const getFormularioById = async (req, res) => {
 export const uplaodFormulario = async (req, res) => {
   try {
     const { body, params } = req;
+    console.log("pasa");
     const response = await updateForm(params.id, body);
     res.status(200).json(response);
   } catch (error) {
