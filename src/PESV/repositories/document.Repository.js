@@ -29,7 +29,7 @@ const getDocumentsByIdUser = async (id_user) => {
 };
 
 export const findDocsPorExpirar = async (hoy, fechaLimite) => {
-  const [docsUserExp, docsVehiculeExp] = await Promise.all([
+  const [docsUserPorExp, docsVehiculePorExp, docsUserVencidos, docsVehiculeVencidos] = await Promise.all([
     DocumentosUsuarioModel.find({
       fechaExpiracion: { $gte: hoy, $lte: fechaLimite }
     }).populate("idUsuario", "-password -idRole -createdAt -updatedAt -idCargo -tipoLicencia -telefono -fechaNacimiento")
@@ -37,6 +37,16 @@ export const findDocsPorExpirar = async (hoy, fechaLimite) => {
 
     DocumentosVehiculoModel.find({
       fechaExpiracion: { $gte: hoy, $lte: fechaLimite }
+    }).populate("idVehiculo", "marca servicio placa")
+      .populate("tipoDocumentoId", "-categoria -descripcion"),
+
+    DocumentosUsuarioModel.find({
+      fechaExpiracion: { $lt: hoy }
+    }).populate("idUsuario", "-password -idRole -createdAt -updatedAt -idCargo -tipoLicencia -telefono -fechaNacimiento")
+      .populate("tipoDocumentoId", "-categoria -descripcion"),
+
+    DocumentosVehiculoModel.find({
+      fechaExpiracion: { $lt: hoy }
     }).populate("idVehiculo", "marca servicio placa")
       .populate("tipoDocumentoId", "-categoria -descripcion")
   ]);
@@ -48,17 +58,20 @@ export const findDocsPorExpirar = async (hoy, fechaLimite) => {
   };
 
   // Agregar la propiedad `diasFaltantes` a cada documento
-  docsUserExp.forEach(doc => {
+  docsUserPorExp.forEach(doc => {
     doc._doc.diasFaltantes = calcularDiasFaltantes(doc.fechaExpiracion);
   });
 
-  docsVehiculeExp.forEach(doc => {
+  docsVehiculePorExp.forEach(doc => {
     doc._doc.diasFaltantes = calcularDiasFaltantes(doc.fechaExpiracion);
   });
 
   return {
-    docsUserExp,
-    docsVehiculeExp
+    docsUserPorExp,
+    docsVehiculePorExp,
+    docsUserVencidos,
+    docsVehiculeVencidos,
+    totalDocsVencidos: docsUserVencidos.length + docsVehiculeVencidos.length
   };
 };
 
