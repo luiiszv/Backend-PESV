@@ -80,6 +80,7 @@ preguntasRoutes.post(
   "/",
   authMiddleware,
   authAdminMiddleware,
+  validateSchema(regiterPreguntasSchema),
   registerPregunta
 );
 
