@@ -18,9 +18,7 @@ const registerNotificacionesSchema = z.object({
   detalle: z
     .string({ required_error: "El detalle de la notificación es requerido" })
     .min(5, { message: "El detalle debe tener al menos 5 caracteres" }),
-  enviadoA: z
-    .array(z.enum(["usuario", "administrador"]))
-    .min(1, { message: "Debe especificar al menos un destinatario" }),
+
   leida: z.boolean().default(false),
 });
 

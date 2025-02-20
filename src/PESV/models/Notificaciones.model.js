@@ -34,7 +34,7 @@ const NotificacionSchema = new Schema({
   enviadoA: {
     type: [String],
     enum: ["usuario", "administrador"], // Permite múltiples destinatarios
-    required: true,
+    default: "usuario",
   },
   leida: {
     type: Boolean,
