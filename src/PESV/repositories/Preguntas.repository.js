@@ -9,10 +9,15 @@ const findAllPreguntas = async () => {
 const findPreguntaById = async (id_pregunta) => {
   return await PreguntasModel.findById(id_pregunta);
 };
-const insertPreguntas = async (pregunta) => {
-  const newPreguntas = new PreguntasModel(pregunta);
-  return await newPreguntas.save();
+const insertPreguntas = async (preguntas) => {
+  if (Array.isArray(preguntas)) {
+    return await PreguntasModel.insertMany(preguntas);
+  } else {
+    const newPregunta = new PreguntasModel(preguntas);
+    return await newPregunta.save();
+  }
 };
+
 
 const updatePregunta = async (id_pregunta, datos_actualizados) => {
 
