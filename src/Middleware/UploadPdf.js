@@ -85,7 +85,7 @@ export const uploadVehiculeMiddleware = async (req, res, next) => {
           { key: "tecnoMecanicaDoc", meta: "tecnoMecanica" },
           { key: "polizaDoc", meta: "poliza" },
           { key: "targOperacionDoc", meta: "targOperacion" },
-          { key: "revisionBiDoc", meta: "revisionBimensual" }
+          { key: "revisionBimensualDoc", meta: "revisionBimensual" }
       ];
 
       console.log(req.files);
