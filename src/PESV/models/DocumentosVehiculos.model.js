@@ -21,7 +21,7 @@ const DocumentosVehiculeModel = new Schema({
   },
   fechaExpiracion: {
     type: Date,
-    require: true,
+    require: false,
   },
   assetId: {
     type: String,
