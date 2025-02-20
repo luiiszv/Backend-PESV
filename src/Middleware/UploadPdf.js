@@ -23,6 +23,7 @@ export const uploadUserMiddleware = async (req, res, next) => {
     let uploadedFiles = [];
 
     for (const fileData of filesData) {
+      
       const file = req.files[fileData.key];
       // Validar archivo PDF
       // if (!file.mimetype || file.mimetype !== "application/pdf") {
@@ -86,6 +87,10 @@ export const uploadVehiculeMiddleware = async (req, res, next) => {
           { key: "targOperacionDoc", meta: "targOperacion" },
           { key: "revisionBiDoc", meta: "revisionBimensual" }
       ];
+
+      console.log(req.files);
+      console.log(req.body);
+
 
       // Filtrar documentos que realmente fueron enviados
       const filesData = documentKeys
