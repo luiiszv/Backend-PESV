@@ -64,67 +64,68 @@ export const uploadUserMiddleware = async (req, res, next) => {
 ///✔
 export const uploadVehiculeMiddleware = async (req, res, next) => {
   try {
-    const { idVehiculo } = req.body;
-    if (!idVehiculo) {
-      return {
-        success: false,
-        message: 'Id del Vehiculo es requerido'
+      const { idVehiculo } = req.body;
+      if (!idVehiculo) {
+          return res.status(400).json({
+              success: false,
+              message: "Id del Vehículo es requerido",
+          });
       }
-    }
-    const targPropiedad = JSON.parse(req.body.targPropiedad);
-    const soat = JSON.parse(req.body.soat);
-    const tecnoMecanica = JSON.parse(req.body.tecnoMecanica);
-    const poliza = JSON.parse(req.body.poliza);
-    const targOperacion = JSON.parse(req.body.targOperacion);
-    const revisionBimensual = JSON.parse(req.body.revisionBimensual)
 
-    const filesData = [
-      { key: "targPropiedadDoc", meta: targPropiedad },
-      { key: "soatDoc", meta: soat },
-      { key: "tecnoMecanicaDoc", meta: tecnoMecanica },
-      { key: "polizaDoc", meta: poliza },
-      { key: "targOperacionDoc", meta: targOperacion },
-      { key: "revisionBiDoc", meta: revisionBimensual }
+      // Función para parsear los documentos solo si existen en el request
+      const parseDocument = (key) => {
+          return req.body[key] ? JSON.parse(req.body[key]) : null;
+      };
 
+      // Documentos permitidos en la solicitud
+      const documentKeys = [
+          { key: "targPropiedadDoc", meta: "targPropiedad" },
+          { key: "soatDoc", meta: "soat" },
+          { key: "tecnoMecanicaDoc", meta: "tecnoMecanica" },
+          { key: "polizaDoc", meta: "poliza" },
+          { key: "targOperacionDoc", meta: "targOperacion" },
+          { key: "revisionBiDoc", meta: "revisionBimensual" }
+      ];
 
-    ];
+      // Filtrar documentos que realmente fueron enviados
+      const filesData = documentKeys
+          .map(({ key, meta }) => ({
+              key,
+              meta: parseDocument(meta),
+          }))
+          .filter(item => item.meta !== null && req.files?.[item.key]); // Solo los documentos enviados
 
+      let uploadedFiles = [];
+      console.log("Archivos recibidos:", req.files);
 
-    let uploadedFiles = [];
-    console.log('files', req.files)
+      for (const fileData of filesData) {
+          const file = req.files[fileData.key];
 
-    for (const fileData of filesData) {
-      const file = req.files[fileData.key];
+          // Subir archivo a Cloudinary
+          const fileUrl = await uploadVehiculosCloudinary(file.tempFilePath, file.name);
 
-      // Validar archivo PDF
-      // if (!file.mimetype || file.mimetype !== "application/pdf") {
-      //   return res.status(400).json({ error: `El archivo ${file.name} no es un PDF` });
-      // }
+          // Eliminar archivo temporal
+          fs.unlinkSync(file.tempFilePath);
 
+          // Agregar archivo y metadatos a la respuesta
+          uploadedFiles.push({
+              idVehiculo,
+              name: file.name,
+              ruta: fileUrl.secure_url,
+              assetId: fileUrl.asset_id,
+              tipoDocumentoId: fileData.meta.tipoDocumentoId,
+              numeroDocumento: fileData.meta.numeroDocumento,
+              fechaExpiracion: fileData.meta.fechaExpiracion || null,
+          });
+      }
 
-      // Subir a Cloudinary
-      const fileUrl = await uploadVehiculosCloudinary(file.tempFilePath, file.name);
-
-      // Eliminar archivo temporal
-      fs.unlinkSync(file.tempFilePath);
-
-      // Agregar archivo y metadatos al JSON de respuesta
-      uploadedFiles.push({
-        idVehiculo,
-        name: file.name,
-        ruta: fileUrl.secure_url,
-        assetId: fileUrl.asset_id,
-        tipoDocumentoId: fileData.meta.tipoDocumentoId,
-        numeroDocumento: fileData.meta.numeroDocumento,
-        fechaExpiracion: fileData.meta.fechaExpiracion
-      });
-    }
-
-    req.uploadedFiles = uploadedFiles;
-
-    next();
+      req.uploadedFiles = uploadedFiles;
+      next();
   } catch (error) {
-    console.error("Error al subir archivos:", error);
-    return res.status(500).json({ error: "Error al subir archivos", details: error.message });
+      console.error("Error al subir archivos:", error);
+      return res.status(500).json({
+          error: "Error al subir archivos",
+          details: error.message,
+      });
   }
 };
