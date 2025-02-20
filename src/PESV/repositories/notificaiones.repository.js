@@ -63,7 +63,7 @@ const findEnumNotify = async () => {
     const tipos = NotificacionModel.schema.path("tipoNotificacion").enumValues;
 
     const tiposFormateados = tipos.map((tipo, index) => ({
-      _id: tipo, 
+      _id: tipo,
       name: tipo,
     }));
     return tiposFormateados;
