@@ -1,35 +1,38 @@
 import { Schema, model } from "mongoose";
 
-
 const FormPreoperacionalSchema = new Schema({
-    idUsuario: {
+  idUsuario: {
+    type: Schema.Types.ObjectId,
+    ref: "usuarios",
+    require: true,
+  },
+  formularioId: {
+    type: Schema.Types.ObjectId,
+    ref: "formularios",
+    require: true,
+  },
+  respuestas: [
+    {
+      idPregunta: {
         type: Schema.Types.ObjectId,
-        ref: 'usuarios',
-        require: true
+        ref: "preguntas_formularios",
+        required: true,
+      },
+      respuesta: {
+        type: String,
+        required: true,
+      },
     },
-    formularioId: {
-        type: Schema.Types.ObjectId,
-        ref: 'formularios',
-        require: true
-    },
-    respuestas: [
-        {
-            idPregunta: {
-                type: Schema.Types.ObjectId,
-                ref: "preguntas_formularios",
-                required: true,
-            },
-            respuesta: {
-                type: String,
-                required: true,
-            }
-        },
-    ],
-    fechaRespuesta: {
-        type: Date,
-        default: Date.now, //  fecha por defecto
-    }
+  ],
+  estadoFormulario: {
+    type: String,
+    enum: ["completado", "completado_con_errores"],
+    required: true,
+  },
+  fechaRespuesta: {
+    type: Date,
+    default: Date.now, //  fecha por defecto
+  },
+});
 
-})
-
-export default model('form_preoperacionales', FormPreoperacionalSchema);
+export default model("form_preoperacionales", FormPreoperacionalSchema);

@@ -7,6 +7,7 @@ import VehiculesRoutes from "./routes/vehiculos.routes.js";
 import DocumentsRoutes from "./routes/document.routes.js";
 import FormulariosRoutes from "./routes/formularios.routes.js";
 import PreguntasRoutes from "./routes/preguntas.routes.js";
+import NotificaionesRoutes from "./routes/notificacion.routes.js";
 
 const routerPESV = Router();
 
@@ -19,6 +20,8 @@ routerPESV.use('/vehiculos', VehiculesRoutes);
 routerPESV.use("/documents", DocumentsRoutes);
 routerPESV.use("/formularios", FormulariosRoutes);
 routerPESV.use("/preguntas", PreguntasRoutes);
+routerPESV.use("/notificaciones", NotificaionesRoutes);
+
 
 
 

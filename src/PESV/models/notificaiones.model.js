@@ -5,36 +5,44 @@ const NotificacionSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "usuarios",
     required: true,
+    index: true,
   },
   tipoNotificacion: {
     type: String,
     enum: [
-      "Formulario No Completado",
-      "Vencimiento de Documentación",
-      "Desplazamiento Finalizado",
-      "Mensaje Personalizado",
+      "formulario_con_errores",
+      "vencimiento_documentacion",
+      "desplazamiento_finalizado",
+      "mensaje_admin",
+      "mensaje_usuario",
+      "recordatorio",
     ],
     required: true,
   },
   detalle: {
-    type: String, // Detalle adicional de la notificación
-    require: true,
+    type: String,
+    required: true,
   },
   fechaNotificacion: {
     type: Date,
     default: Date.now,
   },
+  fechaExpiracion: {
+    type: Date,
+    index: { expires: "7d" }, // ⏳ MongoDB eliminará el documento después de 7 días
+  },
   enviadoA: {
-    type: String,
-    enum: ["Usuario", "Administrador"], // Define si va al usuario, al admin o ambos
+    type: [String],
+    enum: ["usuario", "administrador"], // Permite múltiples destinatarios
     required: true,
   },
-  leido: {
+  leida: {
     type: Boolean,
-    default: false, // Para marcar si la notificación fue vista
+    default: false,
   },
 });
 
+// Índice para optimizar consultas de notificaciones no leídas por usuario
 NotificacionSchema.index({ idUsuario: 1, leida: 1 });
 
 export default model("notificaciones", NotificacionSchema);
