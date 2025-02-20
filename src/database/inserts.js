@@ -131,6 +131,11 @@ db.tipos_documentos.insertMany([
       "Documento que acredita la autorización para conducir vehículos.",
   },
   {
+    nombre: "Revisión bimensual",
+    categoria: "vehiculo",
+    descripcion: "Inspección que se realiza a los vehículos, especialmente a los de transporte público",
+  },
+  {
     nombre: "Tarjeta de propiedad",
     categoria: "vehiculo",
     descripcion: "Documento que certifica la propiedad de un vehículo.",
@@ -166,6 +171,11 @@ db.tipos_documentos.insertMany([
   },
 ]);
 
+db.tipos_documentos.insertOne({
+  nombre: "Revisión bimensual",
+  categoria: "vehiculo",
+  descripcion: "Inspección que se realiza a los vehículos, especialmente a los de transporte público"
+});
 
 
 
