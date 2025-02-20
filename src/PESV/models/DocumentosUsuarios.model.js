@@ -18,7 +18,7 @@ const DocumentosUsuariosSchema = new Schema({
   },
   numeroDocumento: {
     type: String,
-    require: true,
+    require: false,
   },
   fechaExpiracion: {
     type: Date,
