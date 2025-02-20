@@ -1,4 +1,4 @@
-import NotificacionModel from "../models/Notificaiones.model.js";
+import NotificacionModel from "../models/Notificaciones.model.js";
 
 // 📌 Obtener todas las notificaciones de un usuario
 const getAllNotificacionesByIDUser = async (idUsuario) => {
