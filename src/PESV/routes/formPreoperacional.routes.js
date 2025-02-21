@@ -1,0 +1,83 @@
+import {
+  getFormulariosDiarios,
+  getFormulariosDiariosErrores,
+} from "../controllers/formPreoperacional.controller.js";
+import { Router } from "express";
+const router = Router();
+//Validationes
+import { authMiddleware } from "../../Middleware/ValidateAuth.js";
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Formulario de respuesta preoperacional
+ *     description: Endpoints relacionados con los formularios preoperacionales respondidos por los usuarios.
+ *
+ * /pesv/preoperacional/diarios:
+ *   get:
+ *     tags:
+ *       - Formulario de respuesta preoperacional
+ *     summary: Obtiene los formularios preoperacionales respondidos en una fecha específica.
+ *     description: Devuelve una lista de formularios preoperacionales completados en el día indicado.
+ *     parameters:
+ *       - in: query
+ *         name: fecha
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: true
+ *         description: Fecha en formato YYYY-MM-DD para consultar los formularios de ese día.
+ *     responses:
+ *       200:
+ *         description: Lista de formularios encontrados.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       estadoFormulario:
+ *                         type: string
+ *                         example: "completado"
+ *                       fechaRespuesta:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2025-02-21T15:30:00.000Z"
+ *                       idUsuario:
+ *                         type: object
+ *                         properties:
+ *                           name:
+ *                             type: string
+ *                             example: "Juan"
+ *                           lastName:
+ *                             type: string
+ *                             example: "Pérez"
+ *                           email:
+ *                             type: string
+ *                             example: "juan@example.com"
+ *                           numeroDocumento:
+ *                             type: string
+ *                             example: "12345678"
+ *                       formularioId:
+ *                         type: object
+ *                         properties:
+ *                           nombreFormulario:
+ *                             type: string
+ *                             example: "Inspección Vehicular"
+ *       400:
+ *         description: Error en la solicitud (fecha faltante o malformateada).
+ *       500:
+ *         description: Error interno del servidor.
+ */
+
+router.get("/diarios", authMiddleware, getFormulariosDiarios);
+
+router.get("/diarios/error", authMiddleware, getFormulariosDiariosErrores);
+
+export default router;
