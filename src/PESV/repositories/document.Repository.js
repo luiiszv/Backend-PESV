@@ -68,6 +68,31 @@ export const findDocsPorExpirar = async (hoy, fechaLimite) => {
 };
 
 
+
+export const countDocsPorExpirar = async (hoy, fechaLimite) => {
+  const docs = await Promise.all([
+    DocumentosUsuarioModel.find().select("fechaExpiracion"),
+    DocumentosVehiculoModel.find().select("fechaExpiracion"),
+  ]);
+
+  const allDocs = [...docs[0], ...docs[1]].map(doc => {
+    const diasFaltantes = Math.ceil((new Date(doc.fechaExpiracion) - new Date(hoy)) / (1000 * 60 * 60 * 24));
+    return diasFaltantes;
+  });
+
+  const totalProxVencer = allDocs.filter(dias => dias >= 0 && dias <= fechaLimite).length;
+  const totalVencidos = allDocs.filter(dias => dias < 0).length;
+
+  let mensaje = "No hay documentos por expirar ni vencidos.";
+  if (totalProxVencer > 0 || totalVencidos > 0) {
+    mensaje = `🔔 Hay ${totalProxVencer} documentos próximos a vencer en los próximos ${fechaLimite} días y ${totalVencidos} documentos ya vencidos.`;
+  }
+
+  return mensaje;
+};
+
+
+
 export default {
   saveUserDocument,
   saveVehiculeDocument,

@@ -1,5 +1,7 @@
 import NotificacionesRepository from "../repositories/notificaiones.repository.js";
 import UserRepository from "../../Auth/repositories/user.repository.js";
+import DocuemntRepository from "../repositories/document.Repository.js";
+import FormPreoperaciionalRepository from "../repositories/formPreoperacional.repository.js";
 import mongoose from "mongoose";
 
 export const getAllNotificacionesByIDUser = async (idUsuario) => {
@@ -126,5 +128,20 @@ export const getEnumNotify = async () => {
   return {
     success: true,
     data: enums,
+  };
+};
+
+export const generarNotificaiones = async () => {
+  const documentosExpirar = await DocuemntRepository.countDocsPorExpirar();
+  const formsConErrores =
+    await FormPreoperaciionalRepository.countFormulariosDiariosConErrores();
+  const notify = {
+    documentosExpirar,
+    formsConErrores,
+  };
+
+  return {
+    success: true,
+    data: notify,
   };
 };

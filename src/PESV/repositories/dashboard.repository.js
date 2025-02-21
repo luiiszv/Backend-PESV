@@ -1,7 +1,6 @@
 import VehiculosModel from "../models/vehiculos.model.js";
 import FormPreoperacionalModel from "../models/FormPreoperacional.model.js";
 import UsuarioModel from "../../Auth/models/UserModel.js";
-
 const findEstadisticasVehiculos = async () => {
   // Total de vehículos
   const totalVehiculos = await VehiculosModel.countDocuments();
@@ -26,12 +25,30 @@ const findEstadisticasVehiculos = async () => {
     { $group: { _id: "$servicio", cantidad: { $sum: 1 } } },
   ]);
 
-  // Agrupar vehículos por zona
+  // Agrupar vehículos por zona con nombre en lugar de ID
   const vehiculosPorZona = await VehiculosModel.aggregate([
     {
       $group: {
         _id: "$idZona",
         cantidad: { $sum: 1 },
+      },
+    },
+    {
+      $lookup: {
+        from: "zonas", // Nombre de la colección de zonas
+        localField: "_id", // ID de la zona en VehiculosModel
+        foreignField: "_id", // ID en la colección "zonas"
+        as: "zona",
+      },
+    },
+    {
+      $unwind: "$zona", // Convierte el array de $lookup en un objeto normal
+    },
+    {
+      $project: {
+        _id: 0, // Oculta el ID original de la zona
+        zona: "$zona.nombreZona", // Muestra el nombre de la zona
+        cantidad: 1, // Mantiene el conteo de vehículos
       },
     },
   ]);
