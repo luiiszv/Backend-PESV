@@ -7,6 +7,7 @@ import {
   getAllNotificaionesByIdUser,
   createNewNotification,
   getEnumsValues,
+  generaNotificaciones,
 } from "../controllers/notificacion.controller.js";
 
 import { authMiddleware } from "../../Middleware/ValidateAuth.js";
@@ -216,5 +217,7 @@ notifyRouter.get("/user", authMiddleware, getAllNotificaionesUser);
  */
 
 notifyRouter.get("/mark/:id", marcaNotificacionesByLeidas);
+
+notifyRouter.get("/temp/admin", generaNotificaciones);
 
 export default notifyRouter;

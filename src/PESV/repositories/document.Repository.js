@@ -98,5 +98,6 @@ export default {
   saveVehiculeDocument,
   getDocumentsByIdVehiculo,
   getDocumentsByIdUser,
-  findDocsPorExpirar
+  findDocsPorExpirar,
+  countDocsPorExpirar
 };

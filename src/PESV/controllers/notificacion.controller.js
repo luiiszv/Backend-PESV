@@ -4,6 +4,7 @@ import {
   markNotificacionAsRead,
   createNotificacion,
   getEnumNotify,
+  generarNotificaiones,
 } from "../services/notificaciones.service.js";
 
 export const getEnumsValues = async (req, res) => {
@@ -11,7 +12,7 @@ export const getEnumsValues = async (req, res) => {
     const response = await getEnumNotify();
     res.status(200).json(response);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(400).json({
       message: "Something went wrong in getEnumsValues",
       error,
@@ -74,6 +75,18 @@ export const marcaNotificacionesByLeidas = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       message: "Something went wrong in getAllNotificaionesUser",
+      error,
+    });
+  }
+};
+
+export const generaNotificaciones = async (req, res) => {
+  try {
+    const response = await generarNotificaiones();
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(400).json({
+      message: "Something went wrong in generaNotificaciones",
       error,
     });
   }

@@ -49,4 +49,29 @@ const getFormPreOperacionalById = async (id_form) => {
 };
 
 
-export default { findFormulariosDiarios, findFormulariosDiariosConErrores, getFormPreOperacionalById };
+export const countFormulariosDiariosConErrores = async (fecha = new Date()) => {
+  try {
+      const fechaInicio = new Date(fecha);
+      fechaInicio.setHours(0, 0, 0, 0);
+      const fechaFin = new Date(fecha);
+      fechaFin.setHours(23, 59, 59, 999);
+
+      // Contamos directamente los formularios con errores en el rango de fechas
+      const totalErrores = await FormPreoperacionalModel.countDocuments({
+          estadoFormulario: "completado_con_errores",
+          fechaRespuesta: { $gte: fechaInicio, $lte: fechaFin },
+      });
+
+      // Retornamos el mensaje en función del conteo
+      return totalErrores > 0
+          ? `📢 Hay ${totalErrores} formularios con errores el ${fechaInicio.toLocaleDateString()}.`
+          : `✅ No hay formularios con errores el ${fechaInicio.toLocaleDateString()}.`;
+  } catch (error) {
+      console.error("Error al contar formularios con errores:", error);
+      return "⚠️ Error al obtener los formularios con errores.";
+  }
+};
+
+
+
+export default { findFormulariosDiarios, findFormulariosDiariosConErrores, getFormPreOperacionalById, countFormulariosDiariosConErrores };
