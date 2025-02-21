@@ -29,4 +29,24 @@ const findFormulariosDiariosConErrores = async (fecha) => {
     .select("estadoFormulario fechaRespuesta");
 };
 
-export default { findFormulariosDiarios, findFormulariosDiariosConErrores };
+
+const getFormPreOperacionalById = async (id_form) => {
+  const formulario = await FormPreoperacionalModel.findById(id_form)
+    .populate({
+      path: "idUsuario",
+      select: "name lastName email numeroDocumento",
+    })
+    .populate({
+      path: "formularioId",
+      select: "nombreFormulario",
+    })
+    .populate({
+      path: "respuestas.idPregunta",
+      select: "preguntaTexto determinancia",
+    });
+
+  return formulario;
+};
+
+
+export default { findFormulariosDiarios, findFormulariosDiariosConErrores, getFormPreOperacionalById };

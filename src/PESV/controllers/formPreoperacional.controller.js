@@ -1,12 +1,13 @@
 import {
   obtenerFormulariosDiarios,
   obtenerFormulariosDiariosConErrores,
+  getFormPreOperacionalById,
 } from "../services/formPreoperacional.service.js";
 
 export const getFormulariosDiarios = async (req, res) => {
   try {
     const fecha = req.query.fecha || new Date().toISOString().split("T")[0];
-    console.log(fecha)
+    console.log(fecha);
     const result = await obtenerFormulariosDiarios(fecha);
 
     res.status(200).json(result);
@@ -29,6 +30,19 @@ export const getFormulariosDiariosErrores = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error interno del servidor getFormulariosDiarios",
+    });
+  }
+};
+
+export const getFormularioPreoperacionalById = async (req, res) => {
+  try {
+    const response = await getFormPreOperacionalById(req.params.id);
+    res.status(200).json(response);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Error interno del servidor getFormularioPreoperacionalById",
     });
   }
 };

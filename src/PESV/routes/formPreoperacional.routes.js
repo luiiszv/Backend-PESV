@@ -1,6 +1,7 @@
 import {
   getFormulariosDiarios,
   getFormulariosDiariosErrores,
+  getFormularioPreoperacionalById
 } from "../controllers/formPreoperacional.controller.js";
 import { Router } from "express";
 const router = Router();
@@ -78,8 +79,6 @@ import { authMiddleware } from "../../Middleware/ValidateAuth.js";
 
 router.get("/diarios", authMiddleware, getFormulariosDiarios);
 
-
-
 /**
  * @swagger
  * tags:
@@ -149,5 +148,7 @@ router.get("/diarios", authMiddleware, getFormulariosDiarios);
  *         description: Error interno del servidor.
  */
 router.get("/diarios/error", authMiddleware, getFormulariosDiariosErrores);
+
+router.get("/:id", authMiddleware, getFormularioPreoperacionalById);
 
 export default router;
