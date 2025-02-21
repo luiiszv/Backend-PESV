@@ -5,7 +5,8 @@ import {
 
 export const getFormulariosDiarios = async (req, res) => {
   try {
-    const fecha = req.query.fecha || new Date().toISOString().split("T")[0]; // O fecha Actual
+    const fecha = req.query.fecha || new Date().toISOString().split("T")[0];
+    console.log(fecha)
     const result = await obtenerFormulariosDiarios(fecha);
 
     res.status(200).json(result);
