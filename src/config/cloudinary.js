@@ -21,8 +21,9 @@ export const uploadVehiculosCloudinary = async (filePath, fileName) => {
       transformation: [
         { quality: "auto:low" },
       ],
-      format: "pdf", // Asegurar que el archivo sea PDF
+     
     });
+    console.log(res);
     return {
       secure_url: res.secure_url, // URL segura para descargar
       asset_id: res.asset_id,   // Asset ID o public_id
@@ -43,7 +44,7 @@ export const uploadUsuariosCloudinary = async (filePath, fileName) => {
       transformation: [
         { quality: "auto:low" },
       ],
-      format: "pdf", // Archivo sea PDF
+     
     });
 
     console.log(res);
