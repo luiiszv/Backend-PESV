@@ -158,7 +158,6 @@ export const findVehiculeById = async (id_vehiculo) => {
 };
 
 export const updateVehicule = async (id_vehiculo, vehiculo_data) => {
-  const { placa } = vehiculo_data;
   if (!id_vehiculo) {
     return {
       success: false,
@@ -168,38 +167,42 @@ export const updateVehicule = async (id_vehiculo, vehiculo_data) => {
 
   if (!mongoose.Types.ObjectId.isValid(id_vehiculo)) {
     return {
-      suceess: false,
-      message: "Id del Vehiculo no es valido",
+      success: false,
+      message: "Id del Vehiculo no es válido",
     };
   }
 
-  const placaUpper = placa.toUpperCase();
+  const { placa, ...restoDatos } = vehiculo_data; // Extraer placa y el resto de los datos
+  let vehiculoActualizado = { ...restoDatos }; // Inicializar con los datos restantes
 
-  const placaExist = await VehiculeRepository.findVehiculeByPlaca(placaUpper);
-  if (placaExist) {
-    return {
-      success: false,
-      message: 'Placa ya Existe'
+  if (placa) { // Solo procesar si se envió la placa
+    const placaUpper = placa.toUpperCase();
+
+    const placaExist = await VehiculeRepository.findVehiculeByPlaca(placaUpper);
+    if (placaExist) {
+      return {
+        success: false,
+        message: "Placa ya existe",
+      };
     }
-  }
 
-  const vehiuleUperPlaca = { ...vehiculo_data, placa: placaUpper };
+    vehiculoActualizado.placa = placaUpper;
+  }
 
   const response = await VehiculeRepository.updateVehicule(
     id_vehiculo,
-    vehiuleUperPlaca
+    vehiculoActualizado
   );
 
   if (!response) {
     return {
-      suceess: false,
-      message: "Vehiculo no Encontrado",
+      success: false,
+      message: "Vehículo no encontrado",
     };
   }
 
   return {
     success: true,
-    message: "Vehiculo Actualizado",
+    message: "Vehículo actualizado",
   };
 };
-
