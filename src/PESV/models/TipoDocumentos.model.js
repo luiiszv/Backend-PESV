@@ -7,7 +7,7 @@ const TipoDocuemntos = new Schema({
   },
   categoria: {
     type: String,
-    enum: ["Persona", "Vehiculo"],
+    enum: ["persona", "vehiculo"],
   },
   descripcion: {
     type: String,

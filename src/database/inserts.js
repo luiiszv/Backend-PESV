@@ -40,30 +40,35 @@ db.clase_vehiculos.insertMany([
 db.tipo_vehiculos.insertMany([
   {
     nombreTipo: "Transporte personal",
-    description: "Vehículos destinados para el transporte de personas de manera privada o familiar.",
+    description:
+      "Vehículos destinados para el transporte de personas de manera privada o familiar.",
   },
   {
     nombreTipo: "Uso personal",
-    description: "Vehículos utilizados para fines personales o privados, sin fines comerciales.",
+    description:
+      "Vehículos utilizados para fines personales o privados, sin fines comerciales.",
   },
   {
     nombreTipo: "Vehículo de apoyo",
-    description: "Vehículos utilizados para el apoyo de actividades operativas o logísticas.",
+    description:
+      "Vehículos utilizados para el apoyo de actividades operativas o logísticas.",
   },
   {
     nombreTipo: "Motocicleta",
-    description: "Vehículo motorizado de dos ruedas utilizado para el transporte de personas o carga ligera.",
+    description:
+      "Vehículo motorizado de dos ruedas utilizado para el transporte de personas o carga ligera.",
   },
   {
     nombreTipo: "Buseta",
-    description: "Vehículo de transporte público de pequeño tamaño, utilizado para el transporte colectivo de personas.",
+    description:
+      "Vehículo de transporte público de pequeño tamaño, utilizado para el transporte colectivo de personas.",
   },
   {
     nombreTipo: "Transporte de herramienta",
-    description: "Vehículos destinados al transporte de herramientas y equipos para trabajos específicos.",
+    description:
+      "Vehículos destinados al transporte de herramientas y equipos para trabajos específicos.",
   },
 ]);
-
 
 db.roles.insertMany([
   {
@@ -133,7 +138,8 @@ db.tipos_documentos.insertMany([
   {
     nombre: "Revisión bimensual",
     categoria: "vehiculo",
-    descripcion: "Inspección que se realiza a los vehículos, especialmente a los de transporte público",
+    descripcion:
+      "Inspección que se realiza a los vehículos, especialmente a los de transporte público",
   },
   {
     nombre: "Tarjeta de propiedad",
@@ -172,49 +178,130 @@ db.tipos_documentos.insertMany([
 ]);
 
 db.tipos_documentos.insertOne({
-  nombre: "Revisión bimensual",
+  nombre: "Otro",
   categoria: "vehiculo",
-  descripcion: "Inspección que se realiza a los vehículos, especialmente a los de transporte público"
+  descripcion: "Otro documento relaciondo",
 });
-
-
 
 db.cargos.insertMany([
   { name: "NO REGISTRA", description: "Sin información registrada." },
-  { name: "MOTOSIERRISTA", description: "Operador de motosierra en tareas de corte." },
-  { name: "SUPERVISOR", description: "Encargado de supervisar actividades y personal." },
+  {
+    name: "MOTOSIERRISTA",
+    description: "Operador de motosierra en tareas de corte.",
+  },
+  {
+    name: "SUPERVISOR",
+    description: "Encargado de supervisar actividades y personal.",
+  },
   { name: "ARRIERO", description: "Transportista de carga con animales." },
-  { name: "SISO", description: "Responsable de seguridad y salud ocupacional." },
+  {
+    name: "SISO",
+    description: "Responsable de seguridad y salud ocupacional.",
+  },
   { name: "TEC AMBIENTAL", description: "Técnico en gestión ambiental." },
-  { name: "MONITOR", description: "Encargado de monitorear procesos o equipos." },
+  {
+    name: "MONITOR",
+    description: "Encargado de monitorear procesos o equipos.",
+  },
   { name: "AUX MECANICO", description: "Asistente en tareas mecánicas." },
-  { name: "CONDUCTOR", description: "Responsable de conducir vehículos asignados." },
+  {
+    name: "CONDUCTOR",
+    description: "Responsable de conducir vehículos asignados.",
+  },
   { name: "PALETERO", description: "Señalizador de tránsito en obras viales." },
-  { name: "OPERADOR", description: "Operador de maquinaria o equipo especializado." },
-  { name: "JEFE DE ALMACEN", description: "Encargado de la gestión de inventarios." },
-  { name: "GUADAÑADOR", description: "Operador de guadaña en actividades de corte." },
-  { name: "JEFE DE LINEA", description: "Líder responsable de una línea de trabajo." },
-  { name: "ESTABLESIMIENTO", description: "Encargado del establecimiento de cultivos." },
-  { name: "CONTROL FITOSANITARIO", description: "Especialista en manejo de plagas y enfermedades." },
+  {
+    name: "OPERADOR",
+    description: "Operador de maquinaria o equipo especializado.",
+  },
+  {
+    name: "JEFE DE ALMACEN",
+    description: "Encargado de la gestión de inventarios.",
+  },
+  {
+    name: "GUADAÑADOR",
+    description: "Operador de guadaña en actividades de corte.",
+  },
+  {
+    name: "JEFE DE LINEA",
+    description: "Líder responsable de una línea de trabajo.",
+  },
+  {
+    name: "ESTABLESIMIENTO",
+    description: "Encargado del establecimiento de cultivos.",
+  },
+  {
+    name: "CONTROL FITOSANITARIO",
+    description: "Especialista en manejo de plagas y enfermedades.",
+  },
   { name: "ADMINISTRADOR", description: "Gestor de recursos y operaciones." },
-  { name: "AUX HUERTOS", description: "Asistente en tareas relacionadas con huertos." },
-  { name: "AUX INVESTIGACION", description: "Asistente en labores de investigación." },
+  {
+    name: "AUX HUERTOS",
+    description: "Asistente en tareas relacionadas con huertos.",
+  },
+  {
+    name: "AUX INVESTIGACION",
+    description: "Asistente en labores de investigación.",
+  },
   { name: "VIVERISTA", description: "Encargado del manejo de viveros." },
-  { name: "AUX SISO", description: "Asistente de seguridad y salud ocupacional." },
-  { name: "JEFE DE OPERACIONES", description: "Responsable de coordinar operaciones generales." },
-  { name: "MONITOR AMBIENTAL", description: "Encargado de monitorear aspectos ambientales." },
-  { name: "GERENTE GENERAL", description: "Máxima autoridad administrativa de la empresa." },
-  { name: "PSICOLOGA", description: "Profesional encargada de apoyo psicológico." },
-  { name: "MEJORA SOCIAL", description: "Especialista en programas de mejora social." },
-  { name: "AUXILIAR SUPERVISION", description: "Asistente en labores de supervisión." },
-  { name: "ADMINISTRADOR 1", description: "Administrador con rol específico en el área." },
-  { name: "AUXILIAR PUM", description: "Asistente en procesos específicos de PUM." },
-  { name: "PASANTE", description: "Practicante en proceso de formación profesional." },
-  { name: "CONTROL DE HORMIGAS", description: "Especialista en control de hormigas." },
-  { name: "TRAZADOR", description: "Encargado de trazar líneas en procesos de trabajo." },
-  { name: "AUX PROCESO SOCIAL", description: "Asistente en procesos sociales comunitarios." },
+  {
+    name: "AUX SISO",
+    description: "Asistente de seguridad y salud ocupacional.",
+  },
+  {
+    name: "JEFE DE OPERACIONES",
+    description: "Responsable de coordinar operaciones generales.",
+  },
+  {
+    name: "MONITOR AMBIENTAL",
+    description: "Encargado de monitorear aspectos ambientales.",
+  },
+  {
+    name: "GERENTE GENERAL",
+    description: "Máxima autoridad administrativa de la empresa.",
+  },
+  {
+    name: "PSICOLOGA",
+    description: "Profesional encargada de apoyo psicológico.",
+  },
+  {
+    name: "MEJORA SOCIAL",
+    description: "Especialista en programas de mejora social.",
+  },
+  {
+    name: "AUXILIAR SUPERVISION",
+    description: "Asistente en labores de supervisión.",
+  },
+  {
+    name: "ADMINISTRADOR 1",
+    description: "Administrador con rol específico en el área.",
+  },
+  {
+    name: "AUXILIAR PUM",
+    description: "Asistente en procesos específicos de PUM.",
+  },
+  {
+    name: "PASANTE",
+    description: "Practicante en proceso de formación profesional.",
+  },
+  {
+    name: "CONTROL DE HORMIGAS",
+    description: "Especialista en control de hormigas.",
+  },
+  {
+    name: "TRAZADOR",
+    description: "Encargado de trazar líneas en procesos de trabajo.",
+  },
+  {
+    name: "AUX PROCESO SOCIAL",
+    description: "Asistente en procesos sociales comunitarios.",
+  },
   { name: "AUXILIAR", description: "Personal de apoyo en diversas tareas." },
-  { name: "EMPLEADO", description: "Trabajador contratado por la organización." },
-  { name: "APRENDIZ", description: "Persona en proceso de aprendizaje laboral." }
+  {
+    name: "EMPLEADO",
+    description: "Trabajador contratado por la organización.",
+  },
+  {
+    name: "APRENDIZ",
+    description: "Persona en proceso de aprendizaje laboral.",
+  },
 ]);
-

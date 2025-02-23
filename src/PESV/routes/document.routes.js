@@ -4,18 +4,27 @@ import {
   uploadVehiculeDocument,
   getAllDocuments,
   downloadDocumentByRuta,
-  getDocumetosPorExpirar
+  getDocumetosPorExpirar,
 } from "../controllers/document.controller.js";
-import { uploadVehiculeMiddleware, uploadUserMiddleware, } from "../../Middleware/UploadPdf.js";
+import {
+  uploadVehiculeMiddleware,
+  uploadUserMiddleware,
+} from "../../Middleware/UploadPdf.js";
+import { findTipoDocumentoVehiculos } from "../controllers/tipoDocumento.controller.js";
 //Middle
 import { authMiddleware } from "../../Middleware/ValidateAuth.js";
-
+import { authAdminMiddleware } from "../../Middleware/ValidateAdmin.js";
 
 const routerDocuments = Router();
 
-routerDocuments.get('/', getAllDocuments);
+routerDocuments.get("/", getAllDocuments);
 
-
+routerDocuments.get(
+  "/tipos/vehiculos",
+  authMiddleware,
+  authAdminMiddleware,
+  findTipoDocumentoVehiculos
+);
 
 /**
  * @swagger
@@ -26,7 +35,7 @@ routerDocuments.get('/', getAllDocuments);
  *       Permite subir múltiples documentos de usuario, como:
  *       - **Licencia de Conducción**
  *       - **Documento de Identidad**
- *       
+ *
  *       Cada documento debe enviarse con metadatos en formato JSON y el archivo en formato PDF.
  *     tags: [PESV Documents ]
  *     security:
@@ -131,8 +140,11 @@ routerDocuments.get('/', getAllDocuments);
  *                   type: string
  *                   example: "Error al subir archivos"
  */
-routerDocuments.post("/uploadUserFile", uploadUserMiddleware, uploadUserDocument);
-
+routerDocuments.post(
+  "/uploadUserFile",
+  uploadUserMiddleware,
+  uploadUserDocument
+);
 
 /**
  * @swagger
@@ -146,7 +158,7 @@ routerDocuments.post("/uploadUserFile", uploadUserMiddleware, uploadUserDocument
  *       - **Tecnomecánica**
  *       - **Póliza**
  *       - **Tarjeta de Operación**
- *       
+ *
  *       Cada documento incluye metadatos como el ID del tipo de documento, número de documento y fecha de expiración.
  *     tags:
  *       - PESV Documents
@@ -282,8 +294,11 @@ routerDocuments.post("/uploadUserFile", uploadUserMiddleware, uploadUserDocument
  *                   type: string
  *                   example: "Error al subir archivos"
  */
-routerDocuments.post("/uploadVehiculeFile", uploadVehiculeMiddleware, uploadVehiculeDocument);
-
+routerDocuments.post(
+  "/uploadVehiculeFile",
+  uploadVehiculeMiddleware,
+  uploadVehiculeDocument
+);
 
 /**
  * @swagger
@@ -341,8 +356,7 @@ routerDocuments.post("/uploadVehiculeFile", uploadVehiculeMiddleware, uploadVehi
  *                   type: string
  *                   example: "Error al generar el enlace de descarga"
  */
-routerDocuments.get('/download/:id', downloadDocumentByRuta);
-
+routerDocuments.get("/download/:id", downloadDocumentByRuta);
 
 /**
  * @swagger
@@ -445,9 +459,6 @@ routerDocuments.get('/download/:id', downloadDocumentByRuta);
  *       500:
  *         description: Error interno del servidor
  */
-routerDocuments.get('/expirar', authMiddleware, getDocumetosPorExpirar);
-
-
-
+routerDocuments.get("/expirar", authMiddleware, getDocumetosPorExpirar);
 
 export default routerDocuments;
