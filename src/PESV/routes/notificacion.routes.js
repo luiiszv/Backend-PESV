@@ -189,7 +189,7 @@ notifyRouter.get("/user", authMiddleware, getAllNotificaionesUser);
 /**
  * @swagger
  * /pesv/notificaciones/mark/{id}:
- *   get:
+ *   put:
  *     summary: Marcar una notificación como leída.
  *     description: Cambia el estado de una notificación a "leída" mediante su ID.
  *     tags: [PESV Notificaciones]
@@ -216,7 +216,7 @@ notifyRouter.get("/user", authMiddleware, getAllNotificaionesUser);
  *         description: Notificación no encontrada.
  */
 
-notifyRouter.get("/mark/:id", marcaNotificacionesByLeidas);
+notifyRouter.put("/mark/:id", marcaNotificacionesByLeidas);
 
 notifyRouter.get("/temp/admin", generaNotificaciones);
 
