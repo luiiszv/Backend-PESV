@@ -30,30 +30,47 @@ const getDocumentsByIdUser = async (id_user) => {
 
 export const findDocsPorExpirar = async (hoy, fechaLimite) => {
   const docs = await Promise.all([
-    DocumentosUsuarioModel.find().populate("idUsuario", "-password -idRole -createdAt -updatedAt -idCargo -tipoLicencia -telefono -fechaNacimiento")
+    DocumentosUsuarioModel.find()
+      .populate(
+        "idUsuario",
+        "-password -idRole -createdAt -updatedAt -idCargo -tipoLicencia -telefono -fechaNacimiento"
+      )
       .populate("tipoDocumentoId", "-categoria -descripcion"),
-    DocumentosVehiculoModel.find().populate("idVehiculo", "marca servicio placa")
-      .populate("tipoDocumentoId", "-categoria -descripcion")
+    DocumentosVehiculoModel.find()
+      .populate("idVehiculo", "marca servicio placa")
+      .populate("tipoDocumentoId", "-categoria -descripcion"),
   ]);
 
-  const allDocs = [...docs[0], ...docs[1]].map(doc => {
-    const diasFaltantes = Math.ceil((new Date(doc.fechaExpiracion) - new Date(hoy)) / (1000 * 60 * 60 * 24));
+  const allDocs = [...docs[0], ...docs[1]].map((doc) => {
+    const diasFaltantes = Math.ceil(
+      (new Date(doc.fechaExpiracion) - new Date(hoy)) / (1000 * 60 * 60 * 24)
+    );
     return {
       ...doc._doc,
       diasFaltantes,
-      estado: diasFaltantes < 0 ? "Expirado" : "Por Expirar"
+      estado: diasFaltantes < 0 ? "Expirado" : "Por Expirar",
     };
   });
 
-  const docsPorExpirar = allDocs.filter(doc => doc.diasFaltantes >= 0 && doc.diasFaltantes <= fechaLimite);
-  const docsExpirados = allDocs.filter(doc => doc.diasFaltantes < 0);
+  const docsPorExpirar = allDocs.filter(
+    (doc) => doc.diasFaltantes >= 0 && doc.diasFaltantes <= fechaLimite
+  );
+  const docsExpirados = allDocs.filter((doc) => doc.diasFaltantes < 0);
 
   const totalProxVencer = docsPorExpirar.length;
   const totalVencidos = docsExpirados.length;
-  const totalProxVencerUsuario = docsPorExpirar.filter(doc => doc.idUsuario).length;
-  const totalProxVencerVehiculo = docsPorExpirar.filter(doc => doc.idVehiculo).length;
-  const totalVencidosUsuario = docsExpirados.filter(doc => doc.idUsuario).length;
-  const totalVencidosVehiculo = docsExpirados.filter(doc => doc.idVehiculo).length;
+  const totalProxVencerUsuario = docsPorExpirar.filter(
+    (doc) => doc.idUsuario
+  ).length;
+  const totalProxVencerVehiculo = docsPorExpirar.filter(
+    (doc) => doc.idVehiculo
+  ).length;
+  const totalVencidosUsuario = docsExpirados.filter(
+    (doc) => doc.idUsuario
+  ).length;
+  const totalVencidosVehiculo = docsExpirados.filter(
+    (doc) => doc.idVehiculo
+  ).length;
 
   return {
     documentosPorExpirar: docsPorExpirar,
@@ -63,11 +80,9 @@ export const findDocsPorExpirar = async (hoy, fechaLimite) => {
     totalProxVencerUsuario,
     totalProxVencerVehiculo,
     totalVencidosUsuario,
-    totalVencidosVehiculo
+    totalVencidosVehiculo,
   };
 };
-
-
 
 export const countDocsPorExpirar = async (hoy, fechaLimite) => {
   const docs = await Promise.all([
@@ -75,13 +90,17 @@ export const countDocsPorExpirar = async (hoy, fechaLimite) => {
     DocumentosVehiculoModel.find().select("fechaExpiracion"),
   ]);
 
-  const allDocs = [...docs[0], ...docs[1]].map(doc => {
-    const diasFaltantes = Math.ceil((new Date(doc.fechaExpiracion) - new Date(hoy)) / (1000 * 60 * 60 * 24));
+  const allDocs = [...docs[0], ...docs[1]].map((doc) => {
+    const diasFaltantes = Math.ceil(
+      (new Date(doc.fechaExpiracion) - new Date(hoy)) / (1000 * 60 * 60 * 24)
+    );
     return diasFaltantes;
   });
 
-  const totalProxVencer = allDocs.filter(dias => dias >= 0 && dias <= fechaLimite).length;
-  const totalVencidos = allDocs.filter(dias => dias < 0).length;
+  const totalProxVencer = allDocs.filter(
+    (dias) => dias >= 0 && dias <= fechaLimite
+  ).length;
+  const totalVencidos = allDocs.filter((dias) => dias < 0).length;
 
   let mensaje = "No hay documentos por expirar ni vencidos.";
   if (totalProxVencer > 0 || totalVencidos > 0) {
@@ -91,9 +110,12 @@ export const countDocsPorExpirar = async (hoy, fechaLimite) => {
   return mensaje;
 };
 
-
-
-
+const findTipoDocumentoByVehiculo = async (idVehiculo, tipoDocumentoId) => {
+  return await DocumentosVehiculoModel.findOne({
+    idVehiculo,
+    tipoDocumentoId,
+  }).populate("tipoDocumentoId");
+};
 
 export default {
   saveUserDocument,
@@ -101,5 +123,6 @@ export default {
   getDocumentsByIdVehiculo,
   getDocumentsByIdUser,
   findDocsPorExpirar,
-  countDocsPorExpirar
+  countDocsPorExpirar,
+  findTipoDocumentoByVehiculo,
 };

@@ -1,7 +1,8 @@
 import { Router } from "express";
 import {
   uploadUserDocument,
-  uploadVehiculeDocument,
+  uploadManyVehiculeDocument,
+  uploadOneVehiculeDocuemnt,
   getAllDocuments,
   downloadDocumentByRuta,
   getDocumetosPorExpirar,
@@ -9,6 +10,7 @@ import {
 import {
   uploadVehiculeMiddleware,
   uploadUserMiddleware,
+  uploadVehiculeVerifyExistDoc,
 } from "../../Middleware/UploadPdf.js";
 import { findTipoDocumentoVehiculos } from "../controllers/tipoDocumento.controller.js";
 //Middle
@@ -150,7 +152,7 @@ routerDocuments.post(
  * @swagger
  * /pesv/vehiculos/uploadVehiculeFile:
  *   post:
- *     summary: Subir documentos de un vehículo
+ *     summary: Subir multiples documentos de un vehículo
  *     description: |
  *       Permite subir múltiples documentos asociados a un vehículo, incluyendo:
  *       - **Tarjeta de Propiedad**
@@ -297,7 +299,139 @@ routerDocuments.post(
 routerDocuments.post(
   "/uploadVehiculeFile",
   uploadVehiculeMiddleware,
-  uploadVehiculeDocument
+  uploadManyVehiculeDocument
+);
+
+
+
+/**
+ * @swagger
+ * /pesv/vehiculos/uploadVehiculeId:
+ *   post:
+ *     summary: Subir un documento para un vehículo
+ *     description: |
+ *       Permite subir un documento asociado a un vehículo, validando si ya existe un documento del mismo tipo.
+ *       Solo se permite registrar otro documento si el tipo de documento es "Otro".
+ *     tags:
+ *       - PESV Documents
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - idVehiculo
+ *               - tipoDocumentoId
+ *               - documento
+ *             properties:
+ *               idVehiculo:
+ *                 type: string
+ *                 description: ID del vehículo al que se asociará el documento.
+ *                 example: "65bfb39d5e7f4e001c8a1234"
+ *               tipoDocumentoId:
+ *                 type: string
+ *                 description: ID del tipo de documento a subir.
+ *                 example: "679318760a92a8075e0d819a"
+ *               numeroDocumento:
+ *                 type: string
+ *                 description: Número del documento (si aplica).
+ *                 example: "67890"
+ *               fechaExpiracion:
+ *                 type: string
+ *                 format: date
+ *                 description: Fecha de expiración del documento (si aplica).
+ *                 example: "2024-06-30"
+ *               documento:
+ *                 type: string
+ *                 format: binary
+ *                 description: Archivo del documento a subir en formato PDF o imagen.
+ *     responses:
+ *       200:
+ *         description: Documento subido exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Documento registrado con éxito"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     idVehiculo:
+ *                       type: string
+ *                       example: "65bfb39d5e7f4e001c8a1234"
+ *                     name:
+ *                       type: string
+ *                       example: "soat.pdf"
+ *                     ruta:
+ *                       type: string
+ *                       example: "https://cloudinary.com/soat.pdf"
+ *                     assetId:
+ *                       type: string
+ *                       example: "asd123fgh456"
+ *                     tipoDocumentoId:
+ *                       type: string
+ *                       example: "679318760a92a8075e0d819a"
+ *                     numeroDocumento:
+ *                       type: string
+ *                       example: "67890"
+ *                     fechaExpiracion:
+ *                       type: string
+ *                       example: "2024-06-30"
+ *       400:
+ *         description: Solicitud incorrecta, datos faltantes o archivo inválido.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "El vehículo ya tiene un documento de este tipo registrado."
+ *       404:
+ *         description: Vehículo no encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "El vehículo no fue encontrado"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Error al subir archivo"
+ */
+
+
+routerDocuments.post(
+  "/uploadVehiculeId",
+  uploadVehiculeVerifyExistDoc,
+  uploadOneVehiculeDocuemnt
 );
 
 /**
