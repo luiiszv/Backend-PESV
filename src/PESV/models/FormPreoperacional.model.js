@@ -16,17 +16,17 @@ const FormPreoperacionalSchema = new Schema({
       idPregunta: {
         type: Schema.Types.ObjectId,
         ref: "preguntas_formularios",
-        required: true,
+        required: false,
       },
       respuesta: {
-        type: String,
+        type: Boolean,
         required: true,
       },
     },
   ],
   estadoFormulario: {
     type: String,
-    enum: ["completado", "completado_con_errores"],
+    enum: ["completado", "completado_con_errores", "no_aplica"],
     required: true,
   },
   fechaRespuesta: {

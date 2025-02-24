@@ -1,12 +1,16 @@
 import {
   getFormulariosDiarios,
   getFormulariosDiariosErrores,
-  getFormularioPreoperacionalById
+  getFormularioPreoperacionalById,
+  registerFormPreOperaconal
 } from "../controllers/formPreoperacional.controller.js";
 import { Router } from "express";
 const router = Router();
 //Validationes
 import { authMiddleware } from "../../Middleware/ValidateAuth.js";
+import { validateSchema } from "../../Middleware/ValitarorSchema.js";
+import { registerFormularioPreOperacionalSchema } from "../schemas/FormularioPreoperacional.js";
+
 
 /**
  * @swagger
@@ -150,5 +154,10 @@ router.get("/diarios", authMiddleware, getFormulariosDiarios);
 router.get("/diarios/error", authMiddleware, getFormulariosDiariosErrores);
 
 router.get("/:id", authMiddleware, getFormularioPreoperacionalById);
+
+
+
+
+router.post("/", authMiddleware, validateSchema(registerFormularioPreOperacionalSchema), registerFormPreOperaconal)
 
 export default router;

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { z } from "zod";
 
 const isValid = (value) => mongoose.Types.ObjectId.isValid(value);
-
+//Este formulario es el general
 const regiterFormualarioSchema = z.object({
   nombreFormulario: z.string({
     required_error: "El nombre del formulario es requerido.",

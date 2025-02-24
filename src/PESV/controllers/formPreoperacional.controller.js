@@ -2,6 +2,8 @@ import {
   obtenerFormulariosDiarios,
   obtenerFormulariosDiariosConErrores,
   getFormPreOperacionalById,
+  insertFormPreOperacional
+
 } from "../services/formPreoperacional.service.js";
 
 export const getFormulariosDiarios = async (req, res) => {
@@ -46,3 +48,20 @@ export const getFormularioPreoperacionalById = async (req, res) => {
     });
   }
 };
+
+
+export const registerFormPreOperaconal = async (req, res) => {
+  try {
+    const { userId } = req.user;
+    const response = await insertFormPreOperacional(userId, req.body);
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error interno del servidor registerFormPreOperaconal",
+    });
+
+  }
+}
+

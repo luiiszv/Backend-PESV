@@ -1,4 +1,5 @@
 import FormPreoperacionalModel from "../models/FormPreoperacional.model.js";
+import UserModel from "../../Auth/models/UserModel.js";
 
 const findFormulariosDiarios = async (fechaString) => {
   // Convertir la fecha a formato UTC ajustando el inicio y fin del día en Colombia (GMT-5)
@@ -49,29 +50,36 @@ const getFormPreOperacionalById = async (id_form) => {
 };
 
 
-export const countFormulariosDiariosConErrores = async (fecha = new Date()) => {
+const countFormulariosDiariosConErrores = async (fecha = new Date()) => {
   try {
-      const fechaInicio = new Date(fecha);
-      fechaInicio.setHours(0, 0, 0, 0);
-      const fechaFin = new Date(fecha);
-      fechaFin.setHours(23, 59, 59, 999);
+    const fechaInicio = new Date(fecha);
+    fechaInicio.setHours(0, 0, 0, 0);
+    const fechaFin = new Date(fecha);
+    fechaFin.setHours(23, 59, 59, 999);
 
-      // Contamos directamente los formularios con errores en el rango de fechas
-      const totalErrores = await FormPreoperacionalModel.countDocuments({
-          estadoFormulario: "completado_con_errores",
-          fechaRespuesta: { $gte: fechaInicio, $lte: fechaFin },
-      });
+    // Contamos directamente los formularios con errores en el rango de fechas
+    const totalErrores = await FormPreoperacionalModel.countDocuments({
+      estadoFormulario: "completado_con_errores",
+      fechaRespuesta: { $gte: fechaInicio, $lte: fechaFin },
+    });
 
-      // Retornamos el mensaje en función del conteo
-      return totalErrores > 0
-          ? `📢 Hay ${totalErrores} formularios con errores el ${fechaInicio.toLocaleDateString()}.`
-          : `✅ No hay formularios con errores el ${fechaInicio.toLocaleDateString()}.`;
+    // Retornamos el mensaje en función del conteo
+    return totalErrores > 0
+      ? `📢 Hay ${totalErrores} formularios con errores el ${fechaInicio.toLocaleDateString()}.`
+      : `✅ No hay formularios con errores el ${fechaInicio.toLocaleDateString()}.`;
   } catch (error) {
-      console.error("Error al contar formularios con errores:", error);
-      return "⚠️ Error al obtener los formularios con errores.";
+    console.error("Error al contar formularios con errores:", error);
+    return "⚠️ Error al obtener los formularios con errores.";
   }
 };
 
+const insertFormPreOperacional = async (form_data) => {
+  const newForm = new FormPreoperacionalModel(form_data);
+  return await newForm.save();
 
 
-export default { findFormulariosDiarios, findFormulariosDiariosConErrores, getFormPreOperacionalById, countFormulariosDiariosConErrores };
+}
+
+
+
+export default { insertFormPreOperacional, findFormulariosDiarios, findFormulariosDiariosConErrores, getFormPreOperacionalById, countFormulariosDiariosConErrores };
