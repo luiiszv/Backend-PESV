@@ -89,7 +89,6 @@ export const findDocsPorExpirar = async () => {
       (doc) => doc.idVehiculo
     ).length;
 
-    console.log("Documentos por expirar en menos de 60 días:", documentosPorExpirar);
 
     return {
       documentosPorExpirar,
