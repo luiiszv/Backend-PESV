@@ -93,7 +93,10 @@ export const saveManyDocumentVehiculeToDatabase = async (documentData) => {
 export const saveVehiculeDocument = async (doc) => {
   try {
     const response = await DocumentsRepository.saveVehiculeDocument(doc);
-    return response; // Devolver la respuesta del repositorio
+    return {
+      success: true,
+      data: response
+    }; // Devolver la respuesta del repositorio
   } catch (error) {
     console.error("Error al guardar el documento:", error);
     throw new Error("No se pudo guardar el documento.");
