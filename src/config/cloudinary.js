@@ -59,16 +59,35 @@ export const uploadUsuariosCloudinary = async (filePath, fileName) => {
   }
 };
 
-export const downloadFileCloudinary = async (asset_id) => {
+// export const downloadFileCloudinary = async (asset_id) => {
+//   try {
+//     // Generar la URL de descarga usando el Asset ID
+//     const url = ` https://res-console.cloudinary.com/pdfdocs/media_explorer_thumbnails/${asset_id}/download` //el name luego se pone desde el .env
+//     return url;  // URL pública para descarga usando el Asset ID
+//   } catch (error) {
+//     console.error('Error al generar el enlace de descarga:', error);
+//     return null;
+//   }
+// };
+
+const downloadFileCloudinary = async (req, res) => {
   try {
-    // Generar la URL de descarga usando el Asset ID
-    const url = ` https://res-console.cloudinary.com/pdfdocs/media_explorer_thumbnails/${asset_id}/download` //el name luego se pone desde el .env
-    return url;  // URL pública para descarga usando el Asset ID
+    const { asset_id } = req.params; // Obtener el ID desde los parámetros de la URL
+
+    // Generar la URL de descarga usando Cloudinary
+    const downloadUrl = `https://res-console.cloudinary.com/pdfdocs/media_explorer_thumbnails/${asset_id}/download`;
+
+    // Configurar la cabecera para forzar la descarga con la extensión .pdf
+    res.setHeader("Content-Disposition", `attachment; filename=documento_${asset_id}.pdf`);
+    res.redirect(downloadUrl); // Redirigir a la URL de Cloudinary
   } catch (error) {
-    console.error('Error al generar el enlace de descarga:', error);
-    return null;
+    console.error("Error al generar el enlace de descarga:", error);
+    res.status(500).json({ error: "No se pudo generar la URL de descarga" });
   }
 };
+
+module.exports = { downloadFileCloudinary };
+
 
 
 
