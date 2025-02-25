@@ -165,6 +165,9 @@ export const findDocsPorExpirar = async () => {
   const hoy = new Date();
   const fechaLimite = new Date();
   fechaLimite.setDate(hoy.getDate() + 60);
+console.log(hoy);
+  console.log(fechaLimite);
+
 
   const docs = await DocumentsRepository.findDocsPorExpirar(hoy, fechaLimite);
   if (!docs) {

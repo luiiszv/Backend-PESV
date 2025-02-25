@@ -28,60 +28,83 @@ const getDocumentsByIdUser = async (id_user) => {
   });
 };
 
-export const findDocsPorExpirar = async (hoy, fechaLimite) => {
-  const docs = await Promise.all([
-    DocumentosUsuarioModel.find()
-      .populate(
-        "idUsuario",
-        "-password -idRole -createdAt -updatedAt -idCargo -tipoLicencia -telefono -fechaNacimiento"
-      )
-      .populate("tipoDocumentoId", "-categoria -descripcion"),
-    DocumentosVehiculoModel.find()
-      .populate("idVehiculo", "marca servicio placa")
-      .populate("tipoDocumentoId", "-categoria -descripcion"),
-  ]);
 
-  const allDocs = [...docs[0], ...docs[1]].map((doc) => {
-    const diasFaltantes = Math.ceil(
-      (new Date(doc.fechaExpiracion) - new Date(hoy)) / (1000 * 60 * 60 * 24)
+
+export const findDocsPorExpirar = async () => {
+  try {
+    const hoy = new Date();
+    const diasLimite = 60; // Mostrar documentos que expiren en menos de 60 días
+
+    // Obtener documentos de usuarios y vehículos
+    const docs = await Promise.all([
+      DocumentosUsuarioModel.find()
+        .populate(
+          "idUsuario",
+          "-password -idRole -createdAt -updatedAt -idCargo -tipoLicencia -telefono -fechaNacimiento"
+        )
+        .populate("tipoDocumentoId", "-categoria -descripcion"),
+      DocumentosVehiculoModel.find()
+        .populate("idVehiculo", "marca servicio placa")
+        .populate("tipoDocumentoId", "-categoria -descripcion"),
+    ]);
+
+    // Procesar los documentos y calcular días faltantes
+    const allDocs = [...docs[0], ...docs[1]]
+      .map((doc) => {
+        if (!doc.fechaExpiracion) return null; // Ignorar documentos sin fecha de expiración
+
+        const fechaExpiracion = new Date(doc.fechaExpiracion);
+        const diasFaltantes = Math.ceil(
+          (fechaExpiracion - hoy) / (1000 * 60 * 60 * 24)
+        );
+
+        return {
+          ...doc._doc,
+          diasFaltantes,
+          estado: diasFaltantes < 0 ? "Expirado" : "Por Expirar",
+        };
+      })
+      .filter((doc) => doc !== null); // Filtrar documentos sin fecha de expiración
+
+    // Filtrar solo los documentos que expiran en menos de 60 días
+    const documentosPorExpirar = allDocs.filter(
+      (doc) => doc.diasFaltantes > 0 && doc.diasFaltantes <= diasLimite
     );
+
+    const documentosExpirados = allDocs.filter((doc) => doc.diasFaltantes < 0);
+
+    // Contadores de documentos
+    const totalProxVencer = documentosPorExpirar.length;
+    const totalVencidos = documentosExpirados.length;
+    const totalProxVencerUsuario = documentosPorExpirar.filter(
+      (doc) => doc.idUsuario
+    ).length;
+    const totalProxVencerVehiculo = documentosPorExpirar.filter(
+      (doc) => doc.idVehiculo
+    ).length;
+    const totalVencidosUsuario = documentosExpirados.filter(
+      (doc) => doc.idUsuario
+    ).length;
+    const totalVencidosVehiculo = documentosExpirados.filter(
+      (doc) => doc.idVehiculo
+    ).length;
+
+    console.log("Documentos por expirar en menos de 60 días:", documentosPorExpirar);
+
     return {
-      ...doc._doc,
-      diasFaltantes,
-      estado: diasFaltantes < 0 ? "Expirado" : "Por Expirar",
+      documentosPorExpirar,
+      documentosExpirados,
+      totalProxVencer,
+      totalVencidos,
+      totalProxVencerUsuario,
+      totalProxVencerVehiculo,
+      totalVencidosUsuario,
+      totalVencidosVehiculo,
     };
-  });
-
-  const docsPorExpirar = allDocs.filter(
-    (doc) => doc.diasFaltantes >= 0 && doc.diasFaltantes <= fechaLimite
-  );
-  const docsExpirados = allDocs.filter((doc) => doc.diasFaltantes < 0);
-
-  const totalProxVencer = docsPorExpirar.length;
-  const totalVencidos = docsExpirados.length;
-  const totalProxVencerUsuario = docsPorExpirar.filter(
-    (doc) => doc.idUsuario
-  ).length;
-  const totalProxVencerVehiculo = docsPorExpirar.filter(
-    (doc) => doc.idVehiculo
-  ).length;
-  const totalVencidosUsuario = docsExpirados.filter(
-    (doc) => doc.idUsuario
-  ).length;
-  const totalVencidosVehiculo = docsExpirados.filter(
-    (doc) => doc.idVehiculo
-  ).length;
-
-  return {
-    documentosPorExpirar: docsPorExpirar,
-    documentosExpirados: docsExpirados,
-    totalProxVencer,
-    totalVencidos,
-    totalProxVencerUsuario,
-    totalProxVencerVehiculo,
-    totalVencidosUsuario,
-    totalVencidosVehiculo,
-  };
+  } catch (error) {
+    console.error("Error al obtener documentos por expirar:", error);
+    return { success: false, message: "Error interno del servidor" };
+  }
 };
 
 export const countDocsPorExpirar = async (hoy, fechaLimite) => {
@@ -96,6 +119,8 @@ export const countDocsPorExpirar = async (hoy, fechaLimite) => {
     );
     return diasFaltantes;
   });
+
+  console.log(allDocs);
 
   const totalProxVencer = allDocs.filter(
     (dias) => dias >= 0 && dias <= fechaLimite
