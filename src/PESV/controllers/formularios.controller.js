@@ -2,7 +2,8 @@ import {
   findAllFomularios,
   findFormualrioByID,
   insertFormulario,
-  updateForm
+  updateForm,
+  findFormulariosByUserAuth
 } from "../services/formulario.service.js";
 
 export const registerFormualrio = async ({ body }, res) => {
@@ -52,3 +53,20 @@ export const uplaodFormulario = async (req, res) => {
       .json({ message: "Something went wrong in uplaodFormulario", error });
   }
 };
+
+export const getFormularioByUserAuth = async (req, res) => {
+
+  try {
+
+    const { userId } = req.user;
+    const response = await findFormulariosByUserAuth(userId);
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error interno del servidor getFormularioBiUserAuth",
+    });
+  }
+
+}

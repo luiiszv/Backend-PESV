@@ -83,7 +83,6 @@ preguntasRoutes.post(
   validateSchema(regiterPreguntasSchema),
   registerPregunta
 );
-
 /**
  * @swagger
  * /pesv/preguntas:
@@ -127,7 +126,6 @@ preguntasRoutes.post(
  *       500:
  *         description: Error interno del servidor
  */
-
 preguntasRoutes.get("/", authMiddleware, getAllPreguntas);
 
 /**

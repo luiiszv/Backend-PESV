@@ -38,6 +38,14 @@ const updateFormulario = async (idFormulario, updateData) => {
   );
 };
 
+//Obtinen el Fomulario Que estan acticos de acuerdo al tipo de vehiuclo que tiene el usuario
+const findFormulariosByUserAuth = async (idClaseVehiculo) => {
+  return await FormularioModel.find({ idClaseVehiculo, estadoFormulario: true }).populate({
+    path: 'preguntas',
+    select: "-fechaCreacion -createdAt -updatedAt"
+  })
+}
+
 export default {
   findAllFormularios,
   findFormualrioByID,
@@ -45,4 +53,5 @@ export default {
   findFomularioActiveByClase,
   findLastFormularioByClase,
   updateFormulario,
+  findFormulariosByUserAuth
 };

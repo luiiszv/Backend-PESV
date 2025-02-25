@@ -3,6 +3,7 @@ import {
   getFormularioById,
   registerFormualrio,
   uplaodFormulario,
+  getFormularioByUserAuth
 } from "../controllers/formularios.controller.js";
 import { Router } from "express";
 const formualriosRoutes = Router();
@@ -12,6 +13,13 @@ import { authAdminMiddleware } from "../../Middleware/ValidateAdmin.js";
 //Validate Shema
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
 import { regiterFormualarioSchema } from "../schemas/Formularios.schema.js";
+
+
+
+
+formualriosRoutes.get('/usuario', authMiddleware, getFormularioByUserAuth);
+
+
 
 /**
  * @swagger
@@ -88,7 +96,7 @@ import { regiterFormualarioSchema } from "../schemas/Formularios.schema.js";
  */
 
 formualriosRoutes.get(
-  "/:id",
+  "/form/:id",
   authMiddleware,
   authAdminMiddleware,
   getFormularioById
@@ -324,4 +332,7 @@ formualriosRoutes.post(
  */
 
 formualriosRoutes.put("/update/:id", authMiddleware, uplaodFormulario);
+
+
+
 export default formualriosRoutes;

@@ -94,4 +94,5 @@ const getAllFormsPre = async () => {
 }
 
 
+
 export default { getAllFormsPre, insertFormPreOperacional, findFormulariosDiarios, findFormulariosDiariosConErrores, getFormPreOperacionalById, countFormulariosDiariosConErrores };
