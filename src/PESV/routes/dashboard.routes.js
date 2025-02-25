@@ -1,6 +1,7 @@
 import {
   getEstadisticasVehiculosDash,
   getEstadisticasFormsDash,
+  getAllDataDash
 } from "../controllers/dashboard.controller.js";
 import { Router } from "express";
 
@@ -162,5 +163,8 @@ routerDash.get(
   authAdminMiddleware,
   getEstadisticasFormsDash
 );
+
+
+routerDash.get('/data', authMiddleware, authAdminMiddleware, getAllDataDash);
 
 export default routerDash;

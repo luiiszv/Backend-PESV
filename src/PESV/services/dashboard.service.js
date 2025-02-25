@@ -1,4 +1,7 @@
 import DashboardRepository from "../repositories/dashboard.repository.js";
+import UsuariosRepository from "../repositories/user.respository.js";
+import FormPreoperacional from "../repositories/formPreoperacional.repository.js";
+import VeehicuosRepository from "../repositories/vehiculo.repository.js";
 
 export const findEstadisticasVehiculos = async () => {
   try {
@@ -26,3 +29,18 @@ export const findEstaidsticasFormularios = async (fecha) => {
     };
   }
 };
+
+
+export const findAllDataDash = async () => {
+  const responseUsers = await UsuariosRepository.getAllUsers();
+  const resposeFormsPre = await FormPreoperacional.getAllFormsPre();
+  const responseVehiculos = await VeehicuosRepository.findAllVehiculos();
+
+
+  return {
+    success: true,
+    responseUsers,
+    resposeFormsPre,
+    responseVehiculos
+  }
+}
