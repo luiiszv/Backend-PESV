@@ -27,8 +27,8 @@ export const getEstadisticasFormsDash = async (req, res) => {
 
 export const getAllDataDash = async (req, res) => {
   try {
-
-    const response = await findAllDataDash();
+    const fecha = req.query.fecha || new Date().toISOString().split("T")[0]; // O fecha Actual
+    const response = await findAllDataDash(fecha);
     res.status(200).json(response);
 
 

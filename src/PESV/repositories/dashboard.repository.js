@@ -1,6 +1,8 @@
 import VehiculosModel from "../models/vehiculos.model.js";
 import FormPreoperacionalModel from "../models/FormPreoperacional.model.js";
 import UsuarioModel from "../../Auth/models/UserModel.js";
+
+
 const findEstadisticasVehiculos = async () => {
   // Total de vehículos
   const totalVehiculos = await VehiculosModel.countDocuments();
