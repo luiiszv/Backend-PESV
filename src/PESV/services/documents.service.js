@@ -100,7 +100,6 @@ export const saveVehiculeDocument = async (doc) => {
   }
 };
 
-
 export const getDocuemntsByIdVehiculo = async (id_vehiculo) => {
   if (!id_vehiculo) {
     return {
@@ -166,16 +165,65 @@ export const findDocsPorExpirar = async () => {
   const fechaLimite = new Date();
   fechaLimite.setDate(hoy.getDate() + 60);
 
-  const docs = await DocumentsRepository.findDocsPorExpirar(hoy, fechaLimite);
-  if (!docs) {
+  try {
+    const { docsUsuarios, docsVehiculos } = await DocumentsRepository.findDocsPorExpirar(hoy, fechaLimite);
+
+    // 🔹 Procesar documentos de usuarios (sin idUsuario)
+    const docsUsuariosProcesados = docsUsuarios.map((doc) => {
+      const diasFaltantes = Math.ceil((new Date(doc.fechaExpiracion) - hoy) / (1000 * 60 * 60 * 24));
+      return {
+        ...doc._doc,
+        diasFaltantes,
+        estado: diasFaltantes < 0 ? "Expirado" : "Por Expirar",
+      };
+    });
+
+    // 🔹 Procesar documentos de vehículos (sin idUsuarioAsignado)
+    const docsVehiculosProcesados = docsVehiculos.map((doc) => {
+      const diasFaltantes = Math.ceil((new Date(doc.fechaExpiracion) - hoy) / (1000 * 60 * 60 * 24));
+      return {
+        ...doc._doc,
+        diasFaltantes,
+        estado: diasFaltantes < 0 ? "Expirado" : "Por Expirar",
+      };
+    });
+
+    // 🔹 Clasificar documentos según su estado
+    const docsUsuariosPorExpirar = docsUsuariosProcesados.filter((doc) => doc.diasFaltantes >= 0);
+    const docsUsuariosExpirados = docsUsuariosProcesados.filter((doc) => doc.diasFaltantes < 0);
+    const docsVehiculosPorExpirar = docsVehiculosProcesados.filter((doc) => doc.diasFaltantes >= 0);
+    const docsVehiculosExpirados = docsVehiculosProcesados.filter((doc) => doc.diasFaltantes < 0);
+
+    return {
+      success: true,
+      message:
+        docsUsuariosPorExpirar.length > 0 || docsVehiculosPorExpirar.length > 0
+          ? "Documentos por expirar encontrados"
+          : "No hay documentos próximos a vencer",
+      data: {
+        // 📌 Documentos de usuarios (sin idUsuario)
+        documentosUsuariosPorExpirar: docsUsuariosPorExpirar,
+        documentosUsuariosExpirados: docsUsuariosExpirados,
+        totalProxVencerUsuario: docsUsuariosPorExpirar.length,
+        totalVencidosUsuario: docsUsuariosExpirados.length,
+
+        // 📌 Documentos de vehículos (sin idUsuarioAsignado)
+        documentosVehiculosPorExpirar: docsVehiculosPorExpirar,
+        documentosVehiculosExpirados: docsVehiculosExpirados,
+        totalProxVencerVehiculo: docsVehiculosPorExpirar.length,
+        totalVencidosVehiculo: docsVehiculosExpirados.length,
+
+        // 📌 Totales generales
+        totalProxVencer: docsUsuariosPorExpirar.length + docsVehiculosPorExpirar.length,
+        totalVencidos: docsUsuariosExpirados.length + docsVehiculosExpirados.length,
+      },
+    };
+  } catch (error) {
     return {
       success: false,
-      message: "No hay documentos por expirar",
+      message: "Error al obtener los documentos por expirar",
+      error: error.message,
     };
   }
-
-  return {
-    success: true,
-    data: docs,
-  };
 };
+
