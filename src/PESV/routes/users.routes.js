@@ -219,66 +219,6 @@ routerUser.get("/vehiculos", authMiddleware, getUserVehiculos);
 
 /**
  * @swagger
- * /pesv/user/preguntas/clase-vehiculo/{id}:
- *   get:
- *     summary: Obtiene las preguntas activas para un tipo de vehículo específico.
- *     description: Esta API devuelve las preguntas activas basadas en la clase de vehículo proporcionada en el parámetro `id`.
- *     parameters:
- *       - name: id
- *         in: path
- *         description: ID de la clase de vehículo
- *         required: true
- *         schema:
- *           type: string
- *     tags:
- *       - PESV User Vehiculos
- *     responses:
- *       200:
- *         description: Respuesta exitosa con las preguntas activas para el tipo de vehículo.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Success
- *                 data:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       pregunta:
- *                         type: string
- *                       id:
- *                         type: string
- *       400:
- *         description: Error al obtener las preguntas.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Something went wrong in getPreguntasByUserVehiculesActive
- *                 error:
- *                   type: object
- *                   properties:
- *                     message:
- *                       type: string
- *                       example: Error details
- *     security:
- *       - bearerAuth: []
- */
-
-
-routerUser.get("/preguntas/clase-vehiculo/:id", authMiddleware, getPreguntasByVehiculesActive); //pendinete
-
-
-
-/**
- * @swagger
  * /pesv/user/select-register:
  *   get:
  *     summary: Obtiene las opciones de selección para el registro de usuarios.

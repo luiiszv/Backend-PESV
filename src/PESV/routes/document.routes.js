@@ -302,8 +302,6 @@ routerDocuments.post(
   uploadManyVehiculeDocument
 );
 
-
-
 /**
  * @swagger
  * /pesv/vehiculos/uploadVehiculeId:
@@ -426,8 +424,6 @@ routerDocuments.post(
  *                   type: string
  *                   example: "Error al subir archivo"
  */
-
-
 routerDocuments.post(
   "/uploadVehiculeId",
   uploadVehiculeVerifyExistDoc,
@@ -594,5 +590,4 @@ routerDocuments.get("/download/:id", downloadDocumentByRuta);
  *         description: Error interno del servidor
  */
 routerDocuments.get("/expirar", authMiddleware, getDocumetosPorExpirar);
-
 export default routerDocuments;

@@ -30,6 +30,7 @@ const getDocumentsByIdUser = async (id_user) => {
   });
 };
 
+
 const findDocsPorExpirar = async (hoy, fechaLimite) => {
   const docsUsuarios = await DocumentosUsuarioModel.find({
     fechaExpiracion: { $gte: hoy, $lte: fechaLimite },
@@ -47,12 +48,8 @@ const findDocsPorExpirar = async (hoy, fechaLimite) => {
     .populate("tipoDocumentoId", "-categoria -descripcion");
 
   return { docsUsuarios, docsVehiculos };
-};
+}
 
-// 🔹 Nueva función para obtener los vehículos con el usuario asignado
-const findVehiculosByIds = async (idsVehiculos) => {
-  return VehiculosModel.find({ _id: { $in: idsVehiculos } }); // Devuelve el vehículo completo
-};
 
 
 // export const findDocsPorExpirar = async (hoy, fechaLimite) => {
@@ -124,6 +121,8 @@ export const countDocsPorExpirar = async (hoy, fechaLimite) => {
     return diasFaltantes;
   });
 
+  console.log(allDocs);
+
   const totalProxVencer = allDocs.filter(
     (dias) => dias >= 0 && dias <= fechaLimite
   ).length;
@@ -152,5 +151,5 @@ export default {
   findDocsPorExpirar,
   countDocsPorExpirar,
   findTipoDocumentoByVehiculo,
-  findVehiculosByIds
+
 };

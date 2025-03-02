@@ -155,9 +155,10 @@ router.get("/diarios/error", authMiddleware, getFormulariosDiariosErrores);
 
 router.get("/:id", authMiddleware, getFormularioPreoperacionalById);
 
+router.post("/", authMiddleware, validateSchema(registerFormularioPreOperacionalSchema), registerFormPreOperaconal);
 
 
 
-router.post("/", authMiddleware, validateSchema(registerFormularioPreOperacionalSchema), registerFormPreOperaconal)
+
 
 export default router;

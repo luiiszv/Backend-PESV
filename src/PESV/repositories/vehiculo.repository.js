@@ -1,10 +1,27 @@
 
 import VehiculosModel from "../models/vehiculos.model.js";
 import ClaseVehiculoModel from "../models/ClaseVehiuclos.model.js";
-const findAllVehiculosByIdUser = async (id_user) => {
-  return await VehiculosModel.find({ idUsuario: id_user });
-};
 
+const findAllVehiculosByIdUser = async (id_user) => {
+  return await VehiculosModel.find({ idUsuario: id_user }).populate({
+    path: 'idUsuario',
+    select: ""
+  }).populate({
+    path: 'idUsuarioAsignado',
+    select: ""
+
+  }).populate({
+    path: 'idTipoVehiculo',
+    select: ""
+
+  }).populate({
+    path: 'idZona',
+    select: ""
+
+  })
+
+
+}
 const findAllVehiculos = async () => {
   return VehiculosModel.find()
     .populate({
@@ -18,7 +35,13 @@ const findAllVehiculos = async () => {
     .populate({
       path: "idClaseVehiculo",
       select: "-description",
-    });
+    }).populate({
+      path: "idTipoVehiculo",
+      select: "",
+    }).populate({
+      path: "idZona",
+      select: "",
+    })
 };
 
 const findVehiculeById = async (id_vehicule) => {

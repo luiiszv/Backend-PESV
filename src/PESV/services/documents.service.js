@@ -93,7 +93,10 @@ export const saveManyDocumentVehiculeToDatabase = async (documentData) => {
 export const saveVehiculeDocument = async (doc) => {
   try {
     const response = await DocumentsRepository.saveVehiculeDocument(doc);
-    return response; // Devolver la respuesta del repositorio
+    return {
+      success: true,
+      data: response,
+    }; // Devolver la respuesta del repositorio
   } catch (error) {
     console.error("Error al guardar el documento:", error);
     throw new Error("No se pudo guardar el documento.");
@@ -166,11 +169,14 @@ export const findDocsPorExpirar = async () => {
   fechaLimite.setDate(hoy.getDate() + 60);
 
   try {
-    const { docsUsuarios, docsVehiculos } = await DocumentsRepository.findDocsPorExpirar(hoy, fechaLimite);
+    const { docsUsuarios, docsVehiculos } =
+      await DocumentsRepository.findDocsPorExpirar(hoy, fechaLimite);
 
     // 🔹 Procesar documentos de usuarios (sin idUsuario)
     const docsUsuariosProcesados = docsUsuarios.map((doc) => {
-      const diasFaltantes = Math.ceil((new Date(doc.fechaExpiracion) - hoy) / (1000 * 60 * 60 * 24));
+      const diasFaltantes = Math.ceil(
+        (new Date(doc.fechaExpiracion) - hoy) / (1000 * 60 * 60 * 24)
+      );
       return {
         ...doc._doc,
         diasFaltantes,
@@ -180,7 +186,9 @@ export const findDocsPorExpirar = async () => {
 
     // 🔹 Procesar documentos de vehículos (sin idUsuarioAsignado)
     const docsVehiculosProcesados = docsVehiculos.map((doc) => {
-      const diasFaltantes = Math.ceil((new Date(doc.fechaExpiracion) - hoy) / (1000 * 60 * 60 * 24));
+      const diasFaltantes = Math.ceil(
+        (new Date(doc.fechaExpiracion) - hoy) / (1000 * 60 * 60 * 24)
+      );
       return {
         ...doc._doc,
         diasFaltantes,
@@ -189,10 +197,18 @@ export const findDocsPorExpirar = async () => {
     });
 
     // 🔹 Clasificar documentos según su estado
-    const docsUsuariosPorExpirar = docsUsuariosProcesados.filter((doc) => doc.diasFaltantes >= 0);
-    const docsUsuariosExpirados = docsUsuariosProcesados.filter((doc) => doc.diasFaltantes < 0);
-    const docsVehiculosPorExpirar = docsVehiculosProcesados.filter((doc) => doc.diasFaltantes >= 0);
-    const docsVehiculosExpirados = docsVehiculosProcesados.filter((doc) => doc.diasFaltantes < 0);
+    const docsUsuariosPorExpirar = docsUsuariosProcesados.filter(
+      (doc) => doc.diasFaltantes >= 0
+    );
+    const docsUsuariosExpirados = docsUsuariosProcesados.filter(
+      (doc) => doc.diasFaltantes < 0
+    );
+    const docsVehiculosPorExpirar = docsVehiculosProcesados.filter(
+      (doc) => doc.diasFaltantes >= 0
+    );
+    const docsVehiculosExpirados = docsVehiculosProcesados.filter(
+      (doc) => doc.diasFaltantes < 0
+    );
 
     return {
       success: true,
@@ -214,16 +230,20 @@ export const findDocsPorExpirar = async () => {
         totalVencidosVehiculo: docsVehiculosExpirados.length,
 
         // 📌 Totales generales
-        totalProxVencer: docsUsuariosPorExpirar.length + docsVehiculosPorExpirar.length,
-        totalVencidos: docsUsuariosExpirados.length + docsVehiculosExpirados.length,
+        totalProxVencer:
+          docsUsuariosPorExpirar.length + docsVehiculosPorExpirar.length,
+        totalVencidos:
+          docsUsuariosExpirados.length + docsVehiculosExpirados.length,
       },
     };
   } catch (error) {
-    return {
-      success: false,
-      message: "Error al obtener los documentos por expirar",
-      error: error.message,
-    };
+    const docs = await DocumentsRepository.findDocsPorExpirar(hoy, fechaLimite);
+    if (!docs) {
+      return {
+        success: false,
+        message: "Error al obtener los documentos por expirar",
+        error: error.message,
+      };
+    }
   }
 };
-

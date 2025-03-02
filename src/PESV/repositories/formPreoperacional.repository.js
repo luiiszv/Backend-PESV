@@ -81,5 +81,18 @@ const insertFormPreOperacional = async (form_data) => {
 }
 
 
+const getAllFormsPre = async () => {
+  return await FormPreoperacionalModel.find().populate({
+    path: 'idUsuario',
+    select: ''
+  }).populate({
+    path: 'formularioId',
+    select: ''
+  }).populate({
+    path: 'respuestas.idPregunta'
+  })
+}
 
-export default { insertFormPreOperacional, findFormulariosDiarios, findFormulariosDiariosConErrores, getFormPreOperacionalById, countFormulariosDiariosConErrores };
+
+
+export default { getAllFormsPre, insertFormPreOperacional, findFormulariosDiarios, findFormulariosDiariosConErrores, getFormPreOperacionalById, countFormulariosDiariosConErrores };
