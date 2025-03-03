@@ -12,7 +12,7 @@ import {
 
 import { authMiddleware } from "../../Middleware/ValidateAuth.js";
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
-import { registerNotificacionesSchema } from "../schemas/notificaiones.schema.js";
+import { registerUserNotificacionesSchema } from "../schemas/notificaiones.schema.js";
 
 notifyRouter.get("/enums", authMiddleware, getEnumsValues); //Obtine los enums values de tipo notify
 
@@ -90,9 +90,10 @@ notifyRouter.get("/enums", authMiddleware, getEnumsValues); //Obtine los enums v
 notifyRouter.post(
   "/",
   authMiddleware,
-  validateSchema(registerNotificacionesSchema),
+  validateSchema(registerUserNotificacionesSchema),
   createNewNotification
 );
+
 
 /**
  * @swagger

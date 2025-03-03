@@ -3,6 +3,7 @@ import UserRepository from "../../Auth/repositories/user.repository.js";
 import DocuemntRepository from "../repositories/document.Repository.js";
 import FormPreoperaciionalRepository from "../repositories/formPreoperacional.repository.js";
 import mongoose from "mongoose";
+import DocumentRepository from "../repositories/document.Repository.js";
 
 export const getAllNotificacionesByIDUser = async (idUsuario) => {
   if (!idUsuario) {
@@ -54,31 +55,45 @@ export const getAllNotificacionesByAdmin = async () => {
 };
 
 export const createNotificacion = async (notificacionData) => {
-  const { idUsuario } = notificacionData;
+  try {
+    let { idDoc, idUsuario } = notificacionData;
 
-  const userExist = await UserRepository.findUserById(idUsuario);
-  if (!userExist) {
+    // Si hay idDoc, buscar el usuario
+    if (idDoc) {
+      const user = await DocumentRepository.findUserByDocument(idDoc);
+      if (user) {
+        idUsuario = user._id; // Asignar el usuario encontrado
+      } else {
+        return {
+          success: false,
+          message: "No se encontró un usuario con el documento proporcionado.",
+        };
+      }
+    }
+
+    // Si no hay idUsuario después de intentar con idDoc, devolver error
+    if (!idUsuario) {
+      return {
+        success: false,
+        message: "Se requiere un ID de usuario para crear la notificación.",
+      };
+    }
+
+    // Crear la notificación con el ID de usuario asignado
+    const newNotificacion = { ...notificacionData, idUsuario };
+    const newNotify = await NotificacionesRepository.createNotificacion(newNotificacion);
+
+    return {
+      success: true,
+      data: newNotify,
+    };
+  } catch (error) {
+    console.error("Error al crear notificación:", error);
     return {
       success: false,
-      message: "Usuario no encontrado",
+      message: "Ocurrió un error al crear la notificación.",
     };
   }
-
-  const newNotify = await NotificacionesRepository.createNotificacion(
-    notificacionData
-  );
-
-  if (!newNotify) {
-    return {
-      success: false,
-      message: "Error al crear la notificación",
-    };
-  }
-
-  return {
-    success: true,
-    data: newNotify,
-  };
 };
 
 export const markNotificacionAsRead = async (idNotificacion) => {

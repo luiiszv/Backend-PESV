@@ -1,9 +1,7 @@
 import { z } from "zod";
 
 // Esquema de validación con Zod para Notificaciones
-const registerNotificacionesSchema = z.object({
-  idUsuario: z.string({ required_error: "El ID del usuario es requerido" }),
-
+const registerUserNotificacionesSchema = z.object({
   tipoNotificacion: z.enum(
     [
       "formulario_con_errores",
@@ -22,4 +20,4 @@ const registerNotificacionesSchema = z.object({
   leida: z.boolean().default(false),
 });
 
-export { registerNotificacionesSchema };
+export { registerUserNotificacionesSchema };

@@ -32,6 +32,8 @@ export const createNewNotification = async ({ body }, res) => {
   }
 };
 
+
+
 export const getAllNotificaionesAdmin = async (req, res) => {
   try {
     const response = await getAllNotificacionesByAdmin();

@@ -4,6 +4,27 @@ import TipoDocumentsModel from "../models/TipoDocumentos.model.js";
 import UserModel from "../../Auth/models/UserModel.js";
 import VehiculosModel from "../models/vehiculos.model.js";
 
+const findUserByDocument = async (idDoc) => {
+  try {
+    // Intentar buscar en documentos de usuarios
+    const documentoUsuario = await DocumentosUsuarioModel.findById(idDoc).populate("idUsuario");
+    if (documentoUsuario) {
+      return documentoUsuario.idUsuario;
+    }
+
+    // Si no se encuentra en documentos de usuario, buscar en documentos de vehículos
+    const documentoVehiculo = await DocumentosVehiculoModel.findById(idDoc).populate({
+      path: "idVehiculo",
+      populate: { path: "idUsuario" }, // Hace el join con el usuario
+    });
+
+    return documentoVehiculo?.idVehiculo?.idUsuario || null;
+  } catch (error) {
+    console.error("Error obteniendo usuario:", error);
+    return null;
+  }
+};
+
 const saveUserDocument = async (documentData) => {
   const newDocument = new DocumentosUsuarioModel(documentData);
   await newDocument.save();
@@ -30,7 +51,6 @@ const getDocumentsByIdUser = async (id_user) => {
   });
 };
 
-
 const findDocsPorExpirar = async (hoy, fechaLimite) => {
   const docsUsuarios = await DocumentosUsuarioModel.find({
     fechaExpiracion: { $gte: hoy, $lte: fechaLimite },
@@ -48,65 +68,9 @@ const findDocsPorExpirar = async (hoy, fechaLimite) => {
     .populate("tipoDocumentoId", "-categoria -descripcion");
 
   return { docsUsuarios, docsVehiculos };
-}
+};
 
 
-
-// export const findDocsPorExpirar = async (hoy, fechaLimite) => {
-//   const docs = await Promise.all([
-//     DocumentosUsuarioModel.find()
-//       .populate(
-//         "idUsuario",
-//         "-password -idRole -createdAt -updatedAt -idCargo -tipoLicencia -telefono -fechaNacimiento"
-//       )
-//       .populate("tipoDocumentoId", "-categoria -descripcion"),
-//     DocumentosVehiculoModel.find()
-//       .populate("idVehiculo", "marca servicio placa")
-//       .populate("tipoDocumentoId", "-categoria -descripcion"),
-//   ]);
-
-//   const allDocs = [...docs[0], ...docs[1]].map((doc) => {
-//     const diasFaltantes = Math.ceil(
-//       (new Date(doc.fechaExpiracion) - new Date(hoy)) / (1000 * 60 * 60 * 24)
-//     );
-//     return {
-//       ...doc._doc,
-//       diasFaltantes,
-//       estado: diasFaltantes < 0 ? "Expirado" : "Por Expirar",
-//     };
-//   });
-
-//   const docsPorExpirar = allDocs.filter(
-//     (doc) => doc.diasFaltantes >= 0 && doc.diasFaltantes <= fechaLimite
-//   );
-//   const docsExpirados = allDocs.filter((doc) => doc.diasFaltantes < 0);
-
-//   const totalProxVencer = docsPorExpirar.length;
-//   const totalVencidos = docsExpirados.length;
-//   const totalProxVencerUsuario = docsPorExpirar.filter(
-//     (doc) => doc.idUsuario
-//   ).length;
-//   const totalProxVencerVehiculo = docsPorExpirar.filter(
-//     (doc) => doc.idVehiculo
-//   ).length;
-//   const totalVencidosUsuario = docsExpirados.filter(
-//     (doc) => doc.idUsuario
-//   ).length;
-//   const totalVencidosVehiculo = docsExpirados.filter(
-//     (doc) => doc.idVehiculo
-//   ).length;
-
-//   return {
-//     documentosPorExpirar: docsPorExpirar,
-//     documentosExpirados: docsExpirados,
-//     totalProxVencer,
-//     totalVencidos,
-//     totalProxVencerUsuario,
-//     totalProxVencerVehiculo,
-//     totalVencidosUsuario,
-//     totalVencidosVehiculo,
-//   };
-// };
 
 export const countDocsPorExpirar = async (hoy, fechaLimite) => {
   const docs = await Promise.all([
@@ -151,5 +115,5 @@ export default {
   findDocsPorExpirar,
   countDocsPorExpirar,
   findTipoDocumentoByVehiculo,
-
+  findUserByDocument
 };
