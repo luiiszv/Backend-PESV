@@ -7,7 +7,6 @@ import DocumentRepository from "../PESV/repositories/document.Repository.js";
 import VehiculoRepository from "../PESV/repositories/vehiculo.repository.js";
 import mongoose from "mongoose";
 
-
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 ///✔
@@ -36,7 +35,8 @@ export const uploadUserMiddleware = async (req, res, next) => {
 
       if (file.size > MAX_FILE_SIZE) {
         return res.status(400).json({
-          error: `El archivo supera el límite de ${
+          success: false,
+          message: `El archivo supera el límite de ${
             MAX_FILE_SIZE / (1024 * 1024)
           }MB`,
         });
@@ -112,6 +112,16 @@ export const uploadVehiculeMiddleware = async (req, res, next) => {
     for (const fileData of filesData) {
       const file = req.files[fileData.key];
 
+      if (file.size > MAX_FILE_SIZE) {
+        return res.status(400).json({
+          success: false,
+          message: `El archivo supera el límite de ${
+            MAX_FILE_SIZE / (1024 * 1024)
+          }MB`,
+        });
+      }
+
+
       // Subir archivo a Cloudinary
       const fileUrl = await uploadVehiculosCloudinary(
         file.tempFilePath,
@@ -145,11 +155,10 @@ export const uploadVehiculeMiddleware = async (req, res, next) => {
 };
 export const uploadVehiculeVerifyExistDoc = async (req, res, next) => {
   try {
-    let { idVehiculo, tipoDocumentoId, numeroDocumento, fechaExpiracion } = req.body;
+    let { idVehiculo, tipoDocumentoId, numeroDocumento, fechaExpiracion } =
+      req.body;
     const ID_TIPO_OTRO = "67bab092fb72f4bec50d819e"; // ID del tipo de documento "Otro"
 
-
-    
     // Asegurar que `idVehiculo` y `tipoDocumentoId` sean strings válidos
     idVehiculo = idVehiculo?.toString().trim();
     tipoDocumentoId = tipoDocumentoId?.toString().trim();
@@ -176,16 +185,21 @@ export const uploadVehiculeVerifyExistDoc = async (req, res, next) => {
       });
     }
 
-    const tipoDocumentoExisteVehiculo = await DocumentRepository.findTipoDocumentoByVehiculo(
-      idVehiculo,
-      tipoDocumentoId
-    );
+    const tipoDocumentoExisteVehiculo =
+      await DocumentRepository.findTipoDocumentoByVehiculo(
+        idVehiculo,
+        tipoDocumentoId
+      );
 
     if (tipoDocumentoExisteVehiculo) {
-      const nombre = tipoDocumentoExisteVehiculo.tipoDocumentoId?.nombre || "el documento";
+      const nombre =
+        tipoDocumentoExisteVehiculo.tipoDocumentoId?.nombre || "el documento";
 
       // Si el tipo de documento ya existe y no es "Otro", bloquear la operación
-      if (tipoDocumentoExisteVehiculo.tipoDocumentoId?._id.toString() !== ID_TIPO_OTRO) {
+      if (
+        tipoDocumentoExisteVehiculo.tipoDocumentoId?._id.toString() !==
+        ID_TIPO_OTRO
+      ) {
         return res.status(200).json({
           success: false,
           message: `El vehículo ya tiene ${nombre} registrado.`,
@@ -202,7 +216,6 @@ export const uploadVehiculeVerifyExistDoc = async (req, res, next) => {
     }
 
     const { documento } = req.files;
-
 
     // Subir a Cloudinary
     const fileUrl = await uploadVehiculosCloudinary(
