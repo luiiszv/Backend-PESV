@@ -12,7 +12,7 @@ import {
   uploadVehiculeMiddleware,
   uploadUserMiddleware,
   uploadVehiculeVerifyExistDoc,
-  uploadUserVerifyExistDoc
+  uploadUserVerifyExistDoc,
 } from "../../Middleware/UploadPdf.js";
 import { findTipoDocumentoVehiculos } from "../controllers/tipoDocumento.controller.js";
 //Middle
@@ -26,7 +26,6 @@ routerDocuments.get("/", getAllDocuments);
 routerDocuments.get(
   "/tipos/vehiculos",
   authMiddleware,
-  authAdminMiddleware,
   findTipoDocumentoVehiculos
 );
 
