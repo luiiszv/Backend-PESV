@@ -1,9 +1,15 @@
 import TipoDocumentosRepository from "../repositories/tipoDocumento.repository.js";
 
 export const getTipoDocumentosVehiculo = async () => {
-  const response = await TipoDocumentosRepository.getTipoDocumentosVehiculo();
+  const tipoDocVehiculo =
+    await TipoDocumentosRepository.getTipoDocumentosVehiculo();
+  const tipoDocUsuario =
+    await TipoDocumentosRepository.getTipoDocumentosUsuario();
   return {
     success: true,
-    data: response,
+    data: {
+      tipoDocVehiculo,
+      tipoDocUsuario,
+    },
   };
 };

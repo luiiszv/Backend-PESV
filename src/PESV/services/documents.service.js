@@ -103,6 +103,19 @@ export const saveVehiculeDocument = async (doc) => {
   }
 };
 
+export const saveUserDocument = async (doc) => {
+  try {
+    const response = await DocumentsRepository.saveUserDocument(doc);
+    return {
+      success: true,
+      data: response,
+    }; // Devolver la respuesta del repositorio
+  } catch (error) {
+    console.error("Error al guardar el documento:", error);
+    throw new Error("No se pudo guardar el documento.");
+  }
+};
+
 export const getDocuemntsByIdVehiculo = async (id_vehiculo) => {
   if (!id_vehiculo) {
     return {

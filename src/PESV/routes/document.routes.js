@@ -3,6 +3,7 @@ import {
   uploadUserDocument,
   uploadManyVehiculeDocument,
   uploadOneVehiculeDocuemnt,
+  uploadOneUserDocuemnt,
   getAllDocuments,
   downloadDocumentByRuta,
   getDocumetosPorExpirar,
@@ -11,6 +12,7 @@ import {
   uploadVehiculeMiddleware,
   uploadUserMiddleware,
   uploadVehiculeVerifyExistDoc,
+  uploadUserVerifyExistDoc
 } from "../../Middleware/UploadPdf.js";
 import { findTipoDocumentoVehiculos } from "../controllers/tipoDocumento.controller.js";
 //Middle
@@ -428,6 +430,12 @@ routerDocuments.post(
   "/uploadVehiculeId",
   uploadVehiculeVerifyExistDoc,
   uploadOneVehiculeDocuemnt
+);
+
+routerDocuments.post(
+  "/uploadUserId",
+  uploadUserVerifyExistDoc,
+  uploadOneUserDocuemnt
 );
 
 /**

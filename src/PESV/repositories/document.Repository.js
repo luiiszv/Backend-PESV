@@ -107,6 +107,13 @@ const findTipoDocumentoByVehiculo = async (idVehiculo, tipoDocumentoId) => {
   }).populate("tipoDocumentoId");
 };
 
+const findTipoDocumentoByUser = async (idUsuario, tipoDocumentoId) => {
+  return await DocumentosUsuarioModel.findOne({
+    idUsuario,
+    tipoDocumentoId,
+  }).populate("tipoDocumentoId");
+};
+
 export default {
   saveUserDocument,
   saveVehiculeDocument,
@@ -115,5 +122,6 @@ export default {
   findDocsPorExpirar,
   countDocsPorExpirar,
   findTipoDocumentoByVehiculo,
-  findUserByDocument
+  findUserByDocument,
+  findTipoDocumentoByUser
 };

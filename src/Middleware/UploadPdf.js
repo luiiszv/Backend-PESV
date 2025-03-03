@@ -5,6 +5,7 @@ import {
 import fs from "fs";
 import DocumentRepository from "../PESV/repositories/document.Repository.js";
 import VehiculoRepository from "../PESV/repositories/vehiculo.repository.js";
+import UserRepository from "../Auth/repositories/user.repository.js";
 import mongoose from "mongoose";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -243,3 +244,96 @@ export const uploadVehiculeVerifyExistDoc = async (req, res, next) => {
     });
   }
 };
+
+
+export const uploadUserVerifyExistDoc = async (req, res, next) => {
+  try {
+    let { idUsuario, tipoDocumentoId, numeroDocumento, fechaExpiracion } =
+      req.body;
+    const ID_TIPO_OTRO = "67c522ab50f030d6540d8190"; // ID del tipo de documento "Otro Documento"
+
+    // Asegurar que `idVehiculo` y `tipoDocumentoId` sean strings válidos
+    idUsuario = idUsuario?.toString().trim();
+    tipoDocumentoId = tipoDocumentoId?.toString().trim();
+
+    if (!idUsuario) {
+      return res.status(400).json({
+        success: false,
+        message: "Id del Usuario es requerido",
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(idUsuario)) {
+      return res.status(400).json({
+        success: false,
+        message: "Id del Usuario no es válido",
+      });
+    }
+    const userExist= await UserRepository.findUserById(idUsuario)
+
+    if (!userExist) {
+      return res.status(404).json({
+        success: false,
+        message: "El Usuario no fue encontrado",
+      });
+    }
+
+    const tipoDocumentoExisteVehiculo =
+      await DocumentRepository.findTipoDocumentoByUser(
+        idUsuario,
+        tipoDocumentoId
+      );
+
+    if (tipoDocumentoExisteVehiculo) {
+      const nombre =
+        tipoDocumentoExisteVehiculo.tipoDocumentoId?.nombreDocumento || "el documento";
+
+      // Si el tipo de documento ya existe y no es "Otro", bloquear la operación
+      if (
+        tipoDocumentoExisteVehiculo.tipoDocumentoId?._id.toString() !==
+        ID_TIPO_OTRO
+      ) {
+        return res.status(200).json({
+          success: false,
+          message: `El Usuario ya tiene ${nombre} registrado.`,
+        });
+      }
+    }
+
+    // Verificar si se envió un archivo
+    if (!req.files || !req.files.documento) {
+      return res.status(200).json({
+        success: false,
+        message: "No se ha subido ningún documento",
+      });
+    }
+
+    const { documento } = req.files;
+
+    // Subir a Cloudinary
+    const fileUrl = await uploadUsuariosCloudinary(
+      documento.tempFilePath,
+      documento.name
+    );
+
+    const doc = {
+      name: documento.name,
+      ruta: fileUrl.secure_url,
+      assetId: fileUrl.asset_id,
+      idUsuario,
+      tipoDocumentoId,
+      numeroDocumento,
+      fechaExpiracion,
+    };
+
+    req.uploadedFiles = doc;
+    next();
+  } catch (error) {
+    console.error("Error en uploadVehiculeVerifyExistDoc:", error);
+    return res.status(500).json({
+      error: "Error al subir archivo",
+      details: error.message,
+    });
+  }
+};
+

@@ -183,6 +183,12 @@ db.tipos_documentos.insertOne({
   descripcion: "Otro documento relaciondo",
 });
 
+db.tipos_documentos.insertOne({
+  nombre: "Otro Documento",
+  categoria: "persona",
+  descripcion: "Otro documento relaciondo con el usuario",
+});
+
 db.cargos.insertMany([
   { name: "NO REGISTRA", description: "Sin información registrada." },
   {

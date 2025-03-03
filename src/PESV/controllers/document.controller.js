@@ -3,6 +3,7 @@ import {
   saveDocumentUserToDatabase,
   saveManyDocumentVehiculeToDatabase,
   saveVehiculeDocument,
+  saveUserDocument,
   findDocsPorExpirar,
 } from "../services/documents.service.js";
 
@@ -52,9 +53,22 @@ export const uploadManyVehiculeDocument = async (req, res) => {
 };
 
 export const uploadOneVehiculeDocuemnt = async (req, res) => {
+
   try {
     const infoDocs = req.uploadedFiles;
+    console.log(infoDocs)
     const response = await saveVehiculeDocument(infoDocs);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+};
+
+export const uploadOneUserDocuemnt = async (req, res) => {
+  try {
+    const infoDocs = req.uploadedFiles;
+    const response = await saveUserDocument(infoDocs);
     res.status(200).send(response);
   } catch (error) {
     console.log(error);
