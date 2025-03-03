@@ -6,9 +6,11 @@ import {
 
 } from "../services/formPreoperacional.service.js";
 
+import moment from "moment-timezone";
+
 export const getFormulariosDiarios = async (req, res) => {
   try {
-    const fecha = req.query.fecha || new Date().toISOString().split("T")[0];
+    const fecha = req.query.fecha || moment().tz("America/Bogota").format("YYYY-MM-DD");
     console.log(fecha);
     const result = await obtenerFormulariosDiarios(fecha);
 

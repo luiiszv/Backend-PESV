@@ -1,10 +1,12 @@
 import FormPreoperacionalModel from "../models/FormPreoperacional.model.js";
 import UserModel from "../../Auth/models/UserModel.js";
 
+import moment from "moment-timezone";
+
 const findFormulariosDiarios = async (fechaString) => {
-  // Convertir la fecha a formato UTC ajustando el inicio y fin del día en Colombia (GMT-5)
-  const fechaInicio = new Date(`${fechaString}T00:00:00.000-05:00`); // Medianoche en Colombia
-  const fechaFin = new Date(`${fechaString}T23:59:59.999-05:00`); // Fin del día en Colombia
+  // Convertir la fecha a la zona horaria de Colombia
+  const fechaInicio = moment.tz(`${fechaString}T00:00:00`, "America/Bogota").toDate();
+  const fechaFin = moment.tz(`${fechaString}T23:59:59.999`, "America/Bogota").toDate();
 
   return await FormPreoperacionalModel.find({
     fechaRespuesta: { $gte: fechaInicio, $lte: fechaFin },
@@ -13,6 +15,7 @@ const findFormulariosDiarios = async (fechaString) => {
     .populate("formularioId", "nombreFormulario")
     .select("estadoFormulario fechaRespuesta");
 };
+
 
 
 const findFormulariosDiariosConErrores = async (fecha) => {
