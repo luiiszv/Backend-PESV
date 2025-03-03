@@ -21,7 +21,7 @@ app.use(morgan("dev"));
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://backend-pesv.vercel.app",
+  "https://front-end-pesv.vercel.app",
 ];
 
 app.use(
