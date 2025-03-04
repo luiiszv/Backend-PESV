@@ -2,6 +2,8 @@ import {
   findAllVehiculos,
   findSelectInformationVehiculos,
   updateVehicule,
+  toggleVehiculoEnUso
+  
 } from "../services/vehicule.service.js";
 import { getDocuemntsByIdVehiculo } from "../services/documents.service.js";
 
@@ -52,7 +54,22 @@ export const editVehicule = async (req, res) => {
     res.status(200).json(response);
   } catch (error) {
     console.log(error);
-    console.log(error)
+    console.log(error);
+    res.status(400).json({
+      message: "Something went wrong in editVehicule",
+      error,
+    });
+  }
+};
+
+export const changeEstadoUso = async (req, res) => {
+  const { params } = req;
+  try {
+    const response = await toggleVehiculoEnUso(params.id);
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    console.log(error);
     res.status(400).json({
       message: "Something went wrong in editVehicule",
       error,

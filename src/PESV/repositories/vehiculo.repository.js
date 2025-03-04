@@ -1,27 +1,25 @@
-
 import VehiculosModel from "../models/vehiculos.model.js";
 import ClaseVehiculoModel from "../models/ClaseVehiuclos.model.js";
 
 const findAllVehiculosByIdUser = async (id_user) => {
-  return await VehiculosModel.find({ idUsuario: id_user }).populate({
-    path: 'idUsuario',
-    select: ""
-  }).populate({
-    path: 'idUsuarioAsignado',
-    select: ""
-
-  }).populate({
-    path: 'idTipoVehiculo',
-    select: ""
-
-  }).populate({
-    path: 'idZona',
-    select: ""
-
-  })
-
-
-}
+  return await VehiculosModel.find({ idUsuario: id_user })
+    .populate({
+      path: "idUsuario",
+      select: "",
+    })
+    .populate({
+      path: "idUsuarioAsignado",
+      select: "",
+    })
+    .populate({
+      path: "idTipoVehiculo",
+      select: "",
+    })
+    .populate({
+      path: "idZona",
+      select: "",
+    });
+};
 const findAllVehiculos = async () => {
   return VehiculosModel.find()
     .populate({
@@ -35,13 +33,15 @@ const findAllVehiculos = async () => {
     .populate({
       path: "idClaseVehiculo",
       select: "-description",
-    }).populate({
+    })
+    .populate({
       path: "idTipoVehiculo",
       select: "",
-    }).populate({
+    })
+    .populate({
       path: "idZona",
       select: "",
-    })
+    });
 };
 
 const findVehiculeById = async (id_vehicule) => {
@@ -87,6 +87,36 @@ const updateVehicule = async (id_vehiculo, vehicule_data) => {
   return await VehiculosModel.updateOne({ _id: id_vehiculo }, vehicule_data);
 };
 
+
+//Cambia el estado del vehiuclo en uso
+const toggleVehiculoEnUso = async (idVehiculo, estadoUso) => {
+  try {
+    // Buscar el vehículo
+
+    const vehiculo = await findVehiculeById(idVehiculo);
+
+    if (!vehiculo) {
+      return {
+        success: false,
+        message: "Vehiculo no encontrado",
+      };
+    }
+
+    // Cambiar el estado al contrario
+    const nuevoEstado = !estadoUso;
+
+    // Actualizar en la base de datos
+    await VehiculosModel.updateOne(
+      { _id: idVehiculo },
+      { vehiculoEnUso: nuevoEstado }
+    );
+
+    return { success: true, nuevoEstado };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
+
 export default {
   findAllVehiculosByIdUser,
   findVehiculeById,
@@ -95,7 +125,8 @@ export default {
   insertVehiculo,
   findAllVehiculos,
   findEnumValues,
-  updateVehicule
+  updateVehicule,
+  toggleVehiculoEnUso
 };
 
 // .populate({

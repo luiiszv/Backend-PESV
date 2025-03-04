@@ -2,6 +2,7 @@ import {
   getAllSelectVehicules,
   getDocsByIdVehiculo,
   editVehicule,
+  changeEstadoUso,
 } from "../controllers/vehiculos.controller.js";
 import { Router } from "express";
 
@@ -10,7 +11,6 @@ const routerVehiculos = Router();
 //Obtiene los Inf de los select al registrar un vehiculo
 routerVehiculos.get("/", getAllSelectVehicules);
 routerVehiculos.get("/documents/:id", authMiddleware, getDocsByIdVehiculo);
-
 
 /**
  * @swagger
@@ -109,5 +109,46 @@ routerVehiculos.get("/documents/:id", authMiddleware, getDocsByIdVehiculo);
  */
 routerVehiculos.put("/edit/:id", authMiddleware, editVehicule);
 
+/**
+ * @swagger
+ * /pesv/vehiculos/edit/estado-uso/{id}:
+ *   put:
+ *     summary: Cambia el estado de uso de un vehículo
+ *     description: Alterna el estado de uso de un vehículo entre activo e inactivo.
+ *     tags:
+ *       - PESV Vehiculos
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID del vehículo a modificar
+ *         schema:
+ *           type: string
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Estado de uso del vehículo actualizado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     nuevoEstado:
+ *                       type: boolean
+ *       400:
+ *         description: ID del vehículo inválido o faltante
+ *       404:
+ *         description: Vehículo no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+
+routerVehiculos.put("/edit/estado-uso/:id", authMiddleware, changeEstadoUso);
 
 export default routerVehiculos;
