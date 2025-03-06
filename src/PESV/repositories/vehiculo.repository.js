@@ -2,23 +2,13 @@ import VehiculosModel from "../models/vehiculos.model.js";
 import ClaseVehiculoModel from "../models/ClaseVehiuclos.model.js";
 
 const findAllVehiculosByIdUser = async (id_user) => {
-  return await VehiculosModel.find({ idUsuarioAsignado: id_user })
-    .populate({
-      path: "idUsuario",
-      select: "",
-    })
-    .populate({
-      path: "idUsuarioAsignado",
-      select: "",
-    })
-    .populate({
-      path: "idTipoVehiculo",
-      select: "",
-    })
-    .populate({
-      path: "idZona",
-      select: "",
-    });
+  return await VehiculosModel.find({
+    $or: [{ idUsuarioAsignado: id_user }, { idUsuario: id_user }],
+  })
+    .populate("idUsuario")
+    .populate("idUsuarioAsignado")
+    .populate("idTipoVehiculo")
+    .populate("idZona");
 };
 const findAllVehiculos = async () => {
   return VehiculosModel.find()
@@ -87,7 +77,6 @@ const updateVehicule = async (id_vehiculo, vehicule_data) => {
   return await VehiculosModel.updateOne({ _id: id_vehiculo }, vehicule_data);
 };
 
-
 //Cambia el estado del vehiuclo en uso
 const toggleVehiculoEnUso = async (idVehiculo, estadoUso) => {
   try {
@@ -126,7 +115,7 @@ export default {
   findAllVehiculos,
   findEnumValues,
   updateVehicule,
-  toggleVehiculoEnUso
+  toggleVehiculoEnUso,
 };
 
 // .populate({
