@@ -2,7 +2,7 @@ import VehiculosModel from "../models/vehiculos.model.js";
 import ClaseVehiculoModel from "../models/ClaseVehiuclos.model.js";
 
 const findAllVehiculosByIdUser = async (id_user) => {
-  return await VehiculosModel.find({ idUsuario: id_user })
+  return await VehiculosModel.find({ idUsuarioAsignado: id_user })
     .populate({
       path: "idUsuario",
       select: "",
