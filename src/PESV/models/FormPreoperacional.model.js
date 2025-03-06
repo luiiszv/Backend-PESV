@@ -6,6 +6,12 @@ const FormPreoperacionalSchema = new Schema({
     ref: "usuarios",
     require: true,
   },
+
+  idVehiculo: {
+    type: Schema.Types.ObjectId,
+    ref: "vehiculos",
+    require: true,
+  },
   formularioId: {
     type: Schema.Types.ObjectId,
     ref: "formularios",

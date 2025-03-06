@@ -3,6 +3,7 @@ import FormPreoperacionalRepository from "../repositories/formPreoperacional.rep
 import UserRepository from "../../Auth/repositories/user.repository.js";
 import FormRepository from "../repositories/formualrios.respository.js";
 import PreguntasRepository from "../repositories/Preguntas.repository.js";
+import vehiculoRepository from "../repositories/vehiculo.repository.js";
 
 export const obtenerFormulariosDiarios = async (fecha) => {
   const formularios = await FormPreoperacionalRepository.findFormulariosDiarios(
@@ -55,7 +56,7 @@ export const getFormPreOperacionalById = async (id_form) => {
   };
 };
 export const insertFormPreOperacional = async (idUsuario, form_data) => {
-  const { formularioId, respuestas } = form_data;
+  const { formularioId, respuestas, idVehiculo } = form_data;
 
   // Verificar si el usuario y el formulario existen
   const idUsuarioExist = await UserRepository.findUserById(idUsuario);
@@ -63,12 +64,24 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
     return { success: false, message: "El usuario no fue encontrado." };
   }
 
-  const formularioIdExist = await FormRepository.findFormualrioByID(formularioId);
+  const formularioIdExist = await FormRepository.findFormualrioByID(
+    formularioId
+  );
   if (!formularioIdExist) {
     return { success: false, message: "El formulario no fue encontrado." };
   }
 
   let estadoFormulario = "completado";
+
+  
+
+  const vehiculeExist = await vehiculoRepository.findVehiculeById(idVehiculo);
+  if (!vehiculeExist) {
+    return {
+      success: false,
+      message: "Vehiculo no encontrado",
+    };
+  }
 
   // Si no se envían respuestas, se considera "no_aplica"
   if (!Array.isArray(respuestas) || respuestas.length === 0) {
@@ -76,7 +89,9 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
   } else {
     // Validar preguntas y verificar si alguna es determinante con respuesta false
     for (const { idPregunta, respuesta } of respuestas) {
-      const preguntaExist = await PreguntasRepository.findPreguntaById(idPregunta);
+      const preguntaExist = await PreguntasRepository.findPreguntaById(
+        idPregunta
+      );
 
       if (!preguntaExist) {
         return {
@@ -94,14 +109,12 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
   // Preparar datos y registrar en la base de datos
   const formDataStatus = { ...form_data, estadoFormulario, idUsuario };
 
-  const response = await FormPreoperacionalRepository.insertFormPreOperacional(formDataStatus);
+  const response = await FormPreoperacionalRepository.insertFormPreOperacional(
+    formDataStatus
+  );
   return {
     success: true,
     message: "Formulario Registrado",
     data: response,
   };
 };
-
-
-
-
