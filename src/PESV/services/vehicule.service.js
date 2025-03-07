@@ -239,3 +239,23 @@ export const toggleVehiculoEnUso = async (id_vehiculo) => {
     data: response,
   };
 };
+
+export const obtenerVehiculosSinPreoperacional = async (idUsuario) => {
+  try {
+    const response = await VehiculeRepository.obtenerVehiculosSinPreoperacional(
+      idUsuario
+    );
+
+    return {
+      success: true,
+      data: response || [], // Si no hay datos, retorna un array vacío
+    };
+  } catch (error) {
+    console.error("Error en obtenerVehiculosSinPreoperacional:", error);
+    return {
+      success: false,
+      message: "Error al obtener vehículos sin preoperacional.",
+      error: error.message, // Retorna el mensaje del error para depuración
+    };
+  }
+};

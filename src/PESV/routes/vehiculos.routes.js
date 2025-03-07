@@ -3,6 +3,7 @@ import {
   getDocsByIdVehiculo,
   editVehicule,
   changeEstadoUso,
+  getVehiculosSinFormularioPreOperacionalDiario,
 } from "../controllers/vehiculos.controller.js";
 import { Router } from "express";
 
@@ -150,5 +151,57 @@ routerVehiculos.put("/edit/:id", authMiddleware, editVehicule);
  */
 
 routerVehiculos.put("/edit/estado-uso/:id", authMiddleware, changeEstadoUso);
+
+
+
+/**
+ * @swagger
+ * /pesv/vehiculos/vehiculos-sin-preoperacional:
+ *   get:
+ *     summary: Obtiene los vehículos en uso y activos que no han realizado el formulario preoperacional diario.
+ *     tags: 
+ *       - Vehículos
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: idUsuario
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID del usuario propietario o asignado al vehículo.
+ *     responses:
+ *       200:
+ *         description: Lista de vehículos sin preoperacional diario.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     description: ID del vehículo.
+ *                   placa:
+ *                     type: string
+ *                     description: Placa del vehículo.
+ *                   marca:
+ *                     type: string
+ *                     description: Marca del vehículo.
+ *                   modeloVehiculo:
+ *                     type: number
+ *                     description: Año del modelo del vehículo.
+ *       401:
+ *         description: No autorizado, token inválido o faltante.
+ *       500:
+ *         description: Error interno del servidor.
+ */
+routerVehiculos.get(
+  "/vehiculos-sin-preoperacional",
+  authMiddleware,
+  getVehiculosSinFormularioPreOperacionalDiario
+);
+
 
 export default routerVehiculos;

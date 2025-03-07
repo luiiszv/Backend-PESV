@@ -2,8 +2,8 @@ import {
   findAllVehiculos,
   findSelectInformationVehiculos,
   updateVehicule,
-  toggleVehiculoEnUso
-  
+  toggleVehiculoEnUso,
+  obtenerVehiculosSinPreoperacional,
 } from "../services/vehicule.service.js";
 import { getDocuemntsByIdVehiculo } from "../services/documents.service.js";
 
@@ -67,6 +67,23 @@ export const changeEstadoUso = async (req, res) => {
   try {
     const response = await toggleVehiculoEnUso(params.id);
     res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    console.log(error);
+    res.status(400).json({
+      message: "Something went wrong in editVehicule",
+      error,
+    });
+  }
+};
+
+export const getVehiculosSinFormularioPreOperacionalDiario = async (
+  req,
+  res
+) => {
+  const response = await obtenerVehiculosSinPreoperacional(req.user.userId);
+  res.status(200).json(response);
+  try {
   } catch (error) {
     console.log(error);
     console.log(error);

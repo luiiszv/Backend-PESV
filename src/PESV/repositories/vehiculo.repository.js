@@ -1,5 +1,7 @@
 import VehiculosModel from "../models/vehiculos.model.js";
 import ClaseVehiculoModel from "../models/ClaseVehiuclos.model.js";
+import FormPreoperacionalModel from "../models/FormPreoperacional.model.js";
+import moment from "moment-timezone";
 
 const findAllVehiculosByIdUser = async (id_user) => {
   return await VehiculosModel.find({
@@ -106,6 +108,53 @@ const toggleVehiculoEnUso = async (idVehiculo, estadoUso) => {
   }
 };
 
+const obtenerVehiculosSinPreoperacional = async (idUsuario) => {
+  console.log("ID Usuario:", idUsuario);
+  try {
+    const hoy = moment().tz("America/Bogota").startOf("day").toDate(); // Inicio del día
+    const mañana = moment().tz("America/Bogota").endOf("day").toDate(); // Fin del día
+
+    // Buscar vehículos en uso, activos y que pertenezcan al usuario o estén asignados a él
+    const vehiculosEnUso = await VehiculosModel.find({
+      vehiculoEnUso: true,
+      estadoVehiculo: true,
+      $or: [
+        { idUsuario: idUsuario }, // Vehículos registrados por el usuario
+        { idUsuarioAsignado: idUsuario }, // Vehículos asignados al usuario
+      ],
+    }).select("-createdAt -updatedAt -__v");
+
+    if (vehiculosEnUso.length === 0) {
+      console.log("No hay vehículos en uso para este usuario.");
+      return [];
+    }
+
+    const idsVehiculos = vehiculosEnUso.map((v) => v._id);
+
+    // Buscar formularios preoperacionales completados hoy
+    const vehiculosConPreoperacional = await FormPreoperacionalModel.find({
+      idVehiculo: { $in: idsVehiculos },
+      fechaRespuesta: { $gte: hoy, $lte: mañana },
+    }).select("idVehiculo");
+
+    const idsConFormulario = vehiculosConPreoperacional.map((f) =>
+      f.idVehiculo.toString()
+    );
+
+    // Filtrar vehículos que no tengan un formulario hoy
+    const vehiculosSinFormulario = vehiculosEnUso.filter(
+      (v) => !idsConFormulario.includes(v._id.toString())
+    );
+
+    console.log(`Vehículos sin preoperacional para el usuario ${idUsuario}:`, vehiculosSinFormulario);
+
+    return vehiculosSinFormulario;
+  } catch (error) {
+    console.error("Error al obtener vehículos sin preoperacional:", error);
+    return [];
+  }
+};
+
 export default {
   findAllVehiculosByIdUser,
   findVehiculeById,
@@ -116,9 +165,6 @@ export default {
   findEnumValues,
   updateVehicule,
   toggleVehiculoEnUso,
+  obtenerVehiculosSinPreoperacional,
 };
 
-// .populate({
-//     path: "id_zona",  nombre de capo en la coleccion
-//     select: "nombreZona codeZona", campos de la coleccion relacionada
-//   })
