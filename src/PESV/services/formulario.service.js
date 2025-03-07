@@ -1,7 +1,7 @@
 import FormularioRepository from "../repositories/formualrios.respository.js";
 import claseVehiculosRepository from "../repositories/claseVehiculos.repository.js";
 import PreguntasRepository from "../repositories/Preguntas.repository.js";
-import UsuarioRepository from "../repositories/user.respository.js"
+import UsuarioRepository from "../repositories/user.respository.js";
 import VehiculoRepository from "../repositories/vehiculo.repository.js";
 import mongoose from "mongoose";
 
@@ -75,8 +75,8 @@ export const findFormualrioByID = async (id_formulario) => {
   if (!mongoose.Types.ObjectId.isValid(id_formulario)) {
     return {
       success: false,
-      message: "Id del Formualrio no es valido"
-    }
+      message: "Id del Formualrio no es valido",
+    };
   }
   const response = await FormularioRepository.findFormualrioByID(id_formulario);
   if (!response) {
@@ -92,7 +92,6 @@ export const findFormualrioByID = async (id_formulario) => {
 };
 
 export const updateForm = async (id_form, new_data) => {
-
   if (!id_form) {
     return {
       success: false,
@@ -134,68 +133,55 @@ export const updateForm = async (id_form, new_data) => {
   }
 };
 
-export const findFormulariosByUserAuth = async (userId) => {
-  if (!userId) {
+export const findFormularioByVehiculo = async (vehiculoId) => {
+  if (!mongoose.Types.ObjectId.isValid(vehiculoId)) {
     return {
       success: false,
-      message: 'Id del usuario es requerido'
+      message: "ID del vehículo no es válido",
     };
   }
 
-  const user = await UsuarioRepository.getUserById(userId);
-  if (!user) {
+  if (!vehiculoId) {
     return {
       success: false,
-      message: 'Usuario no encontrado'
+      message: "ID del vehículo es requerido",
     };
   }
 
-  const { _id } = user;
+  // Buscar el vehículo por su ID
+  const vehiculo = await VehiculoRepository.findVehiculeById(vehiculoId);
 
-  // Buscamos los vehículos activos del usuario
-  const vehiculosActivos = await VehiculoRepository.findUserVehiuclesActives(_id);
-  console.log('Vehículos Activos:', vehiculosActivos);
-
-  if (!vehiculosActivos || vehiculosActivos.length === 0) {
+  if (!vehiculo) {
     return {
       success: false,
-      message: 'No hay Vehículos Activos Aún'
+      message: "Vehículo no encontrado",
     };
   }
 
-  // IDs de referencia
-  const ID_MOTOCICLETA = "67a50fff122183dc3aaddbae";
-  const ID_AUTOMOVIL = "67a50fff122183dc3aaddbb2";
+  let idClaseVehiculo = vehiculo.idClaseVehiculo;
 
-  const formularios = [];
+  // Si el vehículo no es motocicleta, usar el ID de automóvil
+  const idMotocicleta = "67a50fff122183dc3aaddbae"; // ID de motocicleta
+  const idAutomovil = "67a50fff122183dc3aaddbb2"; // ID de automóvil
 
-  for (const { idClaseVehiculo } of vehiculosActivos) {
-    let idFormulario = ID_AUTOMOVIL; // Por defecto, usar formulario de Automóvil
-
-    if (idClaseVehiculo.toString() === ID_MOTOCICLETA) {
-      idFormulario = ID_MOTOCICLETA; // Si es motocicleta, usa su propio formulario
-    }
-
-    const responseForm = await FormularioRepository.findFormulariosByUserAuth(idFormulario);
-
-    if (responseForm) {
-      formularios.push({
-        idClaseVehiculo,
-        formularios: responseForm
-      });
-    }
+  if (idClaseVehiculo !== idMotocicleta) {
+    idClaseVehiculo = idAutomovil;
   }
 
-  if (formularios.length === 0) {
+  // Obtener el formulario según la clase del vehículo
+  const formulario = await FormularioRepository.findFormulariosByUserAuth(
+    idClaseVehiculo
+  );
+
+  if (!formulario.success || !formulario.formularios.length) {
     return {
       success: false,
-      message: 'No hay formularios disponibles para los vehículos del usuario'
+      message: "No se encontró un formulario para este tipo de vehículo",
     };
   }
 
   return {
     success: true,
-    formularios
+    formulario: formulario.formularios, // Devolver el formulario encontrado
   };
 };
-

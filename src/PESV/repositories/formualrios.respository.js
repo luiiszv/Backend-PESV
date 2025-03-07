@@ -39,12 +39,35 @@ const updateFormulario = async (idFormulario, updateData) => {
 };
 
 //Obtinen el Fomulario Que estan acticos de acuerdo al tipo de vehiuclo que tiene el usuario
-const findFormulariosByUserAuth = async (idClaseVehiculo) => {
-  return await FormularioModel.find({ idClaseVehiculo, estadoFormulario: true }).populate({
-    path: 'preguntas',
-    select: "-fechaCreacion -createdAt -updatedAt"
-  })
-}
+export const findFormulariosByUserAuth = async (idClaseVehiculo) => {
+  if (!idClaseVehiculo) {
+    return {
+      success: false,
+      message: "Id de la clase del vehículo es requerido",
+    };
+  }
+
+  const formularios = await FormularioModel.find({ 
+    idClaseVehiculo, 
+    estadoFormulario: true 
+  }).populate({
+    path: "preguntas",
+    select: "-fechaCreacion -createdAt -updatedAt",
+  });
+
+  if (!formularios || formularios.length === 0) {
+    return {
+      success: false,
+      message: "No se encontraron formularios activos para este tipo de vehículo",
+    };
+  }
+
+  return {
+    success: true,
+    formularios,
+  };
+};
+
 
 export default {
   findAllFormularios,

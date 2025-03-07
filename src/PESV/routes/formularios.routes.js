@@ -17,7 +17,7 @@ import { regiterFormualarioSchema } from "../schemas/Formularios.schema.js";
 
 
 
-formualriosRoutes.get('/usuario', authMiddleware, getFormularioByUserAuth);
+formualriosRoutes.get('/vehiculo/:id', authMiddleware, getFormularioByUserAuth);
 
 
 

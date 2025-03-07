@@ -3,7 +3,7 @@ import {
   findFormualrioByID,
   insertFormulario,
   updateForm,
-  findFormulariosByUserAuth
+  findFormularioByVehiculo
 } from "../services/formulario.service.js";
 
 export const registerFormualrio = async ({ body }, res) => {
@@ -57,9 +57,7 @@ export const uplaodFormulario = async (req, res) => {
 export const getFormularioByUserAuth = async (req, res) => {
 
   try {
-
-    const { userId } = req.user;
-    const response = await findFormulariosByUserAuth(userId);
+    const response = await findFormularioByVehiculo(req.params.id);
     res.status(200).json(response);
   } catch (error) {
     console.log(error);
