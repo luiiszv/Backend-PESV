@@ -150,19 +150,18 @@ export const findFormularioByVehiculo = async (vehiculoId) => {
       return { success: false, message: "Vehículo no encontrado" };
     }
 
-    console.log(vehiculo)
+    
 
 
-    let idClaseVehiculo = vehiculo.idClaseVehiculo;
-
+    let idClaseVehiculo = ""
     // IDs de referencia
     const idMotocicleta = "67a50fff122183dc3aaddbae"; // ID de motocicleta
     const idAutomovil = "67a50fff122183dc3aaddbb2"; // ID de automóvil
 
     // Si el vehículo no es motocicleta, asignamos el ID de automóvil
-    idClaseVehiculo = idClaseVehiculo === idMotocicleta ? idMotocicleta : idAutomovil;
+    idClaseVehiculo = vehiculo.idClaseVehiculo._id == idMotocicleta ? idMotocicleta : idAutomovil;
 
-    console.log("📄 ID de clase asignado:", idClaseVehiculo);
+
 
     // Obtener el formulario según la clase del vehículo
     const formulario = await FormularioRepository.findFormulariosByUserAuth(idClaseVehiculo);
