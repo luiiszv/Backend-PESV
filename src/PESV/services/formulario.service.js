@@ -134,54 +134,47 @@ export const updateForm = async (id_form, new_data) => {
 };
 
 export const findFormularioByVehiculo = async (vehiculoId) => {
-  if (!mongoose.Types.ObjectId.isValid(vehiculoId)) {
-    return {
-      success: false,
-      message: "ID del vehículo no es válido",
-    };
+  try {
+    if (!mongoose.Types.ObjectId.isValid(vehiculoId)) {
+      return { success: false, message: "ID del vehículo no es válido" };
+    }
+
+    if (!vehiculoId) {
+      return { success: false, message: "ID del vehículo es requerido" };
+    }
+
+    // Buscar el vehículo por su ID
+    const vehiculo = await VehiculoRepository.findVehiculeById(vehiculoId);
+
+    if (!vehiculo) {
+      return { success: false, message: "Vehículo no encontrado" };
+    }
+
+    console.log(vehiculo)
+
+
+    let idClaseVehiculo = vehiculo.idClaseVehiculo;
+
+    // IDs de referencia
+    const idMotocicleta = "67a50fff122183dc3aaddbae"; // ID de motocicleta
+    const idAutomovil = "67a50fff122183dc3aaddbb2"; // ID de automóvil
+
+    // Si el vehículo no es motocicleta, asignamos el ID de automóvil
+    idClaseVehiculo = idClaseVehiculo === idMotocicleta ? idMotocicleta : idAutomovil;
+
+    console.log("📄 ID de clase asignado:", idClaseVehiculo);
+
+    // Obtener el formulario según la clase del vehículo
+    const formulario = await FormularioRepository.findFormulariosByUserAuth(idClaseVehiculo);
+
+
+    if (!formulario || !formulario.success || !formulario.formularios.length) {
+      return { success: false, message: "No se encontró un formulario para este tipo de vehículo" };
+    }
+
+    return { success: true, formulario: formulario.formularios };
+  } catch (error) {
+    console.error("❌ Error en findFormularioByVehiculo:", error);
+    return { success: false, message: "Error interno del servidor" };
   }
-
-  if (!vehiculoId) {
-    return {
-      success: false,
-      message: "ID del vehículo es requerido",
-    };
-  }
-
-  // Buscar el vehículo por su ID
-  const vehiculo = await VehiculoRepository.findVehiculeById(vehiculoId);
-
-  if (!vehiculo) {
-    return {
-      success: false,
-      message: "Vehículo no encontrado",
-    };
-  }
-
-  let idClaseVehiculo = vehiculo.idClaseVehiculo;
-
-  // Si el vehículo no es motocicleta, usar el ID de automóvil
-  const idMotocicleta = "67a50fff122183dc3aaddbae"; // ID de motocicleta
-  const idAutomovil = "67a50fff122183dc3aaddbb2"; // ID de automóvil
-
-  if (idClaseVehiculo !== idMotocicleta) {
-    idClaseVehiculo = idAutomovil;
-  }
-
-  // Obtener el formulario según la clase del vehículo
-  const formulario = await FormularioRepository.findFormulariosByUserAuth(
-    idClaseVehiculo
-  );
-
-  if (!formulario.success || !formulario.formularios.length) {
-    return {
-      success: false,
-      message: "No se encontró un formulario para este tipo de vehículo",
-    };
-  }
-
-  return {
-    success: true,
-    formulario: formulario.formularios, // Devolver el formulario encontrado
-  };
 };
