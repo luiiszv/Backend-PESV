@@ -9,7 +9,7 @@ const findAllVehiculosByIdUser = async (id_user) => {
   })
     .populate("idUsuario")
     .populate("idUsuarioAsignado")
-    .populate("idTipoVehiculo")
+    .populate("idActividadVehiculo")
     .populate("idZona");
 };
 const findAllVehiculos = async () => {
@@ -27,7 +27,7 @@ const findAllVehiculos = async () => {
       select: "-description",
     })
     .populate({
-      path: "idTipoVehiculo",
+      path: "idActividadVehiculo",
       select: "",
     })
     .populate({
@@ -43,7 +43,7 @@ const findVehiculeById = async (id_vehicule) => {
       select: "",
     })
     .populate({
-      path: "idTipoVehiculo",
+      path: "idActividadVehiculo",
       select: "",
     })
     .populate({

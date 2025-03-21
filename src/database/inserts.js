@@ -36,33 +36,31 @@ db.clase_vehiculos.insertMany([
       "Vehículo pequeño de tres ruedas usado para carga o pasajeros.",
   },
 ]);
-
 db.actividad_vehiculos.insertMany([
   {
     nombreTipo: "Transporte personal",
     description:
-      "Vehículos destinados para el transporte de personas de manera privada o familiar.",
+      "Vehículos destinados al traslado de personas en un ámbito privado o familiar.",
   },
   {
-    nombreTipo: "Transporte Herramienta",
+    nombreTipo: "Transporte de herramientas",
     description:
-      "Vehículos destinados para el transporte de herramientas.",
+      "Vehículos utilizados para el traslado de herramientas y equipos de trabajo.",
   },
-
   {
     nombreTipo: "Uso personal",
     description:
-      "Vehículos utilizados para fines personales o privados, sin fines comerciales.",
+      "Vehículos empleados exclusivamente para fines personales, sin actividades comerciales.",
   },
   {
     nombreTipo: "Vehículo de apoyo",
     description:
-      "Vehículos utilizados para el apoyo de actividades operativas o logísticas.",
+      "Vehículos destinados a brindar soporte en actividades operativas o logísticas.",
   },
   {
-    nombreTipo: "Trabajo de Campo",
+    nombreTipo: "Trabajo de campo",
     description:
-      "Vehículos utilizados para el apoyo de actividades operativas o logísticas.",
+      "Vehículos empleados en actividades operativas y logísticas fuera de instalaciones fijas.",
   }
 ]);
 

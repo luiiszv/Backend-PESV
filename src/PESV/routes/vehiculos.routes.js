@@ -46,7 +46,7 @@ routerVehiculos.get("/documents/:id", authMiddleware, getDocsByIdVehiculo);
  *               modeloVehiculo:
  *                 type: number
  *                 example: 2020
- *               idTipoVehiculo:
+ *               idActividadVehiculo:
  *                 type: string
  *                 example: "65bfb39d5e7f4e001c8a1234"
  *               fechaMatricula:

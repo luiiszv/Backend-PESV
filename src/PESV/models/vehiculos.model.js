@@ -18,9 +18,9 @@ const VehiculosSchema = new Schema(
       ref: "clase_vehiculos",
       require: true,
     },
-    idTipoVehiculo: {
+    idActividadVehiculo: {
       type: Schema.Types.ObjectId,
-      ref: "tipo_vehiculos",
+      ref: "actividad_vehiculos",
       require: true,
     },
     idZona: {

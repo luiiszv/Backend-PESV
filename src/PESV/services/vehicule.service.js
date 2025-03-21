@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 
 export const findAllVehiculos = async () => {
   const vehiculos = await VehiculeRepository.findAllVehiculos();
+
   if (!vehiculos) {
     return {
       success: false,
@@ -28,7 +29,7 @@ export const insertVehiculo = async (id_user, vehiuclo) => {
     };
   }
 
-  const { placa, idZona, idTipoVehiculo, idClaseVehiculo } = vehiuclo;
+  const { placa, idZona, idActividadVehiculo, idClaseVehiculo } = vehiuclo;
   const placaUperCase = placa.toUpperCase();
   const vehiculeExist = await VehiculeRepository.findVehiculeByPlaca(
     placaUperCase
@@ -49,7 +50,7 @@ export const insertVehiculo = async (id_user, vehiuclo) => {
   }
 
   const tipoVehiculoExist = await TipoVehiculoRepository.findTipoVehiculoById(
-    idTipoVehiculo
+    idActividadVehiculo
   );
   if (!tipoVehiculoExist) {
     return {

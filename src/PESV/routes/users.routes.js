@@ -105,7 +105,7 @@ routerUser.get("/profile", authMiddleware, getProfile);
  *             required:
  *               - placa
  *               - idZona
- *               - idTipoVehiculo
+ *               - idActividadVehiculo
  *               - idClaseVehiculo
  *             properties:
  *               placa:
@@ -114,7 +114,7 @@ routerUser.get("/profile", authMiddleware, getProfile);
  *               idZona:
  *                 type: string
  *                 description: Zona del vehículo.
- *               idTipoVehiculo:
+ *               idActividadVehiculo:
  *                 type: string
  *                 description: Tipo de vehículo.
  *               idClaseVehiculo:

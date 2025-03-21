@@ -10,10 +10,10 @@ export const regiterUserVehiculosSchema = z.object({
       message: "idClaseVehiculo es invalido",
     }),
 
-  idTipoVehiculo: z
-    .string({ required_error: "idTipoVehiculo es requerido" })
+    idActividadVehiculo: z
+    .string({ required_error: "idActividadVehiculo es requerido" })
     .refine(isValid, {
-      message: "idTipoVehiculo es invalido",
+      message: "idActividadVehiculo es invalido",
     }),
 
   idZona: z.string({ required_error: "idZona es requerido" }).refine(isValid, {
@@ -68,10 +68,10 @@ export const regiterAdminVehiculosSchema = z.object({
       message: "idClaseVehiculo es invalido",
     }),
 
-  idTipoVehiculo: z
-    .string({ required_error: "idTipoVehiculo es requerido" })
+    idActividadVehiculo: z
+    .string({ required_error: "idActividadVehiculo es requerido" })
     .refine(isValid, {
-      message: "idTipoVehiculo es invalido",
+      message: "idActividadVehiculo es invalido",
     }),
 
   idZona: z.string({ required_error: "idZona es requerido" }).refine(isValid, {

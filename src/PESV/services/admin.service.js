@@ -265,7 +265,7 @@ export const findVehiculosByUserId = async (id_user) => {
  * */
 
 export const insertAdminVehiculos = async (id_admin, vehiculo_empresa_data) => {
-  const { placa, idClaseVehiculo, idTipoVehiculo, idZona, fechaMatricula } =
+  const { placa, idClaseVehiculo, idActividadVehiculo, idZona, fechaMatricula } =
     vehiculo_empresa_data;
 
   const fecha = new Date(fechaMatricula); 
@@ -301,12 +301,12 @@ export const insertAdminVehiculos = async (id_admin, vehiculo_empresa_data) => {
   }
 
   const idTipoExist = await TipoVehiculoRepository.findTipoVehiculoById(
-    idTipoVehiculo
+    idActividadVehiculo
   );
   if (!idTipoExist) {
     return {
       success: false,
-      message: "idTipoVehiculo not Encontrado",
+      message: "idActividadVehiculo not Encontrado",
     };
   }
 
