@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
-
-const TipoVehiculoSchema = new Schema({
+//Actividad del vehiuculo 
+const ActividadVehiculoSchema = new Schema({
     nombreTipo: {
         type: String,
         require: true
@@ -12,4 +12,4 @@ const TipoVehiculoSchema = new Schema({
     }
 })
 
-export default model('tipo_vehiculos', TipoVehiculoSchema);
+export default model('actividad_vehiculos', ActividadVehiculoSchema);

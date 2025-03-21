@@ -37,12 +37,18 @@ db.clase_vehiculos.insertMany([
   },
 ]);
 
-db.tipo_vehiculos.insertMany([
+db.actividad_vehiculos.insertMany([
   {
     nombreTipo: "Transporte personal",
     description:
       "Vehículos destinados para el transporte de personas de manera privada o familiar.",
   },
+  {
+    nombreTipo: "Transporte Herramienta",
+    description:
+      "Vehículos destinados para el transporte de herramientas.",
+  },
+
   {
     nombreTipo: "Uso personal",
     description:
@@ -54,20 +60,10 @@ db.tipo_vehiculos.insertMany([
       "Vehículos utilizados para el apoyo de actividades operativas o logísticas.",
   },
   {
-    nombreTipo: "Motocicleta",
+    nombreTipo: "Trabajo de Campo",
     description:
-      "Vehículo motorizado de dos ruedas utilizado para el transporte de personas o carga ligera.",
-  },
-  {
-    nombreTipo: "Buseta",
-    description:
-      "Vehículo de transporte público de pequeño tamaño, utilizado para el transporte colectivo de personas.",
-  },
-  {
-    nombreTipo: "Transporte de herramienta",
-    description:
-      "Vehículos destinados al transporte de herramientas y equipos para trabajos específicos.",
-  },
+      "Vehículos utilizados para el apoyo de actividades operativas o logísticas.",
+  }
 ]);
 
 db.roles.insertMany([
