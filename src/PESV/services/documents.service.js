@@ -190,6 +190,8 @@ export const findDocsPorExpirar = async () => {
     const { docsUsuarios, docsVehiculos } =
       await DocumentsRepository.findDocsPorExpirar();
 
+  
+
     // Procesar documentos de usuarios
     const usersGrouped = docsUsuarios.reduce((acc, doc) => {
       const userId = doc.idUsuario._id.toString();
@@ -258,7 +260,7 @@ export const findDocsPorExpirar = async () => {
     // Procesar documentos de vehículos
     const vehiclesGrouped = docsVehiculos.reduce((acc, doc) => {
       const placa = doc.idVehiculo.placa;
-
+      console.log(doc.idVehiculo)
       // Si el vehículo no está en el acumulador, lo inicializamos
       if (!acc[placa]) {
         acc[placa] = {
@@ -267,6 +269,8 @@ export const findDocsPorExpirar = async () => {
           make: doc.idVehiculo.marca,
           model: doc.idVehiculo.modeloVehiculo,
           year: doc.idVehiculo.modeloVehiculo, // Ajusta según tu modelo
+       
+          idUsuarioAsignado: doc.idVehiculo.idUsuarioAsignado?._id,
           owner: doc.idVehiculo.idUsuarioAsignado
             ? doc.idVehiculo.idUsuarioAsignado.name +
               " " +
