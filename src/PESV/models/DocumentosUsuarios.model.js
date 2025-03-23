@@ -28,6 +28,10 @@ const DocumentosUsuariosSchema = new Schema({
     type: String,
     require: true
   },
+  public_id: {
+    type: String,
+    require: true
+  },
   ruta: {
     type: String,
     require: true,

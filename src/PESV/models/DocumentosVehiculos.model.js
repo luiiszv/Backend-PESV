@@ -25,13 +25,16 @@ const DocumentosVehiculeModel = new Schema({
   },
   assetId: {
     type: String,
-    require: true
+    require: true,
+  },
+  public_id: {
+    type: String,
+    require: true,
   },
   ruta: {
     type: String,
     require: true,
   },
-
 });
 
 DocumentosVehiculeModel.index({ idVehiculo: 1 });
