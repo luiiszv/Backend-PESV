@@ -56,20 +56,7 @@ export const getAllNotificacionesByAdmin = async () => {
 
 export const createNotificacion = async (notificacionData) => {
   try {
-    let { idDoc, idUsuario } = notificacionData;
-
-    // Si hay idDoc, buscar el usuario
-    if (idDoc) {
-      const user = await DocumentRepository.findUserByDocument(idDoc);
-      if (user) {
-        idUsuario = user._id; // Asignar el usuario encontrado
-      } else {
-        return {
-          success: false,
-          message: "No se encontró un usuario con el documento proporcionado.",
-        };
-      }
-    }
+    let { idUsuario } = notificacionData;
 
     // Si no hay idUsuario después de intentar con idDoc, devolver error
     if (!idUsuario) {
@@ -79,9 +66,19 @@ export const createNotificacion = async (notificacionData) => {
       };
     }
 
+    const userExist = await UserRepository.findUserById(idUsuario);
+    if (!userExist) {
+      return {
+        success: false,
+        message: "Usuario no encontrado notificación.",
+      };
+    }
+
     // Crear la notificación con el ID de usuario asignado
     const newNotificacion = { ...notificacionData, idUsuario };
-    const newNotify = await NotificacionesRepository.createNotificacion(newNotificacion);
+    const newNotify = await NotificacionesRepository.createNotificacion(
+      newNotificacion
+    );
 
     return {
       success: true,
