@@ -199,7 +199,7 @@ export const findDocsPorExpirar = async () => {
       // Si el usuario no está en el acumulador, lo inicializamos
       if (!acc[userId]) {
         acc[userId] = {
-          id: doc.idUsuario._id,
+          idUsuario: doc.idUsuario._id,
           name: doc.idUsuario.name + " " + doc.idUsuario.lastName,
           documentId: doc.idUsuario.numeroDocumento,
           email: doc.idUsuario.email,
@@ -270,7 +270,7 @@ export const findDocsPorExpirar = async () => {
           model: doc.idVehiculo.modeloVehiculo,
           year: doc.idVehiculo.modeloVehiculo, // Ajusta según tu modelo
        
-          idUsuarioAsignado: doc.idVehiculo.idUsuarioAsignado?._id,
+          idUsuario: doc.idVehiculo.idUsuarioAsignado?._id,
           owner: doc.idVehiculo.idUsuarioAsignado
             ? doc.idVehiculo.idUsuarioAsignado.name +
               " " +
