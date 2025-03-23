@@ -5,8 +5,8 @@ import {
   uploadOneVehiculeDocuemnt,
   uploadOneUserDocuemnt,
   getAllDocuments,
-  downloadDocumentByRuta,
   getDocumetosPorExpirar,
+  updateVehicleDocuemnt
 } from "../controllers/document.controller.js";
 import {
   uploadVehiculeMiddleware,
@@ -439,64 +439,6 @@ routerDocuments.post(
 
 /**
  * @swagger
- * /pesv/users/documents/download/{assetId}:
- *   get:
- *     summary: Descarga un Documento con assetId
- *     description: Permite descargar un documento previamente subido a Cloudinary mediante su `assetId`.
- *     tags: [PESV Documents]
- *     parameters:
- *       - in: path
- *         name: assetId
- *         required: true
- *         schema:
- *           type: string
- *         description: ID del documento almacenado en Cloudinary.
- *         example: "asd123fgh456"
- *     responses:
- *       200:
- *         description: URL de descarga generada exitosamente.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 downloadUrl:
- *                   type: string
- *                   example: "https://res-console.cloudinary.com/pdfdocs/media_explorer_thumbnails/asd123fgh456/download"
- *       400:
- *         description: Faltó el assetId en la solicitud.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "La Ruta es requerida"
- *       500:
- *         description: Error interno del servidor al generar la URL de descarga.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
- *                   type: string
- *                   example: "Error al generar el enlace de descarga"
- */
-routerDocuments.get("/download/:id", downloadDocumentByRuta);
-
-/**
- * @swagger
  * /pesv/documents/expirar:
  *   get:
  *     summary: Obtener documentos próximos a expirar
@@ -597,4 +539,9 @@ routerDocuments.get("/download/:id", downloadDocumentByRuta);
  *         description: Error interno del servidor
  */
 routerDocuments.get("/expirar", authMiddleware, getDocumetosPorExpirar);
+
+
+// /pesv/documents/vehicle/:idVehiculo/update/:assetId
+routerDocuments.put("/vehicle/:idVehiculo/update/:assetId", authMiddleware, updateVehicleDocuemnt);
+
 export default routerDocuments;

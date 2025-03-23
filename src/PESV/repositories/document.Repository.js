@@ -116,6 +116,14 @@ const findTipoDocumentoByUser = async (idUsuario, tipoDocumentoId) => {
   }).populate("tipoDocumentoId");
 };
 
+//Encontrar el documento por el idVehiculo y el assetId de cloudinary
+const findDocByIdVehiculeAndAssetId = async (assetId, idVehiculo) => {
+  return await DocumentosVehiculoModel.findOne({
+    idVehiculo,
+    assetId,
+  });
+};
+
 export default {
   saveUserDocument,
   saveVehiculeDocument,
@@ -126,4 +134,5 @@ export default {
   findTipoDocumentoByVehiculo,
   findUserByDocument,
   findTipoDocumentoByUser,
+  findDocByIdVehiculeAndAssetId,
 };

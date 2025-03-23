@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
 // Cargar variables de entorno
 dotenv.config();
@@ -15,65 +15,56 @@ cloudinary.config({
 export const uploadVehiculosCloudinary = async (filePath, fileName) => {
   try {
     const res = await cloudinary.uploader.upload(filePath, {
-      resource_type: 'raw',
-      folder: 'docVehiculos',
+      resource_type: "raw",
+      folder: "docVehiculos",
       public_id: `${fileName}-${Date.now()}`,
-      transformation: [
-        { quality: "auto:low" },
-      ],
-     
+      transformation: [{ quality: "auto:low" }],
     });
     console.log(res);
     return {
       secure_url: res.secure_url, // URL segura para descargar
-      asset_id: res.asset_id,   // Asset ID o public_id
+      asset_id: res.asset_id, // Asset ID o public_id
+      public_id: res.public_id,
     };
   } catch (error) {
-    console.error('Error en Cloudinary:', error);
-    throw new Error('Error al subir archivo a Cloudinary');
+    console.error("Error en Cloudinary:", error);
+    throw new Error("Error al subir archivo a Cloudinary");
   }
 };
-
 
 export const uploadUsuariosCloudinary = async (filePath, fileName) => {
   try {
     const res = await cloudinary.uploader.upload(filePath, {
-      resource_type: 'raw',
-      folder: 'docUsuarios',
+      resource_type: "raw",
+      folder: "docUsuarios",
       public_id: `${fileName}-${Date.now()}`,
-      transformation: [
-        { quality: "auto:low" },
-      ],
-     
+      transformation: [{ quality: "auto:low" }],
     });
 
     console.log(res);
 
     return {
       secure_url: res.secure_url, // URL segura para descargar
-      asset_id: res.asset_id,   // Asset ID o public_id
-    };;
+      asset_id: res.asset_id, // Asset ID o public_id
+      public_id: res.public_id,
+    };
   } catch (error) {
-    console.error('Error en Cloudinary:', error);
-    throw new Error('Error al subir archivo a Cloudinary');
+    console.error("Error en Cloudinary:", error);
+    throw new Error("Error al subir archivo a Cloudinary");
   }
 };
 
-export const downloadFileCloudinary = async (asset_id) => {
+export const deleteFileCloudinary = async (asset_id) => {
   try {
-    // Generar la URL de descarga usando el Asset ID
-    const url = ` https://res-console.cloudinary.com/pdfdocs/media_explorer_thumbnails/${asset_id}/download` //el name luego se pone desde el .env
-    return url;  // URL pública para descarga usando el Asset ID
+    // Eliminar el archivo usando el asset_id
+    console.log(asset_id)
+    const result = await cloudinary.uploader.destroy(asset_id);
+    console.log(result)
+
+    // Verificar si el archivo se eliminó correctamente
+    return result.result === "ok"; // Devuelve true si se eliminó, false si no
   } catch (error) {
-    console.error('Error al generar el enlace de descarga:', error);
-    return null;
+    console.error("Error al eliminar el archivo en Cloudinary:", error);
+    return false; // Devuelve false si ocurre un error
   }
 };
-
-
-
-
-
-
-
-

@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import DocumentsRepository from "../repositories/document.Repository.js";
-
+import VehicleRepository from "../repositories/vehiculo.repository.js";
 import moment from "moment-timezone";
-
+import { deleteFileCloudinary } from "../../config/cloudinary.js";
 // Configura la zona horaria de Colombia
 const timezone = "America/Bogota";
 
@@ -190,8 +190,6 @@ export const findDocsPorExpirar = async () => {
     const { docsUsuarios, docsVehiculos } =
       await DocumentsRepository.findDocsPorExpirar();
 
-  
-
     // Procesar documentos de usuarios
     const usersGrouped = docsUsuarios.reduce((acc, doc) => {
       const userId = doc.idUsuario._id.toString();
@@ -260,7 +258,7 @@ export const findDocsPorExpirar = async () => {
     // Procesar documentos de vehículos
     const vehiclesGrouped = docsVehiculos.reduce((acc, doc) => {
       const placa = doc.idVehiculo.placa;
-      console.log(doc.idVehiculo)
+      console.log(doc.idVehiculo);
       // Si el vehículo no está en el acumulador, lo inicializamos
       if (!acc[placa]) {
         acc[placa] = {
@@ -269,7 +267,7 @@ export const findDocsPorExpirar = async () => {
           make: doc.idVehiculo.marca,
           model: doc.idVehiculo.modeloVehiculo,
           year: doc.idVehiculo.modeloVehiculo, // Ajusta según tu modelo
-       
+
           idUsuario: doc.idVehiculo.idUsuarioAsignado?._id,
           owner: doc.idVehiculo.idUsuarioAsignado
             ? doc.idVehiculo.idUsuarioAsignado.name +
@@ -343,6 +341,62 @@ export const findDocsPorExpirar = async () => {
       success: false,
       message: "Error al obtener los documentos por expirar",
       error: error.message,
+    };
+  }
+};
+
+export const updateDocsByVehicule = async (idVehiculo, assetId) => {
+  try {
+    if (!assetId) {
+      return {
+        success: false,
+        message: "AssetId es requerido",
+      };
+    }
+
+    if (!idVehiculo) {
+      return {
+        success: false,
+        message: "AssetId es requerido",
+      };
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(idVehiculo)) {
+      return {
+        success: false,
+        message: "idVehiculo no es valido",
+      };
+    }
+    console.log(idVehiculo);
+
+    const vehiculeExist = await VehicleRepository.findVehiculeById(idVehiculo);
+    if (!vehiculeExist) {
+      return {
+        success: false,
+        message: "vehiculo no encotrado",
+      };
+    }
+
+    const docExist = await DocumentsRepository.findDocByIdVehiculeAndAssetId(
+      assetId,
+      idVehiculo
+    );
+
+    if (!docExist) {
+      return {
+        success: false,
+        message: "No se encontró ningún documento con esas coincidencias",
+      };
+    }
+    console.log(docExist)
+
+    const docRes = await deleteFileCloudinary(docExist.assetId);
+
+    console.log(docRes);
+  } catch (error) {
+    return {
+      success: true,
+      message: docsUser,
     };
   }
 };
