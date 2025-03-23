@@ -59,12 +59,13 @@ const findDocsPorExpirar = async () => {
   // Obtener todos los documentos de usuarios
   const docsUsuarios = await DocumentosUsuarioModel.find()
     .populate("idUsuario", "name lastName email numeroDocumento")
-    .populate("tipoDocumentoId", "name");
+    .populate("tipoDocumentoId", "nombre");
 
   // Obtener todos los documentos de vehículos
   const docsVehiculos = await DocumentosVehiculoModel.find()
     .populate("idVehiculo", "marca placa modeloVehiculo idUsuarioAsignado")
-    .populate("tipoDocumentoId", "name")
+    .populate("tipoDocumentoId", "nombre")
+
     .populate({
       path: "idVehiculo",
       populate: { path: "idUsuarioAsignado", select: "name lastName" }, // Populate anidado

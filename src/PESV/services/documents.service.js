@@ -189,6 +189,8 @@ export const findDocsPorExpirar = async () => {
     // Obtener todos los documentos desde el repository
     const { docsUsuarios, docsVehiculos } = await DocumentsRepository.findDocsPorExpirar();
 
+
+
     // Procesar documentos de usuarios
     const usersGrouped = docsUsuarios.reduce((acc, doc) => {
       const userId = doc.idUsuario._id.toString();
@@ -217,7 +219,8 @@ export const findDocsPorExpirar = async () => {
       // Incluir todos los campos del documento
       const documentoCompleto = {
         id: doc._id,
-        name: doc.tipoDocumentoId.name,
+        nameTipo: doc.tipoDocumentoId,
+        name: doc.name,
         tipoDocumentoId: doc.tipoDocumentoId._id,
         numeroDocumento: doc.numeroDocumento,
         fechaExpiracion: fechaExpiracion.format("YYYY-MM-DD"),
@@ -278,10 +281,11 @@ export const findDocsPorExpirar = async () => {
       const diasFaltantes = fechaExpiracion.diff(hoy, "days");
 
       // Incluir todos los campos del documento
+
       const documentoCompleto = {
         id: doc._id,
-        name: doc.tipoDocumentoId.name,
-        tipoDocumentoId: doc.tipoDocumentoId._id,
+        name: doc.tipoDocumentoId,
+        tipoDocumentoId: doc.tipoDocumentoId.nombre,
         numeroDocumento: doc.numeroDocumento,
         fechaExpiracion: fechaExpiracion.format("YYYY-MM-DD"),
         assetId: doc.assetId,
