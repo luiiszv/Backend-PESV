@@ -21,7 +21,7 @@ export const uploadVehiculosCloudinary = async (filePath, fileName) => {
       public_id: `${sanitizedFileName}-${Date.now()}`,
       transformation: [{ quality: "auto:low" }],
     });
-    console.log(res);
+ 
     return {
       secure_url: res.secure_url, // URL segura para descargar
       asset_id: res.asset_id, // Asset ID o public_id
@@ -43,12 +43,12 @@ export const uploadUsuariosCloudinary = async (filePath, fileName) => {
       transformation: [{ quality: "auto:low" }],
     });
 
-    console.log(res);
+   
 
     return {
       secure_url: res.secure_url, // URL segura para descargar
-      asset_id: res.asset_id, // Asset ID o public_id
-      public_id: res.public_id,
+      asset_id: res.asset_id, // Asset ID o 
+      public_id: res.public_id, //public_id
     };
   } catch (error) {
     console.error("Error en Cloudinary:", error);
@@ -56,12 +56,15 @@ export const uploadUsuariosCloudinary = async (filePath, fileName) => {
   }
 };
 
-export const deleteFileCloudinary = async (asset_id) => {
+export const deleteFileCloudinary = async (public_id) => {
   try {
-    // Eliminar el archivo usando el asset_id
-    console.log(asset_id);
-    const result = await cloudinary.uploader.destroy(asset_id);
-    console.log(result);
+    console.log("Eliminando archivo con public_id:", public_id); // Verifica el public_id
+
+    const result = await cloudinary.uploader.destroy(public_id, {
+      resource_type: 'raw', // Especifica el tipo de recurso como 'raw'
+    });
+
+    console.log("Resultado de eliminación:", result); // Verifica el resultado
 
     // Verificar si el archivo se eliminó correctamente
     return result.result === "ok"; // Devuelve true si se eliminó, false si no

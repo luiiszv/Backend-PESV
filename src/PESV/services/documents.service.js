@@ -2,7 +2,11 @@ import mongoose from "mongoose";
 import DocumentsRepository from "../repositories/document.Repository.js";
 import VehicleRepository from "../repositories/vehiculo.repository.js";
 import moment from "moment-timezone";
-import { deleteFileCloudinary } from "../../config/cloudinary.js";
+import {
+  deleteFileCloudinary,
+  uploadVehiculosCloudinary,
+  uploadUsuariosCloudinary
+} from "../../config/cloudinary.js";
 // Configura la zona horaria de Colombia
 const timezone = "America/Bogota";
 
@@ -345,58 +349,161 @@ export const findDocsPorExpirar = async () => {
   }
 };
 
-export const updateDocsByVehicule = async (idVehiculo, assetId) => {
+export const updateDocsByVehicule = async (id_doc, data_update, files) => {
   try {
-    if (!assetId) {
+    // Validar que id_doc esté presente
+    if (!id_doc) {
       return {
         success: false,
-        message: "AssetId es requerido",
+        message: "id_doc es requerido",
       };
     }
 
-    if (!idVehiculo) {
-      return {
-        success: false,
-        message: "AssetId es requerido",
-      };
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(idVehiculo)) {
-      return {
-        success: false,
-        message: "idVehiculo no es valido",
-      };
-    }
-    console.log(idVehiculo);
-
-    const vehiculeExist = await VehicleRepository.findVehiculeById(idVehiculo);
-    if (!vehiculeExist) {
-      return {
-        success: false,
-        message: "vehiculo no encotrado",
-      };
-    }
-
-    const docExist = await DocumentsRepository.findDocByIdVehiculeAndAssetId(
-      assetId,
-      idVehiculo
-    );
+    // Buscar el documento existente en la base de datos
+    const docExist = await DocumentsRepository.findVehicleDocById(id_doc);
 
     if (!docExist) {
       return {
         success: false,
-        message: "No se encontró ningún documento con esas coincidencias",
+        message: "No se encontró ningún documento",
       };
     }
-    console.log(docExist)
 
-    const docRes = await deleteFileCloudinary(docExist.assetId);
+    console.log("Public_id del documento existente:", docExist.public_id);
 
-    console.log(docRes);
-  } catch (error) {
+    // Verificar si se ha subido un nuevo archivo
+    const newFile = files?.file;
+    if (!newFile) {
+      return {
+        success: false,
+        message: "No se ha subido ningún documento",
+      };
+    }
+
+    // Eliminar el archivo existente en Cloudinary
+    const isDeleted = await deleteFileCloudinary(docExist.public_id);
+    if (!isDeleted) {
+      return {
+        success: false,
+        message: "No se pudo eliminar el archivo existente en Cloudinary",
+      };
+    }
+
+    // Subir el nuevo archivo a Cloudinary
+    const newDoc = await uploadVehiculosCloudinary(
+      newFile.tempFilePath,
+      newFile.name
+    );
+
+    // Crear el objeto con los datos actualizados
+    const updatedDoc = {
+      name: newFile.name,
+      ruta: newDoc.secure_url,
+      assetId: newDoc.asset_id,
+      public_id: newDoc.public_id,
+      numeroDocumento: data_update.numeroDocumento,
+      fechaExpiracion: data_update.fechaExpiracion,
+    };
+
+    // Actualizar el documento en la base de datos
+    const updatedDocument = await DocumentsRepository.UpdateVehiuleDocs(
+      id_doc,
+      updatedDoc
+    );
+
     return {
       success: true,
-      message: docsUser,
+      message: "Documento actualizado correctamente",
+      data: updatedDocument,
+    };
+  } catch (error) {
+    console.error("Error en updateDocsByVehicule:", error);
+    return {
+      success: false,
+      message: "Error interno del servidor",
+      error: error.message,
     };
   }
 };
+
+
+
+
+
+export const updateDocsByUser = async (id_doc, data_update, files) => {
+  try {
+    // Validar que id_doc esté presente
+    if (!id_doc) {
+      return {
+        success: false,
+        message: "id_doc es requerido",
+      };
+    }
+
+    // Buscar el documento existente en la base de datos
+    const docExist = await DocumentsRepository.findUserDocById(id_doc);
+
+    if (!docExist) {
+      return {
+        success: false,
+        message: "No se encontró ningún documento",
+      };
+    }
+
+   
+
+    // Verificar si se ha subido un nuevo archivo
+    const newFile = files?.file;
+    if (!newFile) {
+      return {
+        success: false,
+        message: "No se ha subido ningún documento",
+      };
+    }
+
+    // Eliminar el archivo existente en Cloudinary
+    const isDeleted = await deleteFileCloudinary(docExist.public_id);
+    if (!isDeleted) {
+      return {
+        success: false,
+        message: "No se pudo eliminar el archivo existente en Cloudinary",
+      };
+    }
+
+    // Subir el nuevo archivo a Cloudinary
+    const newDoc = await uploadUsuariosCloudinary(
+      newFile.tempFilePath,
+      newFile.name
+    );
+
+    // Crear el objeto con los datos actualizados
+    const updatedDoc = {
+      name: newFile.name,
+      ruta: newDoc.secure_url,
+      assetId: newDoc.asset_id,
+      public_id: newDoc.public_id,
+      numeroDocumento: data_update.numeroDocumento,
+      fechaExpiracion: data_update.fechaExpiracion,
+    };
+
+    // Actualizar el documento en la base de datos
+    const updatedDocument = await DocumentsRepository.UpdateUserDocs(
+      id_doc,
+      updatedDoc
+    );
+
+    return {
+      success: true,
+      message: "Documento actualizado correctamente",
+      data: updatedDocument,
+    };
+  } catch (error) {
+    console.error("Error en updateDocsByVehicule:", error);
+    return {
+      success: false,
+      message: "Error interno del servidor",
+      error: error.message,
+    };
+  }
+};
+

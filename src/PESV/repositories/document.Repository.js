@@ -117,11 +117,28 @@ const findTipoDocumentoByUser = async (idUsuario, tipoDocumentoId) => {
 };
 
 //Encontrar el documento por el idVehiculo y el assetId de cloudinary
-const findDocByIdVehiculeAndAssetId = async (assetId, idVehiculo) => {
-  return await DocumentosVehiculoModel.findOne({
-    idVehiculo,
-    assetId,
-  });
+const findVehicleDocById = async (id_doc) => {
+  return await DocumentosVehiculoModel.findById(id_doc);
+};
+
+const UpdateVehiuleDocs = async (id_doc, vehiculeData) => {
+  return await DocumentosVehiculoModel.updateOne(
+    { _id: id_doc },
+    { $set: vehiculeData },
+    { runValidators: true }
+  );
+};
+
+const findUserDocById = async (id_doc) => {
+  return await DocumentosUsuarioModel.findById(id_doc);
+};
+
+const UpdateUserDocs = async (id_doc, userData) => {
+  return await DocumentosUsuarioModel.updateOne(
+    { _id: id_doc },
+    { $set: userData },
+    { runValidators: true }
+  );
 };
 
 export default {
@@ -134,5 +151,8 @@ export default {
   findTipoDocumentoByVehiculo,
   findUserByDocument,
   findTipoDocumentoByUser,
-  findDocByIdVehiculeAndAssetId,
+  findVehicleDocById,
+  UpdateVehiuleDocs,
+  findUserDocById,
+  UpdateUserDocs
 };

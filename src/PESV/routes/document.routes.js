@@ -6,7 +6,8 @@ import {
   uploadOneUserDocuemnt,
   getAllDocuments,
   getDocumetosPorExpirar,
-  updateVehicleDocuemnt
+  updateVehicleDocuemnt,
+  updateUserDocuemnt,
 } from "../controllers/document.controller.js";
 import {
   uploadVehiculeMiddleware,
@@ -540,8 +541,257 @@ routerDocuments.post(
  */
 routerDocuments.get("/expirar", authMiddleware, getDocumetosPorExpirar);
 
+/**
+ * @swagger
+ * /pesv/documents/update/vehicule-doc/{id}:
+ *   put:
+ *     summary: Actualiza un documento asociado a un vehículo.
+ *     description: |
+ *       Este endpoint permite actualizar un documento asociado a un vehículo.
+ *       - Elimina el archivo existente en Cloudinary.
+ *       - Sube un nuevo archivo a Cloudinary.
+ *       - Actualiza los datos del documento en la base de datos.
+ *     tags:
+ *       - Actualiza Documentos de Vehículos
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del documento que se desea actualizar.
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         description: Datos actualizados del documento.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             tipoDocumentoId:
+ *               type: string
+ *               description: ID del tipo de documento.
+ *               example: "679318760a92a8075e0d819b"
+ *             numeroDocumento:
+ *               type: string
+ *               description: Número del documento.
+ *               example: "1002953831"
+ *             fechaExpiracion:
+ *               type: string
+ *               format: date
+ *               description: Fecha de expiración del documento (formato YYYY-MM-DD).
+ *               example: "2025-06-11"
+ *       - in: formData
+ *         name: file
+ *         type: file
+ *         required: true
+ *         description: Archivo PDF que se desea subir.
+ *     responses:
+ *       200:
+ *         description: Documento actualizado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Documento actualizado correctamente"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: "67e0586a02b27429e0fcc9d2"
+ *                     idVehiculo:
+ *                       type: string
+ *                       example: "67df6d66b49db11b99414d7e"
+ *                     name:
+ *                       type: string
+ *                       example: "nuevo_documento.pdf"
+ *                     tipoDocumentoId:
+ *                       type: string
+ *                       example: "679318760a92a8075e0d819b"
+ *                     numeroDocumento:
+ *                       type: string
+ *                       example: "1002953831"
+ *                     fechaExpiracion:
+ *                       type: string
+ *                       format: date
+ *                       example: "2025-06-11"
+ *                     assetId:
+ *                       type: string
+ *                       example: "09fd52567e3ece9f95508417377780f3"
+ *                     ruta:
+ *                       type: string
+ *                       example: "https://res.cloudinary.com/pdfdocs/raw/upload/v1742757456/docVehiculos/nuevo_documento.pdf-1742757456662"
+ *                     public_id:
+ *                       type: string
+ *                       example: "docVehiculos/nuevo_documento.pdf-1742757456662"
+ *       400:
+ *         description: Error en la solicitud (datos faltantes o inválidos).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "No se encontró ningún documento"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Error interno del servidor"
+ *                 error:
+ *                   type: string
+ *                   example: "Mensaje de error específico"
+ */
+routerDocuments.put(
+  "/update/vehicule-doc/:id",
+  authMiddleware,
+  updateVehicleDocuemnt
+);
 
-// /pesv/documents/vehicle/:idVehiculo/update/:assetId
-routerDocuments.put("/vehicle/:idVehiculo/update/:assetId", authMiddleware, updateVehicleDocuemnt);
+
+
+/**
+ * @swagger
+ * /pesv/documents/update/user-doc/{id}:
+ *   put:
+ *     summary: Actualiza un documento asociado a un Usuario.
+ *     description: |
+ *       Este endpoint permite actualizar un documento asociado a un usuario.
+ *       - Elimina el archivo existente en Cloudinary.
+ *       - Sube un nuevo archivo a Cloudinary.
+ *       - Actualiza los datos del documento en la base de datos.
+ *     tags:
+ *       - Actualiza Documentos de Usuarios
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del documento que se desea actualizar.
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         description: Datos actualizados del documento.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             tipoDocumentoId:
+ *               type: string
+ *               description: ID del tipo de documento.
+ *               example: "679318760a92a8075e0d819b"
+ *             numeroDocumento:
+ *               type: string
+ *               description: Número del documento.
+ *               example: "1002953831"
+ *             fechaExpiracion:
+ *               type: string
+ *               format: date
+ *               description: Fecha de expiración del documento (formato YYYY-MM-DD).
+ *               example: "2025-06-11"
+ *       - in: formData
+ *         name: file
+ *         type: file
+ *         required: true
+ *         description: Archivo PDF que se desea subir.
+ *     responses:
+ *       200:
+ *         description: Documento actualizado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Documento actualizado correctamente"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: "67e0586a02b27429e0fcc9d2"
+ *                     idVehiculo:
+ *                       type: string
+ *                       example: "67df6d66b49db11b99414d7e"
+ *                     name:
+ *                       type: string
+ *                       example: "nuevo_documento.pdf"
+ *                     tipoDocumentoId:
+ *                       type: string
+ *                       example: "679318760a92a8075e0d819b"
+ *                     numeroDocumento:
+ *                       type: string
+ *                       example: "1002953831"
+ *                     fechaExpiracion:
+ *                       type: string
+ *                       format: date
+ *                       example: "2025-06-11"
+ *                     assetId:
+ *                       type: string
+ *                       example: "09fd52567e3ece9f95508417377780f3"
+ *                     ruta:
+ *                       type: string
+ *                       example: "https://res.cloudinary.com/pdfdocs/raw/upload/v1742757456/docVehiculos/nuevo_documento.pdf-1742757456662"
+ *                     public_id:
+ *                       type: string
+ *                       example: "docVehiculos/nuevo_documento.pdf-1742757456662"
+ *       400:
+ *         description: Error en la solicitud (datos faltantes o inválidos).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "No se encontró ningún documento"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Error interno del servidor"
+ *                 error:
+ *                   type: string
+ *                   example: "Mensaje de error específico"
+ */
+
+routerDocuments.put("/update/user-doc/:id", authMiddleware, updateUserDocuemnt);
 
 export default routerDocuments;
