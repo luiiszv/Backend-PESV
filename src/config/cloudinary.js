@@ -42,6 +42,7 @@ export const uploadUsuariosCloudinary = async (filePath, fileName) => {
     });
 
     console.log(res);
+    
 
     return {
       secure_url: res.secure_url, // URL segura para descargar
