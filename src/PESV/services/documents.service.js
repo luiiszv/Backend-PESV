@@ -187,9 +187,8 @@ export const findDocsPorExpirar = async () => {
 
   try {
     // Obtener todos los documentos desde el repository
-    const { docsUsuarios, docsVehiculos } = await DocumentsRepository.findDocsPorExpirar();
-
-
+    const { docsUsuarios, docsVehiculos } =
+      await DocumentsRepository.findDocsPorExpirar();
 
     // Procesar documentos de usuarios
     const usersGrouped = docsUsuarios.reduce((acc, doc) => {
@@ -213,15 +212,17 @@ export const findDocsPorExpirar = async () => {
       acc[userId].totalDocuments += 1;
 
       // Verificar si el documento está vencido o próximo a vencer
-      const fechaExpiracion = moment(doc.fechaExpiracion).tz(timezone).startOf("day");
+      const fechaExpiracion = moment(doc.fechaExpiracion)
+        .tz(timezone)
+        .startOf("day");
       const diasFaltantes = fechaExpiracion.diff(hoy, "days");
 
       // Incluir todos los campos del documento
       const documentoCompleto = {
         id: doc._id,
-        nameTipo: doc.tipoDocumentoId,
-        name: doc.name,
-        tipoDocumentoId: doc.tipoDocumentoId._id,
+
+        name: doc.tipoDocumentoId,
+        tipoDocumentoId: doc.tipoDocumentoId.nombre,
         numeroDocumento: doc.numeroDocumento,
         fechaExpiracion: fechaExpiracion.format("YYYY-MM-DD"),
         assetId: doc.assetId,
@@ -239,7 +240,10 @@ export const findDocsPorExpirar = async () => {
       }
 
       // Agregar el documento a la lista de documentos del usuario
-      if (fechaExpiracion.isBefore(hoy) || fechaExpiracion.isBetween(hoy, fechaLimite, null, "[]")) {
+      if (
+        fechaExpiracion.isBefore(hoy) ||
+        fechaExpiracion.isBetween(hoy, fechaLimite, null, "[]")
+      ) {
         acc[userId].documents.push(documentoCompleto);
       }
 
@@ -264,7 +268,9 @@ export const findDocsPorExpirar = async () => {
           model: doc.idVehiculo.modeloVehiculo,
           year: doc.idVehiculo.modeloVehiculo, // Ajusta según tu modelo
           owner: doc.idVehiculo.idUsuarioAsignado
-            ? doc.idVehiculo.idUsuarioAsignado.name + " " + doc.idVehiculo.idUsuarioAsignado.lastName
+            ? doc.idVehiculo.idUsuarioAsignado.name +
+              " " +
+              doc.idVehiculo.idUsuarioAsignado.lastName
             : "Sin asignar",
           status: "valid", // Estado inicial
           expiredDocuments: 0, // Documentos vencidos
@@ -277,7 +283,9 @@ export const findDocsPorExpirar = async () => {
       acc[placa].totalDocuments += 1;
 
       // Verificar si el documento está vencido o próximo a vencer
-      const fechaExpiracion = moment(doc.fechaExpiracion).tz(timezone).startOf("day");
+      const fechaExpiracion = moment(doc.fechaExpiracion)
+        .tz(timezone)
+        .startOf("day");
       const diasFaltantes = fechaExpiracion.diff(hoy, "days");
 
       // Incluir todos los campos del documento
@@ -303,7 +311,10 @@ export const findDocsPorExpirar = async () => {
       }
 
       // Agregar el documento a la lista de documentos del vehículo
-      if (fechaExpiracion.isBefore(hoy) || fechaExpiracion.isBetween(hoy, fechaLimite, null, "[]")) {
+      if (
+        fechaExpiracion.isBefore(hoy) ||
+        fechaExpiracion.isBetween(hoy, fechaLimite, null, "[]")
+      ) {
         acc[placa].documents.push(documentoCompleto);
       }
 
