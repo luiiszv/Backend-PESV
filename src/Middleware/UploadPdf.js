@@ -230,6 +230,7 @@ export const uploadVehiculeVerifyExistDoc = async (req, res, next) => {
       name: documento.name,
       ruta: fileUrl.secure_url,
       assetId: fileUrl.asset_id,
+      public_id: fileUrl.public_id,
       idVehiculo,
       tipoDocumentoId,
       numeroDocumento,
