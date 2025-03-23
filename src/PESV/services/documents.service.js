@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 import DocumentsRepository from "../repositories/document.Repository.js";
 
+import moment from "moment-timezone";
+
+// Configura la zona horaria de Colombia
+const timezone = "America/Bogota";
+
 //Guardar Documento del Usuario
 export const saveDocumentUserToDatabase = async (documentData) => {
   try {
@@ -177,86 +182,95 @@ export const getDocuemntsByIdUser = async (id_user) => {
 };
 
 export const findDocsPorExpirar = async () => {
-  const hoy = new Date();
-  const fechaLimite = new Date();
-  fechaLimite.setDate(hoy.getDate() + 60);
+  const hoy = moment().tz(timezone).startOf("day"); // Fecha actual en la zona horaria de Colombia
+  const fechaLimite = moment().tz(timezone).add(60, "days").endOf("day"); // 60 días en el futuro
 
   try {
-    const { docsUsuarios, docsVehiculos } =
-      await DocumentsRepository.findDocsPorExpirar(hoy, fechaLimite);
+    // Obtener todos los documentos desde el repository
+    const { docsVehiculos } = await DocumentsRepository.findDocsPorExpirar();
 
-    // 🔹 Procesar documentos de usuarios (sin idUsuario)
-    const docsUsuariosProcesados = docsUsuarios.map((doc) => {
-      const diasFaltantes = Math.ceil(
-        (new Date(doc.fechaExpiracion) - hoy) / (1000 * 60 * 60 * 24)
-      );
-      return {
-        ...doc._doc,
-        diasFaltantes,
-        estado: diasFaltantes < 0 ? "Expirado" : "Por Expirar",
+    // Procesar documentos de vehículos
+    const vehiclesGrouped = docsVehiculos.reduce((acc, doc) => {
+      const placa = doc.idVehiculo.placa;
+
+      // Si el vehículo no está en el acumulador, lo inicializamos
+      if (!acc[placa]) {
+        acc[placa] = {
+          id: doc.idVehiculo._id,
+          plate: doc.idVehiculo.placa,
+          make: doc.idVehiculo.marca,
+          model: doc.idVehiculo.modeloVehiculo,
+          year: doc.idVehiculo.modeloVehiculo, // Ajusta según tu modelo
+          owner: doc.idVehiculo.idUsuarioAsignado
+            ? doc.idVehiculo.idUsuarioAsignado.name +
+              " " +
+              doc.idVehiculo.idUsuarioAsignado.lastName
+            : "Sin asignar",
+          status: "valid", // Estado inicial
+          expiredDocuments: 0, // Documentos vencidos
+          totalDocuments: 0, // Total de documentos
+          documents: [], // Documentos próximos a vencer o vencidos
+        };
+      }
+
+      // Incrementar el total de documentos del vehículo
+      acc[placa].totalDocuments += 1;
+
+      // Verificar si el documento está vencido o próximo a vencer
+      const fechaExpiracion = moment(doc.fechaExpiracion)
+        .tz(timezone)
+        .startOf("day");
+      const diasFaltantes = fechaExpiracion.diff(hoy, "days");
+
+      // Incluir todos los campos del documento
+      const documentoCompleto = {
+        id: doc._id,
+        name: doc.tipoDocumentoId.name,
+        tipoDocumentoId: doc.tipoDocumentoId._id,
+        numeroDocumento: doc.numeroDocumento,
+        fechaExpiracion: fechaExpiracion.format("YYYY-MM-DD"),
+        assetId: doc.assetId,
+        ruta: doc.ruta,
+        daysRemaining: diasFaltantes,
       };
-    });
 
-    // 🔹 Procesar documentos de vehículos (sin idUsuarioAsignado)
-    const docsVehiculosProcesados = docsVehiculos.map((doc) => {
-      const diasFaltantes = Math.ceil(
-        (new Date(doc.fechaExpiracion) - hoy) / (1000 * 60 * 60 * 24)
-      );
-      return {
-        ...doc._doc,
-        diasFaltantes,
-        estado: diasFaltantes < 0 ? "Expirado" : "Por Expirar",
-      };
-    });
+      if (fechaExpiracion.isBefore(hoy)) {
+        // Documento vencido
+        acc[placa].expiredDocuments += 1;
+        documentoCompleto.status = "expired";
+      } else if (fechaExpiracion.isBetween(hoy, fechaLimite, null, "[]")) {
+        // Documento próximo a vencer
+        documentoCompleto.status = diasFaltantes <= 30 ? "urgent" : "warning";
+      }
 
-    // 🔹 Clasificar documentos según su estado
-    const docsUsuariosPorExpirar = docsUsuariosProcesados.filter(
-      (doc) => doc.diasFaltantes >= 0
-    );
-    const docsUsuariosExpirados = docsUsuariosProcesados.filter(
-      (doc) => doc.diasFaltantes < 0
-    );
-    const docsVehiculosPorExpirar = docsVehiculosProcesados.filter(
-      (doc) => doc.diasFaltantes >= 0
-    );
-    const docsVehiculosExpirados = docsVehiculosProcesados.filter(
-      (doc) => doc.diasFaltantes < 0
+      // Agregar el documento a la lista de documentos del vehículo
+      if (
+        fechaExpiracion.isBefore(hoy) ||
+        fechaExpiracion.isBetween(hoy, fechaLimite, null, "[]")
+      ) {
+        acc[placa].documents.push(documentoCompleto);
+      }
+
+      return acc;
+    }, {});
+
+    // Convertir el objeto agrupado en un array y filtrar vehículos con documentos próximos a vencer o vencidos
+    const vehiclesFinal = Object.values(vehiclesGrouped).filter(
+      (vehicle) => vehicle.documents.length > 0
     );
 
     return {
       success: true,
-      message:
-        docsUsuariosPorExpirar.length > 0 || docsVehiculosPorExpirar.length > 0
-          ? "Documentos por expirar encontrados"
-          : "No hay documentos próximos a vencer",
       data: {
-        // 📌 Documentos de usuarios (sin idUsuario)
-        documentosUsuariosPorExpirar: docsUsuariosPorExpirar,
-        documentosUsuariosExpirados: docsUsuariosExpirados,
-        totalProxVencerUsuario: docsUsuariosPorExpirar.length,
-        totalVencidosUsuario: docsUsuariosExpirados.length,
-
-        // 📌 Documentos de vehículos (sin idUsuarioAsignado)
-        documentosVehiculosPorExpirar: docsVehiculosPorExpirar,
-        documentosVehiculosExpirados: docsVehiculosExpirados,
-        totalProxVencerVehiculo: docsVehiculosPorExpirar.length,
-        totalVencidosVehiculo: docsVehiculosExpirados.length,
-
-        // 📌 Totales generales
-        totalProxVencer:
-          docsUsuariosPorExpirar.length + docsVehiculosPorExpirar.length,
-        totalVencidos:
-          docsUsuariosExpirados.length + docsVehiculosExpirados.length,
+        vehicles: vehiclesFinal,
       },
     };
   } catch (error) {
-    const docs = await DocumentsRepository.findDocsPorExpirar(hoy, fechaLimite);
-    if (!docs) {
-      return {
-        success: false,
-        message: "Error al obtener los documentos por expirar",
-        error: error.message,
-      };
-    }
+    console.error("Error en findDocsPorExpirar:", error);
+    return {
+      success: false,
+      message: "Error al obtener los documentos por expirar",
+      error: error.message,
+    };
   }
 };

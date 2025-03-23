@@ -7,13 +7,17 @@ import VehiculosModel from "../models/vehiculos.model.js";
 const findUserByDocument = async (idDoc) => {
   try {
     // Intentar buscar en documentos de usuarios
-    const documentoUsuario = await DocumentosUsuarioModel.findById(idDoc).populate("idUsuario");
+    const documentoUsuario = await DocumentosUsuarioModel.findById(
+      idDoc
+    ).populate("idUsuario");
     if (documentoUsuario) {
       return documentoUsuario.idUsuario;
     }
 
     // Si no se encuentra en documentos de usuario, buscar en documentos de vehículos
-    const documentoVehiculo = await DocumentosVehiculoModel.findById(idDoc).populate({
+    const documentoVehiculo = await DocumentosVehiculoModel.findById(
+      idDoc
+    ).populate({
       path: "idVehiculo",
       populate: { path: "idUsuario" }, // Hace el join con el usuario
     });
@@ -51,26 +55,23 @@ const getDocumentsByIdUser = async (id_user) => {
   });
 };
 
-const findDocsPorExpirar = async (hoy, fechaLimite) => {
-  const docsUsuarios = await DocumentosUsuarioModel.find({
-    fechaExpiracion: { $gte: hoy, $lte: fechaLimite },
-  })
-    .populate(
-      "idUsuario",
-      "-password -idRole -createdAt -updatedAt -idCargo -tipoLicencia -telefono -fechaNacimiento"
-    )
-    .populate("tipoDocumentoId", "-categoria -descripcion");
+const findDocsPorExpirar = async () => {
+  // Obtener todos los documentos de usuarios
+  const docsUsuarios = await DocumentosUsuarioModel.find()
+    .populate("idUsuario", "name lastName email numeroDocumento")
+    .populate("tipoDocumentoId", "name");
 
-  const docsVehiculos = await DocumentosVehiculoModel.find({
-    fechaExpiracion: { $gte: hoy, $lte: fechaLimite },
-  })
-    .populate("idVehiculo", "marca servicio placa")
-    .populate("tipoDocumentoId", "-categoria -descripcion");
+  // Obtener todos los documentos de vehículos
+  const docsVehiculos = await DocumentosVehiculoModel.find()
+    .populate("idVehiculo", "marca placa modeloVehiculo idUsuarioAsignado")
+    .populate("tipoDocumentoId", "name")
+    .populate({
+      path: "idVehiculo",
+      populate: { path: "idUsuarioAsignado", select: "name lastName" }, // Populate anidado
+    });
 
   return { docsUsuarios, docsVehiculos };
 };
-
-
 
 export const countDocsPorExpirar = async (hoy, fechaLimite) => {
   const docs = await Promise.all([
@@ -123,5 +124,5 @@ export default {
   countDocsPorExpirar,
   findTipoDocumentoByVehiculo,
   findUserByDocument,
-  findTipoDocumentoByUser
+  findTipoDocumentoByUser,
 };
