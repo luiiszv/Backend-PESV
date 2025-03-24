@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import DocumentsRepository from "../repositories/document.Repository.js";
 import VehicleRepository from "../repositories/vehiculo.repository.js";
 import moment from "moment-timezone";
 import {
   deleteFileCloudinary,
   uploadVehiculosCloudinary,
-  uploadUsuariosCloudinary
+  uploadUsuariosCloudinary,
 } from "../../config/cloudinary.js";
 // Configura la zona horaria de Colombia
 const timezone = "America/Bogota";
@@ -426,10 +426,6 @@ export const updateDocsByVehicule = async (id_doc, data_update, files) => {
   }
 };
 
-
-
-
-
 export const updateDocsByUser = async (id_doc, data_update, files) => {
   try {
     // Validar que id_doc esté presente
@@ -449,8 +445,6 @@ export const updateDocsByUser = async (id_doc, data_update, files) => {
         message: "No se encontró ningún documento",
       };
     }
-
-   
 
     // Verificar si se ha subido un nuevo archivo
     const newFile = files?.file;
@@ -507,3 +501,44 @@ export const updateDocsByUser = async (id_doc, data_update, files) => {
   }
 };
 
+export const findUserDocById = async (id_doc) => {
+  if (!mongoose.Types.ObjectId.isValid(id_doc)) {
+    return {
+      success: false,
+      message: "Id del documento no es valido",
+    };
+  }
+  const doc = await DocumentsRepository.findUserDocById(id_doc);
+  if (!doc) {
+    return {
+      success: false,
+      message: "Documento no encontrado",
+    };
+  }
+
+  return {
+    success: true,
+    data: doc,
+  };
+};
+
+export const findVehicleDocById = async (id_doc) => {
+  if (!mongoose.Types.ObjectId.isValid(id_doc)) {
+    return {
+      success: false,
+      message: "Id del documento no es valido",
+    };
+  }
+  const doc = await DocumentsRepository.findVehicleDocById(id_doc);
+  if (!doc) {
+    return {
+      success: false,
+      message: "Documento no encontrado",
+    };
+  }
+
+  return {
+    success: true,
+    data: doc,
+  };
+};

@@ -8,6 +8,8 @@ import {
   getDocumetosPorExpirar,
   updateVehicleDocuemnt,
   updateUserDocuemnt,
+  getUserDocumentById,
+  getVehicleDocumentById,
 } from "../controllers/document.controller.js";
 import {
   uploadVehiculeMiddleware,
@@ -23,6 +25,11 @@ import { authAdminMiddleware } from "../../Middleware/ValidateAdmin.js";
 const routerDocuments = Router();
 
 routerDocuments.get("/", getAllDocuments);
+
+routerDocuments.get("/user/:id", getUserDocumentById);
+
+routerDocuments.get("/vehicle/:id", getVehicleDocumentById);
+
 
 routerDocuments.get(
   "/tipos/vehiculos",
@@ -667,8 +674,6 @@ routerDocuments.put(
   authMiddleware,
   updateVehicleDocuemnt
 );
-
-
 
 /**
  * @swagger

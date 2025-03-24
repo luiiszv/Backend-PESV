@@ -7,6 +7,8 @@ import {
   findDocsPorExpirar,
   updateDocsByVehicule,
   updateDocsByUser,
+  findUserDocById,
+  findVehicleDocById,
 } from "../services/documents.service.js";
 
 export const getAllDocuments = async (req, res) => {
@@ -108,3 +110,24 @@ export const updateUserDocuemnt = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+export const getUserDocumentById = async (req, res) => {
+  try {
+    const response = await findUserDocById(req.params.id);
+    res.status(200).json(response);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export const getVehicleDocumentById = async (req, res) => {
+  try {
+    const response = await findVehicleDocById(req.params.id);
+    res.status(200).json(response);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
