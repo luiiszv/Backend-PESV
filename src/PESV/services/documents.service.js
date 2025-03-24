@@ -371,39 +371,40 @@ export const updateDocsByVehicule = async (id_doc, data_update, files) => {
 
     console.log("Public_id del documento existente:", docExist.public_id);
 
+    let updatedDoc = {
+      numeroDocumento: data_update.numeroDocumento || docExist.numeroDocumento,
+      fechaExpiracion: data_update.fechaExpiracion || docExist.fechaExpiracion,
+      name: docExist.name,
+      ruta: docExist.ruta,
+      assetId: docExist.assetId,
+      public_id: docExist.public_id,
+    };
+
     // Verificar si se ha subido un nuevo archivo
     const newFile = files?.file;
-    if (!newFile) {
-      return {
-        success: false,
-        message: "No se ha subido ningún documento",
-      };
+
+    if (newFile) {
+      // Eliminar el archivo existente en Cloudinary antes de subir el nuevo
+      const isDeleted = await deleteFileCloudinary(docExist.public_id);
+      if (!isDeleted) {
+        return {
+          success: false,
+          message: "No se pudo eliminar el archivo existente en Cloudinary",
+        };
+      }
+
+      // Subir el nuevo archivo a Cloudinary
+      const newDoc = await uploadVehiculosCloudinary(
+        newFile.tempFilePath,
+        newFile.name
+      );
+
+      // Actualizar los datos del documento con la nueva información del archivo
+      updatedDoc.name = newFile.name;
+      updatedDoc.ruta = newDoc.secure_url;
+      updatedDoc.assetId = newDoc.asset_id;
+      updatedDoc.public_id = newDoc.public_id;
     }
-
-    // Eliminar el archivo existente en Cloudinary
-    const isDeleted = await deleteFileCloudinary(docExist.public_id);
-    if (!isDeleted) {
-      return {
-        success: false,
-        message: "No se pudo eliminar el archivo existente en Cloudinary",
-      };
-    }
-
-    // Subir el nuevo archivo a Cloudinary
-    const newDoc = await uploadVehiculosCloudinary(
-      newFile.tempFilePath,
-      newFile.name
-    );
-
-    // Crear el objeto con los datos actualizados
-    const updatedDoc = {
-      name: newFile.name,
-      ruta: newDoc.secure_url,
-      assetId: newDoc.asset_id,
-      public_id: newDoc.public_id,
-      numeroDocumento: data_update.numeroDocumento,
-      fechaExpiracion: data_update.fechaExpiracion,
-    };
 
     // Actualizar el documento en la base de datos
     const updatedDocument = await DocumentsRepository.UpdateVehiuleDocs(
@@ -446,39 +447,42 @@ export const updateDocsByUser = async (id_doc, data_update, files) => {
       };
     }
 
+    console.log("Public_id del documento existente:", docExist.public_id);
+
+    let updatedDoc = {
+      numeroDocumento: data_update.numeroDocumento || docExist.numeroDocumento,
+      fechaExpiracion: data_update.fechaExpiracion || docExist.fechaExpiracion,
+      name: docExist.name,
+      ruta: docExist.ruta,
+      assetId: docExist.assetId,
+      public_id: docExist.public_id,
+    };
+
     // Verificar si se ha subido un nuevo archivo
     const newFile = files?.file;
-    if (!newFile) {
-      return {
-        success: false,
-        message: "No se ha subido ningún documento",
-      };
+
+    if (newFile) {
+      // Eliminar el archivo existente en Cloudinary antes de subir el nuevo
+      const isDeleted = await deleteFileCloudinary(docExist.public_id);
+      if (!isDeleted) {
+        return {
+          success: false,
+          message: "No se pudo eliminar el archivo existente en Cloudinary",
+        };
+      }
+
+      // Subir el nuevo archivo a Cloudinary
+      const newDoc = await uploadUsuariosCloudinary(
+        newFile.tempFilePath,
+        newFile.name
+      );
+
+      // Actualizar los datos del documento con la nueva información del archivo
+      updatedDoc.name = newFile.name;
+      updatedDoc.ruta = newDoc.secure_url;
+      updatedDoc.assetId = newDoc.asset_id;
+      updatedDoc.public_id = newDoc.public_id;
     }
-
-    // Eliminar el archivo existente en Cloudinary
-    const isDeleted = await deleteFileCloudinary(docExist.public_id);
-    if (!isDeleted) {
-      return {
-        success: false,
-        message: "No se pudo eliminar el archivo existente en Cloudinary",
-      };
-    }
-
-    // Subir el nuevo archivo a Cloudinary
-    const newDoc = await uploadUsuariosCloudinary(
-      newFile.tempFilePath,
-      newFile.name
-    );
-
-    // Crear el objeto con los datos actualizados
-    const updatedDoc = {
-      name: newFile.name,
-      ruta: newDoc.secure_url,
-      assetId: newDoc.asset_id,
-      public_id: newDoc.public_id,
-      numeroDocumento: data_update.numeroDocumento,
-      fechaExpiracion: data_update.fechaExpiracion,
-    };
 
     // Actualizar el documento en la base de datos
     const updatedDocument = await DocumentsRepository.UpdateUserDocs(
@@ -492,7 +496,7 @@ export const updateDocsByUser = async (id_doc, data_update, files) => {
       data: updatedDocument,
     };
   } catch (error) {
-    console.error("Error en updateDocsByVehicule:", error);
+    console.error("Error en updateDocsByUser:", error);
     return {
       success: false,
       message: "Error interno del servidor",
