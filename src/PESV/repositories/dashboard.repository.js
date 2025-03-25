@@ -1,6 +1,9 @@
 import VehiculosModel from "../models/vehiculos.model.js";
 import FormPreoperacionalModel from "../models/FormPreoperacional.model.js";
 import UsuarioModel from "../../Auth/models/UserModel.js";
+import VehiculoModel from "../models/vehiculos.model.js";
+import moment from "moment-timezone";
+export const TIMEZONE = "America/Bogota";
 
 const findEstadisticasVehiculos = async () => {
   // Total de vehículos
@@ -36,21 +39,57 @@ const findEstadisticasVehiculos = async () => {
     },
     {
       $lookup: {
-        from: "zonas", // Nombre de la colección de zonas
-        localField: "_id", // ID de la zona en VehiculosModel
-        foreignField: "_id", // ID en la colección "zonas"
+        from: "zonas",
+        localField: "_id",
+        foreignField: "_id",
         as: "zona",
       },
     },
     {
-      $unwind: "$zona", // Convierte el array de $lookup en un objeto normal
+      $unwind: "$zona",
     },
     {
       $project: {
-        _id: 0, // Oculta el ID original de la zona
-        zona: "$zona.nombreZona", // Muestra el nombre de la zona
-        cantidad: 1, // Mantiene el conteo de vehículos
+        _id: 0,
+        zona: "$zona.nombreZona",
+        cantidad: 1,
       },
+    },
+  ]);
+
+  // Agrupar vehículos por actividad con nombre en lugar de ID
+  const vehiculosPorActividad = await VehiculosModel.aggregate([
+    {
+      $match: {
+        estadoVehiculo: true, // Solo vehículos activos
+      },
+    },
+    {
+      $group: {
+        _id: "$idActividadVehiculo",
+        cantidad: { $sum: 1 },
+      },
+    },
+    {
+      $lookup: {
+        from: "actividad_vehiculos",
+        localField: "_id",
+        foreignField: "_id",
+        as: "actividad",
+      },
+    },
+    {
+      $unwind: "$actividad",
+    },
+    {
+      $project: {
+        _id: 0,
+        actividad: "$actividad.nombreTipo",
+        cantidad: 1,
+      },
+    },
+    {
+      $sort: { cantidad: -1 }, // Ordenar por cantidad descendente
     },
   ]);
 
@@ -61,8 +100,10 @@ const findEstadisticasVehiculos = async () => {
     vehiculosEmpresa,
     vehiculosPorServicio,
     vehiculosPorZona,
+    vehiculosPorActividad, // Nuevo campo agregado
   };
 };
+
 const findEstadisticasFormularios = async () => {
   try {
     const hoy = new Date();
@@ -139,5 +180,131 @@ const findEstadisticasFormularios = async () => {
     return { success: false, message: "Error al obtener estadísticas" };
   }
 };
+const obtenerEstadisticasPorActividad = async (fechaString = null) => {
+  const fecha = fechaString || moment().tz(TIMEZONE).format("YYYY-MM-DD");
+  const fechaInicio = moment.tz(fecha, TIMEZONE).startOf("day").toDate();
+  const fechaFin = moment.tz(fecha, TIMEZONE).endOf("day").toDate();
 
-export default { findEstadisticasVehiculos, findEstadisticasFormularios };
+  try {
+    // 1. Obtenemos todos los vehículos activos agrupados por actividad
+    const actividadesConVehiculos = await VehiculoModel.aggregate([
+      {
+        $match: {
+          estadoVehiculo: true,
+          vehiculoEnUso: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "actividad_vehiculos",
+          localField: "idActividadVehiculo",
+          foreignField: "_id",
+          as: "actividad",
+        },
+      },
+      { $unwind: "$actividad" },
+      {
+        $group: {
+          _id: "$actividad.nombreTipo",
+          totalVehiculos: { $sum: 1 },
+          vehiculos: { $push: "$_id" },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    // 2. Obtenemos los formularios completados hoy con su actividad
+    const formulariosCompletados = await FormPreoperacionalModel.aggregate([
+      {
+        $match: {
+          estadoFormulario: { $in: ["completado", "completado_con_errores"] },
+          fechaRespuesta: { $gte: fechaInicio, $lte: fechaFin },
+        },
+      },
+      {
+        $lookup: {
+          from: "vehiculos",
+          localField: "idVehiculo",
+          foreignField: "_id",
+          as: "vehiculo",
+        },
+      },
+      { $unwind: "$vehiculo" },
+      {
+        $lookup: {
+          from: "actividad_vehiculos",
+          localField: "vehiculo.idActividadVehiculo",
+          foreignField: "_id",
+          as: "actividad",
+        },
+      },
+      { $unwind: "$actividad" },
+      {
+        $group: {
+          _id: "$actividad.nombreTipo",
+          completados: { $sum: 1 },
+        },
+      },
+    ]);
+
+    // 3. Combinamos los datos
+    const estadisticas = actividadesConVehiculos.map((actividad) => {
+      const completadosData = formulariosCompletados.find(
+        (a) => a._id === actividad._id
+      );
+      const completados = completadosData ? completadosData.completados : 0;
+
+      return {
+        actividad: actividad._id,
+        totalVehiculos: actividad.totalVehiculos,
+        completados,
+        faltantes: actividad.totalVehiculos - completados,
+        porcentajeCompletados: Math.round(
+          (completados / actividad.totalVehiculos) * 100
+        ),
+      };
+    });
+
+    // 4. Calculamos totales generales
+    const totalGeneral = {
+      totalVehiculos: actividadesConVehiculos.reduce(
+        (sum, a) => sum + a.totalVehiculos,
+        0
+      ),
+      totalCompletados: formulariosCompletados.reduce(
+        (sum, f) => sum + f.completados,
+        0
+      ),
+    };
+    totalGeneral.totalFaltantes =
+      totalGeneral.totalVehiculos - totalGeneral.totalCompletados;
+    totalGeneral.porcentajeCompletados = Math.round(
+      (totalGeneral.totalCompletados / totalGeneral.totalVehiculos) * 100
+    );
+
+    return {
+      success: true,
+      fechaConsulta: fecha,
+      resumenGeneral: {
+        totalVehiculos: totalGeneral.totalVehiculos,
+        totalCompletados: totalGeneral.totalCompletados,
+        totalFaltantes: totalGeneral.totalFaltantes,
+        porcentajeCompletados: `${totalGeneral.porcentajeCompletados}%`,
+      },
+      detallePorActividad: estadisticas,
+    };
+  } catch (error) {
+    console.error("Error en obtenerEstadisticasPorActividad:", error);
+    return {
+      success: false,
+      message: "Error al obtener estadísticas",
+      error: error.message,
+    };
+  }
+};
+
+export default {
+  findEstadisticasVehiculos,
+  findEstadisticasFormularios,
+  obtenerEstadisticasPorActividad,
+};

@@ -38,6 +38,7 @@ export const findAllDataDash = async (fecha) => {
   const responseVehiculos = await VeehicuosRepository.findAllVehiculos();
   const responseEstadisticasFormularios = await DashboardRepository.findEstadisticasFormularios(fecha);
   const responseeEstadisticasVehiculos = await DashboardRepository.findEstadisticasVehiculos();
+  const obtenerEstadisticasPorActividad= await DashboardRepository.obtenerEstadisticasPorActividad();
 
 
   return {
@@ -46,7 +47,8 @@ export const findAllDataDash = async (fecha) => {
     resposeFormsPre,
     responseVehiculos,
     responseEstadisticasFormularios,
-    responseeEstadisticasVehiculos
+    responseeEstadisticasVehiculos,
+    obtenerEstadisticasPorActividad
 
   }
 }
