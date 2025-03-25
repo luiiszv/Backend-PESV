@@ -2,8 +2,8 @@ import cron from "node-cron";
 import { marcarFaltantesComoNoContestado } from "../services/formPreoperacional.service.js";
 
 // Configuración editable
-export const HORA_EJECUCION = 23; // 10 PM
-export const MINUTO_EJECUCION = 2; // 15 minutos
+export const HORA_EJECUCION = 15; // 10 PM
+export const MINUTO_EJECUCION = 1; // 15 minutos
 export const TIMEZONE = "America/Bogota";
 
 export const initPreoperacionalCron = () => {
