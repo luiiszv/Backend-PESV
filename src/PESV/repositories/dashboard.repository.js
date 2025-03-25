@@ -180,6 +180,8 @@ const findEstadisticasFormularios = async () => {
     return { success: false, message: "Error al obtener estadísticas" };
   }
 };
+
+
 const obtenerEstadisticasPorActividad = async (fechaString = null) => {
   const fecha = fechaString || moment().tz(TIMEZONE).format("YYYY-MM-DD");
   const fechaInicio = moment.tz(fecha, TIMEZONE).startOf("day").toDate();
