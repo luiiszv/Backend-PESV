@@ -5,6 +5,9 @@ import cors from "cors";
 import morgan from "morgan";
 import fileUpload from "express-fileupload";
 
+//Fun
+import { initPreoperacionalCron } from "./PESV/jobs/preoperacionalCron.js";
+
 //Routes
 import authRoutes from "./Auth/index.js";
 import PESVRoutes from "./PESV/index.js";
@@ -47,6 +50,11 @@ app.use(
     tempFileDir: "/tmp/", // Carpeta temporal donde guarda los archivos
   })
 );
+
+//
+
+// Inicializar la tarea programada
+initPreoperacionalCron();
 
 app.use("/auth", authRoutes);
 app.use("/pesv", PESVRoutes);

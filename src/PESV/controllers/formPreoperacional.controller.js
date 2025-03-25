@@ -2,15 +2,19 @@ import {
   obtenerFormulariosDiarios,
   obtenerFormulariosDiariosConErrores,
   getFormPreOperacionalById,
-  insertFormPreOperacional
-
+  insertFormPreOperacional,
+  obtenerVehiculosFaltantes,
 } from "../services/formPreoperacional.service.js";
 
 import moment from "moment-timezone";
 
+//Script de inset formularios
+import { ejecutarMarcadoManual } from "../jobs/preoperacionalCron.js";
+
 export const getFormulariosDiarios = async (req, res) => {
   try {
-    const fecha = req.query.fecha || moment().tz("America/Bogota").format("YYYY-MM-DD");
+    const fecha =
+      req.query.fecha || moment().tz("America/Bogota").format("YYYY-MM-DD");
     console.log(fecha);
     const result = await obtenerFormulariosDiarios(fecha);
 
@@ -51,7 +55,6 @@ export const getFormularioPreoperacionalById = async (req, res) => {
   }
 };
 
-
 export const registerFormPreOperaconal = async (req, res) => {
   try {
     const { userId } = req.user;
@@ -63,9 +66,36 @@ export const registerFormPreOperaconal = async (req, res) => {
       success: false,
       message: "Error interno del servidor registerFormPreOperaconal",
     });
-
   }
-}
+};
 
+export const getVehiculosFaltantes = async (req, res) => {
+  try {
+    const { fecha, hora_limite } = req.query;
+    const result = await obtenerVehiculosFaltantes(
+      fecha,
+      hora_limite ? parseInt(hora_limite) : undefined
+    );
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
+export const ejecutarPruebaManual = async (req, res) => {
+  try {
+    const { hora } = req.query;
+    const resultado = await ejecutarMarcadoManual(hora ? parseInt(hora) : null);
 
+    res.json({
+      success: resultado.success,
+      message: resultado.message,
+      detalles: resultado.detalles,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

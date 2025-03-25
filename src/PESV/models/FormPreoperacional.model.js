@@ -32,7 +32,12 @@ const FormPreoperacionalSchema = new Schema({
   ],
   estadoFormulario: {
     type: String,
-    enum: ["completado", "completado_con_errores", "no_aplica"],
+    enum: [
+      "completado",
+      "completado_con_errores",
+      "no_aplica",
+      "no_contestado",
+    ],
     required: true,
   },
   fechaRespuesta: {

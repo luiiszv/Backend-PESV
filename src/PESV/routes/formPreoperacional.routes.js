@@ -2,7 +2,8 @@ import {
   getFormulariosDiarios,
   getFormulariosDiariosErrores,
   getFormularioPreoperacionalById,
-  registerFormPreOperaconal
+  registerFormPreOperaconal,
+  getVehiculosFaltantes,
 } from "../controllers/formPreoperacional.controller.js";
 import { Router } from "express";
 const router = Router();
@@ -10,6 +11,15 @@ const router = Router();
 import { authMiddleware } from "../../Middleware/ValidateAuth.js";
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
 import { registerFormularioPreOperacionalSchema } from "../schemas/FormularioPreoperacional.js";
+
+
+
+router.get("/vehiculos-faltantes", authMiddleware, getVehiculosFaltantes);
+
+
+
+
+
 
 
 /**
@@ -155,9 +165,12 @@ router.get("/diarios/error", authMiddleware, getFormulariosDiariosErrores);
 
 router.get("/:id", authMiddleware, getFormularioPreoperacionalById);
 
-router.post("/", authMiddleware, validateSchema(registerFormularioPreOperacionalSchema), registerFormPreOperaconal);
-
-
+router.post(
+  "/",
+  authMiddleware,
+  validateSchema(registerFormularioPreOperacionalSchema),
+  registerFormPreOperaconal
+);
 
 
 

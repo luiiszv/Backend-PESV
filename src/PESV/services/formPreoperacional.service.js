@@ -5,8 +5,8 @@ import FormRepository from "../repositories/formualrios.respository.js";
 import PreguntasRepository from "../repositories/Preguntas.repository.js";
 import vehiculoRepository from "../repositories/vehiculo.repository.js";
 import NotifyRepository from "../repositories/notificaiones.repository.js";
-
-
+import moment from "moment-timezone";
+const TIMEZONE = "America/Bogota";
 export const obtenerFormulariosDiarios = async (fecha) => {
   const formularios = await FormPreoperacionalRepository.findFormulariosDiarios(
     fecha
@@ -58,8 +58,6 @@ export const getFormPreOperacionalById = async (id_form) => {
   };
 };
 
-
-
 export const insertFormPreOperacional = async (idUsuario, form_data) => {
   const { formularioId, respuestas, idVehiculo } = form_data;
 
@@ -88,10 +86,15 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
     estadoFormulario = "no_aplica";
   } else {
     for (const { idPregunta, respuesta } of respuestas) {
-      const preguntaExist = await PreguntasRepository.findPreguntaById(idPregunta);
+      const preguntaExist = await PreguntasRepository.findPreguntaById(
+        idPregunta
+      );
 
       if (!preguntaExist) {
-        return { success: false, message: `La pregunta con ID ${idPregunta} no fue encontrada.` };
+        return {
+          success: false,
+          message: `La pregunta con ID ${idPregunta} no fue encontrada.`,
+        };
       }
 
       if (preguntaExist.determinancia && respuesta === false) {
@@ -102,7 +105,9 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
 
   // Registrar el formulario con su estado
   const formDataStatus = { ...form_data, estadoFormulario, idUsuario };
-  const response = await FormPreoperacionalRepository.insertFormPreOperacional(formDataStatus);
+  const response = await FormPreoperacionalRepository.insertFormPreOperacional(
+    formDataStatus
+  );
 
   // Notificar en caso de errores en el formulario
   if (estadoFormulario == "completado_con_errores") {
@@ -112,12 +117,161 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
       detalle: `El vehículo con placa ${vehiculoExist.placa} ha realizado un formulario con errores.`,
       enviadoA: ["administrador"],
     });
-    console.log(res)
+    console.log(res);
   }
 
   return {
     success: true,
-    message: estadoFormulario === "completado_con_errores" ? "Formulario Registrado Con Errores" : "Formulario Registrado",
+    message:
+      estadoFormulario === "completado_con_errores"
+        ? "Formulario Registrado Con Errores"
+        : "Formulario Registrado",
     data: response,
   };
+};
+
+//Estadisticas
+export const obtenerVehiculosFaltantes = async (fechaString, horaLimite) => {
+  const fecha = fechaString || moment.tz(TIMEZONE).format("YYYY-MM-DD");
+  const faltantes =
+    await FormPreoperacionalRepository.findVehiculosFaltantesPreoperacional(
+      fecha,
+      horaLimite
+    );
+
+  // Filtrar solo los datos necesarios para la respuesta
+  const data = faltantes.map((item) => ({
+    vehiculo: {
+      _id: item.vehiculo._id,
+      placa: item.vehiculo.placa,
+      marca: item.vehiculo.marca,
+      claseVehiculo: item.vehiculo.idClaseVehiculo,
+    },
+    formularioAsignado: item.formularioAsignado
+      ? {
+          _id: item.formularioAsignado._id,
+          nombreFormulario: item.formularioAsignado.nombreFormulario,
+          version: item.formularioAsignado.version,
+        }
+      : null,
+    debeRealizar: !!item.formularioAsignado,
+  }));
+
+  return {
+    success: true,
+    data,
+    message: `Se encontraron ${faltantes.length} vehículos sin preoperacional`,
+  };
+};
+export const marcarFaltantesComoNoContestado = async (horaLimite = 16) => {
+  const ahora = moment().tz(TIMEZONE);
+  console.log(`[${ahora.format()}] Iniciando marcado automático`);
+
+  const fechaString = ahora.format("YYYY-MM-DD");
+  const fechaInicio = ahora.clone().startOf("day").toDate();
+  const fechaFin = ahora.clone().endOf("day").toDate();
+
+  if (horaLimite && ahora.hour() < horaLimite) {
+    console.log(`⏳ Hora actual (${ahora.format("HH:mm")}) es menor a la hora límite (${horaLimite}:00), no se ejecuta.`);
+    return {
+      success: false,
+      message: `El marcado automático solo se ejecuta después de las ${horaLimite}:00`,
+      horaActual: ahora.format("HH:mm"),
+    };
+  }
+
+  try {
+    console.log("🔍 Buscando vehículos que no han realizado el preoperacional...");
+    const vehiculosFaltantes = await FormPreoperacionalRepository.findVehiculosFaltantesPreoperacional(fechaString);
+    console.log(`📌 Vehículos faltantes encontrados: ${vehiculosFaltantes.length}`);
+
+    let contador = 0;
+    const resultados = [];
+    const notificacionesCreadas = [];
+
+    for (const item of vehiculosFaltantes) {
+      try {
+        const vehiculo = item.vehiculo;
+        console.log(`🚗 Procesando vehículo: ${vehiculo.placa} (${vehiculo._id})`);
+
+        // Validación robusta del usuario
+        const usuarioNotificacion = vehiculo.idUsuarioAsignado || vehiculo.idUsuario;
+        if (!usuarioNotificacion) {
+          console.error(`⚠️ Vehículo ${vehiculo.placa} no tiene usuario válido. Se omite.`);
+          continue;
+        }
+
+        // Verificar si ya está marcado
+        const yaMarcado = await FormPreoperacionalRepository.existeNoContestdadoParaVehiculo(
+          vehiculo._id,
+          fechaInicio,
+          fechaFin
+        );
+        if (yaMarcado) {
+          console.log(`⚠️ Vehículo ${vehiculo.placa} ya está marcado. Se omite.`);
+          continue;
+        }
+
+        const formulario = item.formularioAsignado;
+        if (!formulario) {
+          console.log(`❌ No hay formulario para ${vehiculo.placa}. Se omite.`);
+          continue;
+        }
+
+        // Crear registro
+        await FormPreoperacionalRepository.createNoAplicaAutomatico({
+          idUsuario: usuarioNotificacion,
+          idVehiculo: vehiculo._id,
+          formularioId: formulario._id,
+          respuestas: [],
+          estadoFormulario: "no_contestado",
+        });
+        console.log(`✅ Vehículo ${vehiculo.placa} marcado como "no_contestado"`);
+
+        // Crear notificación
+        const notificacion = await NotifyRepository.createNotificacion({
+          idUsuario: usuarioNotificacion,
+          tipoNotificacion: "info",
+          detalle: `Vehículo ${vehiculo.placa} marcado como no contestado (no preoperacional)`,
+          enviadoA: ["administrador"],
+          fechaExpiracion: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        });
+
+        notificacionesCreadas.push(notificacion._id);
+        contador++;
+        resultados.push({
+          vehiculo: vehiculo._id,
+          placa: vehiculo.placa,
+          status: "success",
+        });
+      } catch (error) {
+        console.error(`❌ Error procesando ${item.vehiculo.placa}:`, error);
+        resultados.push({
+          vehiculo: item.vehiculo._id,
+          placa: item.vehiculo.placa,
+          status: "error",
+          error: error.message,
+        });
+      }
+    }
+
+    console.log(`✅ Marcado completado. ${contador} vehículos procesados.`);
+    return {
+      success: true,
+      message: `Proceso completado. ${contador} vehículos procesados.`,
+      totalVehiculos: vehiculosFaltantes.length,
+      vehiculosProcesados: contador,
+      notificacionesCreadas: notificacionesCreadas.length,
+      errores: resultados.filter((r) => r.status === "error").length,
+      detalles: resultados,
+      horaEjecucion: ahora.format("HH:mm:ss"),
+    };
+  } catch (error) {
+    console.error("🚨 Error en el proceso automático:", error);
+    return {
+      success: false,
+      message: "Error en el proceso automático",
+      error: error.message,
+    };
+  }
 };

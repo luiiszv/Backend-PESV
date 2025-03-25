@@ -38,8 +38,8 @@ const updateFormulario = async (idFormulario, updateData) => {
   );
 };
 
-//Obtinen el Fomulario Que estan acticos de acuerdo al tipo de vehiuclo que tiene el usuario
-export const findFormulariosByUserAuth = async (idClaseVehiculo) => {
+//Obtinen el Fomulario Que estan activos de acuerdo al tipo de vehiuclo que tiene el usuario
+const findFormulariosByUserAuth = async (idClaseVehiculo) => {
   if (!idClaseVehiculo) {
     return {
       success: false,
@@ -47,9 +47,9 @@ export const findFormulariosByUserAuth = async (idClaseVehiculo) => {
     };
   }
 
-  const formularios = await FormularioModel.find({ 
-    idClaseVehiculo, 
-    estadoFormulario: true 
+  const formularios = await FormularioModel.find({
+    idClaseVehiculo,
+    estadoFormulario: true,
   }).populate({
     path: "preguntas",
     select: "-fechaCreacion -createdAt -updatedAt",
@@ -58,7 +58,8 @@ export const findFormulariosByUserAuth = async (idClaseVehiculo) => {
   if (!formularios || formularios.length === 0) {
     return {
       success: false,
-      message: "No se encontraron formularios activos para este tipo de vehículo",
+      message:
+        "No se encontraron formularios activos para este tipo de vehículo",
     };
   }
 
@@ -68,6 +69,11 @@ export const findFormulariosByUserAuth = async (idClaseVehiculo) => {
   };
 };
 
+const findFomulariosActives = async (idClaseVehiculo) => {
+  return await FormularioModel.find({
+    estadoFormulario: true,
+  });
+};
 
 export default {
   findAllFormularios,
@@ -76,5 +82,6 @@ export default {
   findFomularioActiveByClase,
   findLastFormularioByClase,
   updateFormulario,
-  findFormulariosByUserAuth
+  findFormulariosByUserAuth,
+  findFomulariosActives,
 };
