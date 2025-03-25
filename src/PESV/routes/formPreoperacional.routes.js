@@ -20,8 +20,6 @@ router.get("/vehiculos-faltantes", authMiddleware, getVehiculosFaltantes);
 
 
 
-
-
 /**
  * @swagger
  * tags:

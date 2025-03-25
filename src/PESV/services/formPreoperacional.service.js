@@ -145,7 +145,7 @@ export const obtenerVehiculosFaltantes = async (fechaString, horaLimite) => {
       _id: item.vehiculo._id,
       placa: item.vehiculo.placa,
       marca: item.vehiculo.marca,
-      claseVehiculo: item.vehiculo.idClaseVehiculo,
+      claseVehiculo: item.vehiculo.idClaseVehiculo, //puede generar error
     },
     formularioAsignado: item.formularioAsignado
       ? {

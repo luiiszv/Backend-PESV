@@ -2,7 +2,6 @@ import VehiculosModel from "../models/vehiculos.model.js";
 import FormPreoperacionalModel from "../models/FormPreoperacional.model.js";
 import UsuarioModel from "../../Auth/models/UserModel.js";
 
-
 const findEstadisticasVehiculos = async () => {
   // Total de vehículos
   const totalVehiculos = await VehiculosModel.countDocuments();
@@ -89,6 +88,11 @@ const findEstadisticasFormularios = async () => {
             day: { $dayOfMonth: "$fechaRespuesta" },
           },
           totalFormularios: { $sum: 1 },
+          formulariosCorrectos: {
+            $sum: {
+              $cond: [{ $eq: ["$estadoFormulario", "completado"] }, 1, 0],
+            },
+          },
           formulariosConErrores: {
             $sum: {
               $cond: [
@@ -98,9 +102,9 @@ const findEstadisticasFormularios = async () => {
               ],
             },
           },
-          formulariosCorrectos: {
+          formulariosNoContestados: {
             $sum: {
-              $cond: [{ $eq: ["$estadoFormulario", "completado"] }, 1, 0],
+              $cond: [{ $eq: ["$estadoFormulario", "no_contestado"] }, 1, 0],
             },
           },
         },
@@ -121,11 +125,15 @@ const findEstadisticasFormularios = async () => {
           totalFormularios: 1,
           formulariosCorrectos: 1,
           formulariosConErrores: 1,
+          formulariosNoContestados: 1,
         },
       },
     ]);
 
-    return { success: true, formulariosAgrupados };
+    return {
+      success: true,
+      formulariosAgrupados,
+    };
   } catch (error) {
     console.error("❌ Error en findEstadisticasFormularios:", error);
     return { success: false, message: "Error al obtener estadísticas" };
