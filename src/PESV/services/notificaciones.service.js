@@ -27,6 +27,7 @@ export const getAllNotificacionesByIDUser = async (idUsuario) => {
   if (!allNotify || allNotify.length === 0) {
     return {
       success: false,
+      data: [],
       message: "No hay notificaciones aún",
     };
   }
