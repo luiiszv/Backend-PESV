@@ -4,6 +4,7 @@ import {
   getFormularioPreoperacionalById,
   registerFormPreOperaconal,
   getVehiculosFaltantes,
+  marcarFomrsFaltanes,
 } from "../controllers/formPreoperacional.controller.js";
 import { Router } from "express";
 const router = Router();
@@ -13,12 +14,10 @@ import { validateSchema } from "../../Middleware/ValitarorSchema.js";
 import { registerFormularioPreOperacionalSchema } from "../schemas/FormularioPreoperacional.js";
 
 
+//Fun para marcar formualrios preoperacionales faltantes
+router.post("/marcar-faltantes-pesv", marcarFomrsFaltanes);
 
 router.get("/vehiculos-faltantes", authMiddleware, getVehiculosFaltantes);
-
-
-
-
 
 /**
  * @swagger
@@ -169,7 +168,5 @@ router.post(
   validateSchema(registerFormularioPreOperacionalSchema),
   registerFormPreOperaconal
 );
-
-
 
 export default router;

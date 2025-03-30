@@ -4,6 +4,7 @@ import {
   getFormPreOperacionalById,
   insertFormPreOperacional,
   obtenerVehiculosFaltantes,
+  marcarFaltantesComoNoContestado
 } from "../services/formPreoperacional.service.js";
 
 import moment from "moment-timezone";
@@ -97,5 +98,24 @@ export const ejecutarPruebaManual = async (req, res) => {
       success: false,
       message: error.message,
     });
+  }
+};
+
+export const marcarFomrsFaltanes = async (req, res) => {
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Método no permitido" });
+  }
+
+  try {
+    console.log(
+      `[${new Date().toISOString()}] 🔹 Ejecutando marcado automático...`
+    );
+    const resultado = await marcarFaltantesComoNoContestado(
+      new Date().getHours()
+    );
+    return res.status(200).json(resultado);
+  } catch (error) {
+    console.error(`[${new Date().toISOString()}] ❌ Error:`, error);
+    return res.status(500).json({ success: false, message: "Error interno" });
   }
 };

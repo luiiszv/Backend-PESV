@@ -51,10 +51,9 @@ app.use(
   })
 );
 
-//
 
-// Inicializar la tarea programada
-initPreoperacionalCron();
+
+
 
 app.use("/auth", authRoutes);
 app.use("/pesv", PESVRoutes);
