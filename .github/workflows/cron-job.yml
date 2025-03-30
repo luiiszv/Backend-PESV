@@ -2,7 +2,7 @@ name: Marcar Formularios Faltantes
 
 on:
   schedule:
-    - cron: "0 14 * * *" # Se ejecuta todos los días a las 3:15 AM UTC (10:15 PM en Colombia)
+    - cron: "0 14 * * *" # Se ejecuta todos los días a las 9:00 AM en Colombia (14:00 UTC)
   workflow_dispatch: # Permite ejecución manual desde GitHub
 
 jobs:
