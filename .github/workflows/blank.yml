@@ -11,4 +11,14 @@ jobs:
     steps:
       - name: Llamar API de Vercel
         run: |
-          curl -X POST https://backend-pesv.vercel.app/pesv/preoperacional/marcar-faltantes-pesv
+          echo "⏳ Iniciando solicitud a la API..."
+          RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -X POST https://backend-pesv.vercel.app/pesv/preoperacional/marcar-faltantes-pesv)
+          echo "📡 Respuesta del servidor: $RESPONSE"
+          
+          # Leer el contenido de response.txt (solo si la respuesta no es vacía)
+          if [ -s response.txt ]; then
+            echo "📄 Respuesta detallada:"
+            cat response.txt
+          else
+            echo "⚠️ No se recibió respuesta del servidor."
+          fi
