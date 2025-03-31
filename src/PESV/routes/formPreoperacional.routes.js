@@ -5,6 +5,7 @@ import {
   registerFormPreOperaconal,
   getVehiculosFaltantes,
   marcarFomrsFaltanes,
+  registerFormPreOperaconalNoAplica
 } from "../controllers/formPreoperacional.controller.js";
 import { Router } from "express";
 const router = Router();
@@ -168,5 +169,14 @@ router.post(
   validateSchema(registerFormularioPreOperacionalSchema),
   registerFormPreOperaconal
 );
+
+
+router.post(
+  "/no-aplica/:id",
+  authMiddleware,
+  registerFormPreOperaconalNoAplica
+);
+
+
 
 export default router;

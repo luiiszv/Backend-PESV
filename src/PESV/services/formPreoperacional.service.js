@@ -130,6 +130,54 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
   };
 };
 
+
+//Insert preoperacional no_aplica
+export const insertFormPreOperacionalNoAplica = async (idUsuario, idVehicle) => {
+  console.log("No aplica")
+
+  // Verificar si el usuario existe
+  const usuarioExist = await UserRepository.findUserById(idUsuario);
+  if (!usuarioExist) {
+    return { success: false, message: "El usuario no fue encontrado." };
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(idVehicle)) {
+    return { success: false, message: "El id del vehiculo no es valido" };
+  }
+
+
+  // Verificar si el vehículo existe
+  const vehiculoExist = await vehiculoRepository.findVehiculeById(idVehicle);
+  if (!vehiculoExist) {
+    return { success: false, message: "Vehículo no encontrado." };
+  }
+
+  let estadoFormulario = "no_aplica";
+
+  const idFormulario = await FormRepository.findFomularioActiveByClase(vehiculoExist.idClaseVehiculo);
+
+  console.log(idFormulario)
+
+
+
+
+
+  // Notificar en caso de errores en el formulario
+  // const res = await NotifyRepository.createNotificacion({
+  //   idUsuario: vehiculoExist.idUsuarioAsignado || vehiculoExist.idUsuario,
+  //   tipoNotificacion: "formulario_con_errores",
+  //   detalle: `El vehículo con placa ${vehiculoExist.placa} ha realizado un formulario con errores.`,
+  //   enviadoA: ["administrador"],
+  // });
+
+
+
+  return {
+    success: true,
+    message: "Form"
+  };
+};
+
 //Estadisticas
 export const obtenerVehiculosFaltantes = async (fechaString, horaLimite) => {
   const fecha = fechaString || moment.tz(TIMEZONE).format("YYYY-MM-DD");
@@ -149,10 +197,10 @@ export const obtenerVehiculosFaltantes = async (fechaString, horaLimite) => {
     },
     formularioAsignado: item.formularioAsignado
       ? {
-          _id: item.formularioAsignado._id,
-          nombreFormulario: item.formularioAsignado.nombreFormulario,
-          version: item.formularioAsignado.version,
-        }
+        _id: item.formularioAsignado._id,
+        nombreFormulario: item.formularioAsignado.nombreFormulario,
+        version: item.formularioAsignado.version,
+      }
       : null,
     debeRealizar: !!item.formularioAsignado,
   }));

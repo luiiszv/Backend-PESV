@@ -4,7 +4,8 @@ import {
   getFormPreOperacionalById,
   insertFormPreOperacional,
   obtenerVehiculosFaltantes,
-  marcarFaltantesComoNoContestado
+  marcarFaltantesComoNoContestado,
+  insertFormPreOperacionalNoAplica
 } from "../services/formPreoperacional.service.js";
 
 import moment from "moment-timezone";
@@ -60,6 +61,21 @@ export const registerFormPreOperaconal = async (req, res) => {
   try {
     const { userId } = req.user;
     const response = await insertFormPreOperacional(userId, req.body);
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error interno del servidor registerFormPreOperaconal",
+    });
+  }
+};
+
+
+export const registerFormPreOperaconalNoAplica = async (req, res) => {
+  try {
+    const { userId } = req.user;
+    const response = await insertFormPreOperacionalNoAplica(userId, req.params.id);
     res.status(200).json(response);
   } catch (error) {
     console.log(error);
