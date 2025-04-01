@@ -137,6 +137,10 @@ export const insertFormPreOperacionalNoAplica = async (idUsuario, data) => {
 
   const { idVehicle } = data;
 
+  if (!idVehicle) {
+    return { success: false, message: "El id del vehiculo es requerido" };
+  }
+
   // Verificar si el usuario existe
   const usuarioExist = await UserRepository.findUserById(idUsuario);
   if (!usuarioExist) {
@@ -163,11 +167,8 @@ export const insertFormPreOperacionalNoAplica = async (idUsuario, data) => {
     formData
   );
 
-  console.log(response)
-
 
   // Notificar en caso de errores en el formulario
-
 
   const res = await NotifyRepository.createNotificacion({
     idUsuario: vehiculoExist.idUsuarioAsignado || vehiculoExist.idUsuario,

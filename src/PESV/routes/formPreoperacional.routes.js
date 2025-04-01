@@ -332,7 +332,7 @@ router.post(
  *         description: Internal server error
  */
 router.post(
-  "/no-aplica/:id",
+  "/no-aplica",
   authMiddleware,
   registerFormPreOperaconalNoAplica
 );
