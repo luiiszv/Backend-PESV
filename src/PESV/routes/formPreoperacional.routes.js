@@ -268,10 +268,9 @@ router.post(
 
 
 
-
 /**
  * @swagger
- * /pesv/preoperacional/no-aplica/{idVehiculo}:
+ * /pesv/preoperacional/no-aplica/:
  *   post:
  *     tags:
  *       - Preoperational Forms
@@ -279,24 +278,24 @@ router.post(
  *     description: Marks a preoperational form as not applicable for a specific vehicle and user
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - name: id
- *         in: path
- *         description: ID of the vehicle
- *         required: true
- *         schema:
- *           type: string
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - idUsuario
+ *               - idVehicle
  *             properties:
  *               idUsuario:
  *                 type: string
  *                 description: ID of the user submitting the form
  *                 example: "507f1f77bcf86cd799439011"
+ *               idVehicle:
+ *                 type: string
+ *                 description: ID of the vehicle
+ *                 example: "607f1f77bcf86cd799439022"
  *     responses:
  *       200:
  *         description: Form successfully marked as not applicable

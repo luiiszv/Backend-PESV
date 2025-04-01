@@ -75,7 +75,7 @@ export const registerFormPreOperaconal = async (req, res) => {
 export const registerFormPreOperaconalNoAplica = async (req, res) => {
   try {
     const { userId } = req.user;
-    const response = await insertFormPreOperacionalNoAplica(userId, req.params.id);
+    const response = await insertFormPreOperacionalNoAplica(userId, req.body);
     res.status(200).json(response);
   } catch (error) {
     console.log(error);

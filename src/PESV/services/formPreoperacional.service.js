@@ -132,8 +132,10 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
 
 
 //Insert preoperacional no_aplica
-export const insertFormPreOperacionalNoAplica = async (idUsuario, idVehicle) => {
+export const insertFormPreOperacionalNoAplica = async (idUsuario, data) => {
   console.log("No aplica")
+
+  const { idVehicle } = data;
 
   // Verificar si el usuario existe
   const usuarioExist = await UserRepository.findUserById(idUsuario);
