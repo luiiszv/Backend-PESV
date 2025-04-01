@@ -135,9 +135,9 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
 export const insertFormPreOperacionalNoAplica = async (idUsuario, data) => {
   console.log("No aplica")
 
-  const { idVehicle } = data;
+  const { idVehiculo } = data;
 
-  if (!idVehicle) {
+  if (!idVehiculo) {
     return { success: false, message: "El id del vehiculo es requerido" };
   }
 
@@ -147,13 +147,13 @@ export const insertFormPreOperacionalNoAplica = async (idUsuario, data) => {
     return { success: false, message: "El usuario no fue encontrado." };
   }
 
-  if (!mongoose.Types.ObjectId.isValid(idVehicle)) {
+  if (!mongoose.Types.ObjectId.isValid(idVehiculo)) {
     return { success: false, message: "El id del vehiculo no es valido" };
   }
 
 
   // Verificar si el vehículo existe
-  const vehiculoExist = await vehiculoRepository.findVehiculeById(idVehicle);
+  const vehiculoExist = await vehiculoRepository.findVehiculeById(idVehiculo);
   if (!vehiculoExist) {
     return { success: false, message: "Vehículo no encontrado." };
   }
@@ -161,7 +161,7 @@ export const insertFormPreOperacionalNoAplica = async (idUsuario, data) => {
 
   const idFormulario = await FormRepository.findFomularioActiveByClase(vehiculoExist.idClaseVehiculo);
 
-  const formData = { estadoFormulario: "no_aplica", idUsuario, idVehicle, idFormulario };
+  const formData = { estadoFormulario: "no_aplica", idUsuario, idVehiculo, idFormulario };
 
   const response = await FormPreoperacionalRepository.insertFormPreOperacional(
     formData
