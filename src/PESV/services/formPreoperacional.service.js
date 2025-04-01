@@ -152,29 +152,34 @@ export const insertFormPreOperacionalNoAplica = async (idUsuario, idVehicle) => 
     return { success: false, message: "Vehículo no encontrado." };
   }
 
-  let estadoFormulario = "no_aplica";
 
   const idFormulario = await FormRepository.findFomularioActiveByClase(vehiculoExist.idClaseVehiculo);
 
-  console.log(idFormulario)
+  const formData = { estadoFormulario: "no_aplica", idUsuario, idVehicle, idFormulario };
 
+  const response = await FormPreoperacionalRepository.insertFormPreOperacional(
+    formData
+  );
 
-
+  console.log(response)
 
 
   // Notificar en caso de errores en el formulario
-  // const res = await NotifyRepository.createNotificacion({
-  //   idUsuario: vehiculoExist.idUsuarioAsignado || vehiculoExist.idUsuario,
-  //   tipoNotificacion: "formulario_con_errores",
-  //   detalle: `El vehículo con placa ${vehiculoExist.placa} ha realizado un formulario con errores.`,
-  //   enviadoA: ["administrador"],
-  // });
+
+
+  const res = await NotifyRepository.createNotificacion({
+    idUsuario: vehiculoExist.idUsuarioAsignado || vehiculoExist.idUsuario,
+    tipoNotificacion: "formulario_no_aplica",
+    detalle: `El vehículo con placa ${vehiculoExist.placa} ha marcado un formulario como no aplica.`,
+    enviadoA: ["administrador"],
+  });
 
 
 
   return {
     success: true,
-    message: "Form"
+    message: "Formulario registrado como no aplica",
+    data: response
   };
 };
 

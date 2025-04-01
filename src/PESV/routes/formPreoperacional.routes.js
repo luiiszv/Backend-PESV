@@ -163,6 +163,102 @@ router.get("/diarios/error", authMiddleware, getFormulariosDiariosErrores);
 
 router.get("/:id", authMiddleware, getFormularioPreoperacionalById);
 
+
+
+
+/**
+ * @swagger
+ * /pesv/preoperacional/:
+ *   post:
+ *     tags:
+ *       - Preoperational Forms
+ *     summary: Register a new preoperational form
+ *     description: |
+ *       Submits a preoperational form with answers and determines its status:
+ *       - 'completado' (completed)
+ *       - 'no_aplica' (not applicable)
+ *       - 'completado_con_errores' (completed with errors)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - formularioId
+ *               - respuestas
+ *               - idVehiculo
+ *             properties:
+ *               formularioId:
+ *                 type: string
+ *                 description: ID of the form template
+ *                 example: "611f1f77bcf86cd799439022"
+ *               idVehiculo:
+ *                 type: string
+ *                 description: ID of the vehicle
+ *                 example: "611f1f77bcf86cd799439033"
+ *               respuestas:
+ *                 type: array
+ *                 description: Array of question answers
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     idPregunta:
+ *                       type: string
+ *                       description: ID of the question
+ *                       example: "611f1f77bcf86cd799439044"
+ *                     respuesta:
+ *                       type: boolean
+ *                       description: Answer to the question
+ *                       example: true
+ *     responses:
+ *       200:
+ *         description: Form successfully registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Formulario Registrado"
+ *                 data:
+ *                   type: object
+ *                   description: The created form record
+ *       400:
+ *         description: Invalid input or missing required data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "El formulario no fue encontrado."
+ *       401:
+ *         description: Unauthorized - missing or invalid token
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Error interno del servidor registerFormPreOperaconal"
+ */
 router.post(
   "/",
   authMiddleware,
@@ -171,6 +267,71 @@ router.post(
 );
 
 
+
+
+/**
+ * @swagger
+ * /pesv/preoperacional/no-aplica/{idVehiculo}:
+ *   post:
+ *     tags:
+ *       - Preoperational Forms
+ *     summary: Mark a preoperational form as not applicable
+ *     description: Marks a preoperational form as not applicable for a specific vehicle and user
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID of the vehicle
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               idUsuario:
+ *                 type: string
+ *                 description: ID of the user submitting the form
+ *                 example: "507f1f77bcf86cd799439011"
+ *     responses:
+ *       200:
+ *         description: Form successfully marked as not applicable
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Formulario registrado como no aplica"
+ *                 data:
+ *                   type: object
+ *                   description: The created form record
+ *       400:
+ *         description: Invalid input or vehicle/user not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "El id del vehiculo no es valido"
+ *       401:
+ *         description: Unauthorized - missing or invalid token
+ *       500:
+ *         description: Internal server error
+ */
 router.post(
   "/no-aplica/:id",
   authMiddleware,
