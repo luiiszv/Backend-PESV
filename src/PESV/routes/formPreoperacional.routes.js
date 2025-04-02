@@ -11,12 +11,14 @@ import { Router } from "express";
 const router = Router();
 //Validationes
 import { authMiddleware } from "../../Middleware/ValidateAuth.js";
+import { authAdminMiddleware } from "../../Middleware/ValidateAdmin.js";
+
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
 import { registerFormularioPreOperacionalSchema } from "../schemas/FormularioPreoperacional.js";
 
 
 //Fun para marcar formualrios preoperacionales faltantes
-router.post("/marcar-faltantes-pesv", marcarFomrsFaltanes);
+router.post("/marcar-faltantes-pesv", authMiddleware, authAdminMiddleware, marcarFomrsFaltanes);
 
 router.get("/vehiculos-faltantes", authMiddleware, getVehiculosFaltantes);
 

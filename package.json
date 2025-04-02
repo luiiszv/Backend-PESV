@@ -8,7 +8,7 @@
     "start": "node src/index.js",
     "build": "npm install",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cron-preoperacional": "node src/services/formPreoperacional.cron.js"
+     "cron": "node cronRunner.js"
   },
   "keywords": [],
   "author": "",
