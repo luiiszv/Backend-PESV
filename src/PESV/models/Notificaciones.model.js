@@ -28,10 +28,8 @@ const NotificacionSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  fechaExpiracion: {
-    type: Date,
-    index: { expires: "7d" }, // ⏳ MongoDB eliminará el documento después de 7 días
-  },
+  fechaExpiracion: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+
   enviadoA: {
     type: [String],
     enum: ["usuario", "administrador"], // Permite múltiples destinatarios
