@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js",
+    "build": "npm install",
+    "test": "echo \"Error: no test specified\" && exit 1",
+     "cron": "node cronRunner.js"
   },
   "keywords": [],
   "author": "",

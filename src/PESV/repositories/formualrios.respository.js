@@ -75,6 +75,13 @@ const findFomulariosActives = async (idClaseVehiculo) => {
   });
 };
 
+const findFomularioActivoByCaseVehiculo = async (idClaseVehiculo) => {
+  return await FormularioModel.findOne({
+    idClaseVehiculo: idClaseVehiculo,
+    estadoFormulario: true
+  })
+}
+
 export default {
   findAllFormularios,
   findFormualrioByID,
@@ -84,4 +91,5 @@ export default {
   updateFormulario,
   findFormulariosByUserAuth,
   findFomulariosActives,
+  findFomularioActivoByCaseVehiculo
 };

@@ -180,8 +180,6 @@ const findEstadisticasFormularios = async () => {
     return { success: false, message: "Error al obtener estadísticas" };
   }
 };
-
-
 const obtenerEstadisticasPorActividad = async (fechaString = null) => {
   const fecha = fechaString || moment().tz(TIMEZONE).format("YYYY-MM-DD");
   const fechaInicio = moment.tz(fecha, TIMEZONE).startOf("day").toDate();
@@ -215,11 +213,10 @@ const obtenerEstadisticasPorActividad = async (fechaString = null) => {
       { $sort: { _id: 1 } },
     ]);
 
-    // 2. Obtenemos los formularios completados hoy con su actividad
-    const formulariosCompletados = await FormPreoperacionalModel.aggregate([
+    // 2. Obtenemos los formularios registrados hoy con su actividad (sin importar estadoFormulario)
+    const formulariosRegistrados = await FormPreoperacionalModel.aggregate([
       {
         $match: {
-          estadoFormulario: { $in: ["completado", "completado_con_errores"] },
           fechaRespuesta: { $gte: fechaInicio, $lte: fechaFin },
         },
       },
@@ -244,14 +241,14 @@ const obtenerEstadisticasPorActividad = async (fechaString = null) => {
       {
         $group: {
           _id: "$actividad.nombreTipo",
-          completados: { $sum: 1 },
+          completados: { $sum: 1 }, // realmente es "registrados"
         },
       },
     ]);
 
-    // 3. Combinamos los datos
+    // 3. Combinamos los datos por actividad
     const estadisticas = actividadesConVehiculos.map((actividad) => {
-      const completadosData = formulariosCompletados.find(
+      const completadosData = formulariosRegistrados.find(
         (a) => a._id === actividad._id
       );
       const completados = completadosData ? completadosData.completados : 0;
@@ -267,22 +264,30 @@ const obtenerEstadisticasPorActividad = async (fechaString = null) => {
       };
     });
 
-    // 4. Calculamos totales generales
+    // 4. Filtramos formularios solo de actividades activas
+    const actividadIds = actividadesConVehiculos.map((a) => a._id);
+    const formulariosFiltrados = formulariosRegistrados.filter((f) =>
+      actividadIds.includes(f._id)
+    );
+
+    // 5. Cálculo de totales generales
     const totalGeneral = {
       totalVehiculos: actividadesConVehiculos.reduce(
         (sum, a) => sum + a.totalVehiculos,
         0
       ),
-      totalCompletados: formulariosCompletados.reduce(
+      totalCompletados: formulariosFiltrados.reduce(
         (sum, f) => sum + f.completados,
         0
       ),
     };
     totalGeneral.totalFaltantes =
       totalGeneral.totalVehiculos - totalGeneral.totalCompletados;
-    totalGeneral.porcentajeCompletados = Math.round(
-      (totalGeneral.totalCompletados / totalGeneral.totalVehiculos) * 100
-    );
+    totalGeneral.porcentajeCompletados = totalGeneral.totalVehiculos > 0
+      ? Math.round(
+          (totalGeneral.totalCompletados / totalGeneral.totalVehiculos) * 100
+        )
+      : 0;
 
     return {
       success: true,
@@ -304,6 +309,8 @@ const obtenerEstadisticasPorActividad = async (fechaString = null) => {
     };
   }
 };
+
+
 
 export default {
   findEstadisticasVehiculos,

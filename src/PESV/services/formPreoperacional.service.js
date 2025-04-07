@@ -130,6 +130,62 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
   };
 };
 
+
+//Insert preoperacional no_aplica
+export const insertFormPreOperacionalNoAplica = async (idUsuario, data) => {
+  console.log("No aplica")
+
+  const { idVehiculo } = data;
+
+  if (!idVehiculo) {
+    return { success: false, message: "El id del vehiculo es requerido" };
+  }
+
+  // Verificar si el usuario existe
+  const usuarioExist = await UserRepository.findUserById(idUsuario);
+  if (!usuarioExist) {
+    return { success: false, message: "El usuario no fue encontrado." };
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(idVehiculo)) {
+    return { success: false, message: "El id del vehiculo no es valido" };
+  }
+
+
+  // Verificar si el vehículo existe
+  const vehiculoExist = await vehiculoRepository.findVehiculeById(idVehiculo);
+  if (!vehiculoExist) {
+    return { success: false, message: "Vehículo no encontrado." };
+  }
+
+
+  const idFormulario = await FormRepository.findFomularioActiveByClase(vehiculoExist.idClaseVehiculo);
+
+  const formData = { estadoFormulario: "no_aplica", idUsuario, idVehiculo, idFormulario };
+
+  const response = await FormPreoperacionalRepository.insertFormPreOperacional(
+    formData
+  );
+
+
+  // Notificar en caso de errores en el formulario
+
+  const res = await NotifyRepository.createNotificacion({
+    idUsuario: vehiculoExist.idUsuarioAsignado || vehiculoExist.idUsuario,
+    tipoNotificacion: "formulario_no_aplica",
+    detalle: `El vehículo con placa ${vehiculoExist.placa} ha marcado un formulario como no aplica.`,
+    enviadoA: ["administrador"],
+  });
+
+
+
+  return {
+    success: true,
+    message: "Formulario registrado como no aplica",
+    data: response
+  };
+};
+
 //Estadisticas
 export const obtenerVehiculosFaltantes = async (fechaString, horaLimite) => {
   const fecha = fechaString || moment.tz(TIMEZONE).format("YYYY-MM-DD");
@@ -149,10 +205,10 @@ export const obtenerVehiculosFaltantes = async (fechaString, horaLimite) => {
     },
     formularioAsignado: item.formularioAsignado
       ? {
-          _id: item.formularioAsignado._id,
-          nombreFormulario: item.formularioAsignado.nombreFormulario,
-          version: item.formularioAsignado.version,
-        }
+        _id: item.formularioAsignado._id,
+        nombreFormulario: item.formularioAsignado.nombreFormulario,
+        version: item.formularioAsignado.version,
+      }
       : null,
     debeRealizar: !!item.formularioAsignado,
   }));
