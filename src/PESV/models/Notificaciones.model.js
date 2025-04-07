@@ -29,7 +29,11 @@ const NotificacionSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  fechaExpiracion: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+
+  fechaExpiracion: {
+    type: Date,
+    index: { expires: "7d" },
+  },
 
   enviadoA: {
     type: [String],
