@@ -133,7 +133,6 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
 
 //Insert preoperacional no_aplica
 export const insertFormPreOperacionalNoAplica = async (idUsuario, data) => {
-  console.log("No aplica")
 
   const { idVehiculo } = data;
 
@@ -151,13 +150,11 @@ export const insertFormPreOperacionalNoAplica = async (idUsuario, data) => {
     return { success: false, message: "El id del vehiculo no es valido" };
   }
 
-
   // Verificar si el vehículo existe
   const vehiculoExist = await vehiculoRepository.findVehiculeById(idVehiculo);
   if (!vehiculoExist) {
     return { success: false, message: "Vehículo no encontrado." };
   }
-
 
   const idFormulario = await FormRepository.findFomularioActiveByClase(vehiculoExist.idClaseVehiculo);
 
