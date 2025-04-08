@@ -4,7 +4,7 @@ import { z } from "zod";
 const registerUserNotificacionesSchema = z.object({
   tipoNotificacion: z.enum(
     [
-      "formulario_con_errores",
+      "formulario_en_revision",
       "vencimiento_documentacion",
       "desplazamiento_finalizado",
       "mensaje_admin",

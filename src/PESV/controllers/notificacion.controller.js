@@ -25,6 +25,7 @@ export const createNewNotification = async ({ body }, res) => {
     const response = await createNotificacion(body);
     res.status(200).json(response);
   } catch (error) {
+    console.log(error)
     res.status(400).json({
       message: "Something went wrong in createNewNotification",
       error,
