@@ -10,7 +10,7 @@ const NotificacionSchema = new Schema({
   tipoNotificacion: {
     type: String,
     enum: [
-      "formulario_con_errores",
+      "formulario_en_revision",
       "formulario_no_aplica",
       "vencimiento_documentacion",
       "documento_proximo_vencer",
