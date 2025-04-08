@@ -131,13 +131,13 @@ const findEstadisticasFormularios = async () => {
           totalFormularios: { $sum: 1 },
           formulariosCorrectos: {
             $sum: {
-              $cond: [{ $eq: ["$estadoFormulario", "completado"] }, 1, 0],
+              $cond: [{ $eq: ["$estadoFormulario", "operativo"] }, 1, 0],
             },
           },
           formulariosConErrores: {
             $sum: {
               $cond: [
-                { $eq: ["$estadoFormulario", "completado_con_errores"] },
+                { $eq: ["$estadoFormulario", "en_revision"] },
                 1,
                 0,
               ],
@@ -145,7 +145,12 @@ const findEstadisticasFormularios = async () => {
           },
           formulariosNoContestados: {
             $sum: {
-              $cond: [{ $eq: ["$estadoFormulario", "no_contestado"] }, 1, 0],
+              $cond: [{ $eq: ["$estadoFormulario", "no_reporta"] }, 1, 0],
+            },
+          },
+          formulariosCorregidos: {
+            $sum: {
+              $cond: [{ $eq: ["$estadoFormulario", "revisado_corregido"] }, 1, 0],
             },
           },
         },
@@ -167,6 +172,7 @@ const findEstadisticasFormularios = async () => {
           formulariosCorrectos: 1,
           formulariosConErrores: 1,
           formulariosNoContestados: 1,
+          formulariosCorregidos: 1
         },
       },
     ]);
@@ -285,8 +291,8 @@ const obtenerEstadisticasPorActividad = async (fechaString = null) => {
       totalGeneral.totalVehiculos - totalGeneral.totalCompletados;
     totalGeneral.porcentajeCompletados = totalGeneral.totalVehiculos > 0
       ? Math.round(
-          (totalGeneral.totalCompletados / totalGeneral.totalVehiculos) * 100
-        )
+        (totalGeneral.totalCompletados / totalGeneral.totalVehiculos) * 100
+      )
       : 0;
 
     return {
