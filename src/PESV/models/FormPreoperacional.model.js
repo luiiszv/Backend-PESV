@@ -33,10 +33,11 @@ const FormPreoperacionalSchema = new Schema({
   estadoFormulario: {
     type: String,
     enum: [
-      "completado",
-      "completado_con_errores",
-      "no_aplica",
-      "no_contestado",
+      "operativo",  //Cuando lo reponde correctamene
+      "en_revision", // No esta correcto, lo completo con errores
+      "no_aplica", //Por algun motivo el usuario tiene la opcion de marcar como no aplica
+      "no_reporta", // No lo contesto
+      "revisado_corregido", // En caso de que se reponda mal pero lo reviso un admin y lo corrigio para que este operativo
     ],
     required: true,
   },

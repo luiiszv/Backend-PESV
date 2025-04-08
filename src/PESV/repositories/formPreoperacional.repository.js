@@ -30,7 +30,7 @@ const findFormulariosDiariosConErrores = async (fecha) => {
   fechaFin.setHours(23, 59, 59, 999);
 
   return await FormPreoperacionalModel.find({
-    estadoFormulario: "completado_con_errores",
+    estadoFormulario: "en_revision",
     fechaRespuesta: { $gte: fechaInicio, $lte: fechaFin },
   })
     .populate("idUsuario", "name lastName email numeroDocumento")
@@ -65,7 +65,7 @@ const countFormulariosDiariosConErrores = async (fecha = new Date()) => {
 
     // Contamos directamente los formularios con errores en el rango de fechas
     const totalErrores = await FormPreoperacionalModel.countDocuments({
-      estadoFormulario: "completado_con_errores",
+      estadoFormulario: "en_revision",
       fechaRespuesta: { $gte: fechaInicio, $lte: fechaFin },
     });
 
@@ -222,7 +222,7 @@ const existeNoContestdadoParaVehiculo = async (
 ) => {
   const count = await FormPreoperacionalModel.countDocuments({
     idVehiculo: vehiculoId,
-    estadoFormulario: "no_contestado",
+    estadoFormulario: "no_reporta",
     fechaRespuesta: { $gte: fechaInicio, $lte: fechaFin },
   });
   return count > 0;

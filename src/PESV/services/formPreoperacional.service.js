@@ -79,7 +79,7 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
     return { success: false, message: "Vehículo no encontrado." };
   }
 
-  let estadoFormulario = "completado";
+  let estadoFormulario = "operativo";
 
   // Si no hay respuestas, se considera "no_aplica"
   if (!Array.isArray(respuestas) || respuestas.length === 0) {
@@ -98,7 +98,7 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
       }
 
       if (preguntaExist.determinancia && respuesta === false) {
-        estadoFormulario = "completado_con_errores";
+        estadoFormulario = "en_revision";
       }
     }
   }
@@ -110,7 +110,7 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
   );
 
   // Notificar en caso de errores en el formulario
-  if (estadoFormulario == "completado_con_errores") {
+  if (estadoFormulario == "en_revision") {
     const res = await NotifyRepository.createNotificacion({
       idUsuario: vehiculoExist.idUsuarioAsignado || vehiculoExist.idUsuario,
       tipoNotificacion: "formulario_con_errores",
@@ -123,7 +123,7 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
   return {
     success: true,
     message:
-      estadoFormulario === "completado_con_errores"
+      estadoFormulario === "en_revision"
         ? "Formulario Registrado Con Errores"
         : "Formulario Registrado",
     data: response,
@@ -280,9 +280,9 @@ export const marcarFaltantesComoNoContestado = async (horaLimite = 16) => {
           idVehiculo: vehiculo._id,
           formularioId: formulario._id,
           respuestas: [],
-          estadoFormulario: "no_contestado",
+          estadoFormulario: "no_reporta",
         });
-        console.log(`✅ Vehículo ${vehiculo.placa} marcado como "no_contestado"`);
+        console.log(`✅ Vehículo ${vehiculo.placa} marcado como "no_reporta"`);
 
         // Crear notificación
         const notificacion = await NotifyRepository.createNotificacion({
