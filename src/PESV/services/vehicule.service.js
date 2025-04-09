@@ -71,6 +71,7 @@ export const insertVehiculo = async (id_user, vehiuclo) => {
     ...vehiuclo,
     placa: placaUperCase,
     idUsuario: id_user,
+    idUsuarioAsignado: id_user
   };
 
   await VehiculeRepository.insertVehiculo(vehiculoWithAuthUser);
