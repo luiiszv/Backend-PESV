@@ -87,7 +87,7 @@ export const findAllVehiculosByIdUser = async (id_user) => {
   if (vehiculos.length <= 0) {
     return {
       success: false,
-      message: "No hay Vehiulos asociados aun ",
+      message: "No hay Vehiulos asociados aun",
     };
   }
   return {
