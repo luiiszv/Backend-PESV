@@ -52,3 +52,4 @@ export const getAllPreguntas = async (req, res) => {
       .json({ message: "Something went wrong in getAllPreguntas", error });
   }
 };
+

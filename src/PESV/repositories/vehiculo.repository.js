@@ -49,7 +49,13 @@ const findVehiculeById = async (id_vehicule) => {
     .populate({
       path: "idZona",
       select: "-codeZona",
-    });
+    })
+    .populate({
+      path: "idUsuarioAsignado",
+      select: "name lastName numeroDocumento email",
+    })
+    
+    ;
 };
 
 const findVehiculeByPlaca = async (placa_vehicule) => {
