@@ -91,6 +91,10 @@ const getAllFormsPre = async () => {
       select: "",
     })
     .populate({
+      path: "idVehiculo",
+      select: "",
+    })
+    .populate({
       path: "formularioId",
       select: "",
     })

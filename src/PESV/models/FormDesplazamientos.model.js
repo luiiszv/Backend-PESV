@@ -6,24 +6,17 @@ const FormDesplazamientosSchema = new Schema({
     ref: "usuarios",
     required: true,
   },
-  respuestas: [
-    {
-      idPregunta: {
-        type: Schema.Types.ObjectId,
-        ref: "preguntas_formularios",
-        required: true,
-      },
-      respuesta: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
-  estadoDesplazamiento: {
-    type: String,
-    enum: ["En Curso", "Completado", "Pendiente"],
-    default: "En Curso",
+ 
+  puntoInicio: {
+    nombre: { type: String, required: true },
+    coordenadas: { type: CoordenadasSchema, required: false } // opcional
   },
+
+  puntoDestino: {
+    nombre: { type: String, required: true },
+    coordenadas: { type: CoordenadasSchema, required: false } // opcional
+  },
+
   fechaInicio: {
     type: Date,
     default: Date.now,
@@ -31,55 +24,15 @@ const FormDesplazamientosSchema = new Schema({
   fechaFin: {
     type: Date,
   },
-  rutaPrincipal: {
-    type: {
-      origen: {
-        lat: { type: Number, required: true },
-        lng: { type: Number, required: true },
-      },
-      destino: {
-        lat: { type: Number, required: true },
-        lng: { type: Number, required: true },
-      },
-      waypoints: [
-        //PuntosIntermedio
-        {
-          lat: { type: Number },
-          lng: { type: Number },
-        },
-      ],
-    },
-    required: true,
+
+  estadoDesplazamiento: {
+    type: String,
+    enum: ["En Curso", "Completado", "Pendiente"],
+    default: "En Curso",
   },
-  rutaAlterna: {
-    type: {
-      origen: {
-        lat: { type: Number, required: true },
-        lng: { type: Number, required: true },
-      },
-      destino: {
-        lat: { type: Number, required: true },
-        lng: { type: Number, required: true },
-      },
-      waypoints: [
-        //Puntos opcionales por ejemplo puntos intemedios
-        {
-          lat: { type: Number },
-          lng: { type: Number },
-        },
-      ],
-    },
-  },
-  paradas: [
-    {
-      lugar: {
-        lat: { type: Number, required: true },
-        lng: { type: Number, required: true },
-      },
-      descripcion: { type: String }, // Por ejemplo, "Restaurante"
-      hora: { type: String },
-    },
-  ],
+
+
+
 });
 
 export default model("form_desplazamientos", FormDesplazamientosSchema);
