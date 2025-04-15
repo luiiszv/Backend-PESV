@@ -10,6 +10,7 @@ import PreguntasRoutes from "./routes/preguntas.routes.js";
 import NotificaionesRoutes from "./routes/notificacion.routes.js";
 import FormulariosPreOperacional from "./routes/formPreoperacional.routes.js";
 import DashboardRoutes from "./routes/dashboard.routes.js";
+import DesplazamientosRoutes from "./routes/desplazamientos.routes.js";
 
 
 const routerPESV = Router();
@@ -26,6 +27,8 @@ routerPESV.use("/preguntas", PreguntasRoutes);
 routerPESV.use("/notificaciones", NotificaionesRoutes);
 routerPESV.use("/preoperacional", FormulariosPreOperacional);
 routerPESV.use("/dashboard", DashboardRoutes);
+routerPESV.use("/desplazamientos", DesplazamientosRoutes);
+
 
 
 
