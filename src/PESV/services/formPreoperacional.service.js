@@ -118,7 +118,14 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
       detalle: `El vehículo con placa ${vehiculoExist.placa} ha realizado un formulario con errores.`,
       enviadoA: ["administrador"],
     });
-    console.log(res);
+
+    await NotifyRepository.createNotificacion({
+      idUsuario: vehiculoExist.idUsuarioAsignado || vehiculoExist.idUsuario,
+      tipoNotificacion: "formulario_en_revision",
+      detalle: `El vehículo con placa ${vehiculoExist.placa} ha realizado un formulario con errores.`,
+      enviadoA: ["usuario"],
+    });
+  
   }
 
   return {

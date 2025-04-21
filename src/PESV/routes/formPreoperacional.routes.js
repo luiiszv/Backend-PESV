@@ -357,7 +357,6 @@ router.get(
   findPreoperaconal
 );
 
-
 router.delete("/delete/:id", authMiddleware, deletePreoperacional);
 
 
