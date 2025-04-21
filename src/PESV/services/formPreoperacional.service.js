@@ -7,6 +7,7 @@ import vehiculoRepository from "../repositories/vehiculo.repository.js";
 import NotifyRepository from "../repositories/notificaiones.repository.js";
 import moment from "moment-timezone";
 const TIMEZONE = "America/Bogota";
+
 export const obtenerFormulariosDiarios = async (fecha) => {
   const formularios = await FormPreoperacionalRepository.findFormulariosDiarios(
     fecha
@@ -216,7 +217,7 @@ export const obtenerVehiculosFaltantes = async (fechaString, horaLimite) => {
     message: `Se encontraron ${faltantes.length} vehículos sin preoperacional`,
   };
 };
-export const marcarFaltantesComoNoContestado = async (horaLimite = 16) => {
+export const marcarFaltantesComoNoContestado = async (horaLimite = 8) => {
   const ahora = moment().tz(TIMEZONE);
   console.log(`[${ahora.format()}] Iniciando marcado automático`);
 
