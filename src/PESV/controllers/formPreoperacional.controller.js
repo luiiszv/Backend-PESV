@@ -7,7 +7,8 @@ import {
   marcarFaltantesComoNoContestado,
   insertFormPreOperacionalNoAplica,
   updatePreoperacionalById,
-  findPreoperacionalById
+  findPreoperacionalById,
+  deletePreoperacioalById
 } from "../services/formPreoperacional.service.js";
 
 import moment from "moment-timezone";
@@ -158,6 +159,21 @@ export const findPreoperaconal = async (req, res) => {
   try {
 
     const response = await findPreoperacionalById(req.params.id);
+    res.status(200).json(response);
+
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({ success: false, message: "Error interno" });
+
+  }
+
+}
+
+
+export const deletePreoperacional = async (req, res) => {
+  try {
+
+    const response = await deletePreoperacioalById(req.params.id);
     res.status(200).json(response);
 
   } catch (error) {

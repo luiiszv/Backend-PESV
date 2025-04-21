@@ -238,6 +238,11 @@ const updateForm = async (id, updateData) => {
   return await FormPreoperacionalModel.findByIdAndUpdate(id, updateData, { new: true });
 };
 
+
+const deleteFormPreoperacional = async (id) => {
+  return await FormPreoperacionalModel.findByIdAndDelete(id);
+};
+
 export default {
   getAllFormsPre,
   insertFormPreOperacional,
@@ -250,5 +255,6 @@ export default {
   findByFechaRange,
   createNoAplicaAutomatico,
   existeNoContestdadoParaVehiculo,
-  updateForm
+  updateForm,
+  deleteFormPreoperacional
 };

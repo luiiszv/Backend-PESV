@@ -7,7 +7,8 @@ import {
   marcarFomrsFaltanes,
   registerFormPreOperaconalNoAplica,
   updatePreoperaconal,
-  findPreoperaconal
+  findPreoperaconal,
+  deletePreoperacional
 } from "../controllers/formPreoperacional.controller.js";
 import { Router } from "express";
 const router = Router();
@@ -355,6 +356,9 @@ router.get(
   authMiddleware,
   findPreoperaconal
 );
+
+
+router.delete("/delete/:id", authMiddleware, deletePreoperacional);
 
 
 
