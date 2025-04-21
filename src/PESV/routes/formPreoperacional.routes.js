@@ -6,7 +6,8 @@ import {
   getVehiculosFaltantes,
   marcarFomrsFaltanes,
   registerFormPreOperaconalNoAplica,
-  updatePreoperaconal
+  updatePreoperaconal,
+  findPreoperaconal
 } from "../controllers/formPreoperacional.controller.js";
 import { Router } from "express";
 const router = Router();
@@ -348,6 +349,13 @@ router.put(
   authAdminMiddleware,
   updatePreoperaconal
 );
+
+router.get(
+  "/find/:id",
+  authMiddleware,
+  findPreoperaconal
+);
+
 
 
 

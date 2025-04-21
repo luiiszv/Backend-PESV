@@ -337,9 +337,6 @@ export const updatePreoperacionalById = async (id_form, datos) => {
 
     }
 
-
-
-
     const preoperacionalExist = await FormPreoperacionalRepository.getFormPreOperacionalById(id_form);
 
     if (!preoperacionalExist) {
@@ -364,6 +361,46 @@ export const updatePreoperacionalById = async (id_form, datos) => {
     }
 
 
+
+  } catch (error) {
+    console.error("🚨 Error en PreoperacionalById:", error);
+    return {
+      success: false,
+      message: "Error en el proceso automático",
+      error: error.message,
+    };
+  }
+}
+
+
+export const findPreoperacionalById = async (id_form) => {
+
+  try {
+
+
+    if (!mongoose.Types.ObjectId.isValid(id_form)) {
+      return {
+        success: false,
+        message: "El id del formulario es invalido"
+      }
+
+    }
+
+    const preoperacionalExist = await FormPreoperacionalRepository.getFormPreOperacionalById(id_form);
+
+    if (!preoperacionalExist) {
+      return {
+        success: false,
+        message: "No se ha encontrado el formulario"
+      }
+
+    }
+
+    return {
+      success: true,
+      data: preoperacionalExist,
+
+    }
 
   } catch (error) {
     console.error("🚨 Error en PreoperacionalById:", error);
