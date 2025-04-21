@@ -217,7 +217,7 @@ export const obtenerVehiculosFaltantes = async (fechaString, horaLimite) => {
     message: `Se encontraron ${faltantes.length} vehículos sin preoperacional`,
   };
 };
-export const marcarFaltantesComoNoContestado = async (horaLimite = 8) => {
+export const marcarFaltantesComoNoContestado = async () => {
   const ahora = moment().tz(TIMEZONE);
   console.log(`[${ahora.format()}] Iniciando marcado automático`);
 
@@ -225,15 +225,7 @@ export const marcarFaltantesComoNoContestado = async (horaLimite = 8) => {
   const fechaInicio = ahora.clone().startOf("day").toDate();
   const fechaFin = ahora.clone().endOf("day").toDate();
 
-  if (horaLimite && ahora.hour() < horaLimite) {
-    console.log(`⏳ Hora actual (${ahora.format("HH:mm")}) es menor a la hora límite (${horaLimite}:00), no se ejecuta.`);
-    return {
-      success: false,
-      message: `El marcado automático solo se ejecuta después de las ${horaLimite}:00`,
-      horaActual: ahora.format("HH:mm"),
-    };
-  }
-
+ 
   try {
     console.log("🔍 Buscando vehículos que no han realizado el preoperacional...");
     const vehiculosFaltantes = await FormPreoperacionalRepository.findVehiculosFaltantesPreoperacional(fechaString);
