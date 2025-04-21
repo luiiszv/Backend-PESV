@@ -167,11 +167,11 @@ const findVehiculosFaltantesPreoperacional = async (fechaString) => {
     },
     formularioAsignado: formulariosPorClase[vehiculo.idClaseVehiculo._id]
       ? {
-          _id: formulariosPorClase[vehiculo.idClaseVehiculo._id]._id,
-          nombre:
-            formulariosPorClase[vehiculo.idClaseVehiculo._id].nombreFormulario,
-          version: formulariosPorClase[vehiculo.idClaseVehiculo._id].version,
-        }
+        _id: formulariosPorClase[vehiculo.idClaseVehiculo._id]._id,
+        nombre:
+          formulariosPorClase[vehiculo.idClaseVehiculo._id].nombreFormulario,
+        version: formulariosPorClase[vehiculo.idClaseVehiculo._id].version,
+      }
       : null,
     debeRealizar: !!formulariosPorClase[vehiculo.idClaseVehiculo._id],
   }));
@@ -232,6 +232,12 @@ const existeNoContestdadoParaVehiculo = async (
   return count > 0;
 };
 
+
+
+const updateForm = async (id, updateData) => {
+  return await FormPreoperacionalModel.findByIdAndUpdate(id, updateData, { new: true });
+};
+
 export default {
   getAllFormsPre,
   insertFormPreOperacional,
@@ -244,4 +250,5 @@ export default {
   findByFechaRange,
   createNoAplicaAutomatico,
   existeNoContestdadoParaVehiculo,
+  updateForm
 };

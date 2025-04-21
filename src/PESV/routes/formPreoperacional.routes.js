@@ -5,7 +5,8 @@ import {
   registerFormPreOperaconal,
   getVehiculosFaltantes,
   marcarFomrsFaltanes,
-  registerFormPreOperaconalNoAplica
+  registerFormPreOperaconalNoAplica,
+  updatePreoperaconal
 } from "../controllers/formPreoperacional.controller.js";
 import { Router } from "express";
 const router = Router();
@@ -15,6 +16,7 @@ import { authAdminMiddleware } from "../../Middleware/ValidateAdmin.js";
 
 import { validateSchema } from "../../Middleware/ValitarorSchema.js";
 import { registerFormularioPreOperacionalSchema } from "../schemas/FormularioPreoperacional.js";
+
 
 
 //Fun para marcar formualrios preoperacionales faltantes
@@ -337,6 +339,14 @@ router.post(
   "/no-aplica",
   authMiddleware,
   registerFormPreOperaconalNoAplica
+);
+
+
+router.put(
+  "/update/:id",
+  authMiddleware,
+  authAdminMiddleware,
+  updatePreoperaconal
 );
 
 
