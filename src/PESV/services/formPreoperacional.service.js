@@ -122,10 +122,10 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
     await NotifyRepository.createNotificacion({
       idUsuario: vehiculoExist.idUsuarioAsignado || vehiculoExist.idUsuario,
       tipoNotificacion: "formulario_en_revision",
-      detalle: `El vehículo con placa ${vehiculoExist.placa} ha realizado un formulario con errores.`,
+      detalle: `Según los resultados del formulario preoperacional, el vehículo con placas ${vehiculoExist.placa} NO cumple con las condiciones mínimas de seguridad para su circulación. .`,
       enviadoA: ["usuario"],
     });
-  
+
   }
 
   return {
