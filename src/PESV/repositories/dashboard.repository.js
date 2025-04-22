@@ -104,21 +104,22 @@ const findEstadisticasVehiculos = async () => {
   };
 };
 
+
 const findEstadisticasFormularios = async () => {
   try {
-    const hoy = new Date();
-    const inicioSemana = new Date(hoy);
-    inicioSemana.setDate(hoy.getDate() - hoy.getDay()); // Lunes de la semana actual
-    inicioSemana.setHours(0, 0, 0, 0);
+    const hoy = moment().tz(TIMEZONE);
 
-    const finSemana = new Date(inicioSemana);
-    finSemana.setDate(inicioSemana.getDate() + 6); // Domingo de la misma semana
-    finSemana.setHours(23, 59, 59, 999);
+    // Semana de lunes a domingo
+    const inicioSemana = hoy.clone().startOf("week").add(1, "day");
+    const finSemana = inicioSemana.clone().add(6, "days").endOf("day");
 
     const formulariosAgrupados = await FormPreoperacionalModel.aggregate([
       {
         $match: {
-          fechaRespuesta: { $gte: inicioSemana, $lte: finSemana }, // 🔥 Solo de esta semana
+          fechaRespuesta: {
+            $gte: inicioSemana.toDate(),
+            $lte: finSemana.toDate(),
+          },
         },
       },
       {
@@ -129,26 +130,27 @@ const findEstadisticasFormularios = async () => {
             day: { $dayOfMonth: "$fechaRespuesta" },
           },
           totalFormularios: { $sum: 1 },
-          formulariosCorrectos: {
+          formulariosOperativos: {
             $sum: {
               $cond: [{ $eq: ["$estadoFormulario", "operativo"] }, 1, 0],
             },
           },
-          formulariosConErrores: {
+          formulariosEnRevision: {
             $sum: {
-              $cond: [
-                { $eq: ["$estadoFormulario", "en_revision"] },
-                1,
-                0,
-              ],
+              $cond: [{ $eq: ["$estadoFormulario", "en_revision"] }, 1, 0],
             },
           },
-          formulariosNoContestados: {
+          formulariosNoAplica: {
+            $sum: {
+              $cond: [{ $eq: ["$estadoFormulario", "no_aplica"] }, 1, 0],
+            },
+          },
+          formulariosNoReporta: {
             $sum: {
               $cond: [{ $eq: ["$estadoFormulario", "no_reporta"] }, 1, 0],
             },
           },
-          formulariosCorregidos: {
+          formulariosRevisadosCorregidos: {
             $sum: {
               $cond: [{ $eq: ["$estadoFormulario", "revisado_corregido"] }, 1, 0],
             },
@@ -156,7 +158,7 @@ const findEstadisticasFormularios = async () => {
         },
       },
       {
-        $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 }, // 🔥 Ordenar correctamente por fecha
+        $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 },
       },
       {
         $project: {
@@ -169,10 +171,11 @@ const findEstadisticasFormularios = async () => {
             },
           },
           totalFormularios: 1,
-          formulariosCorrectos: 1,
-          formulariosConErrores: 1,
-          formulariosNoContestados: 1,
-          formulariosCorregidos: 1
+          formulariosOperativos: 1,
+          formulariosEnRevision: 1,
+          formulariosNoAplica: 1,
+          formulariosNoReporta: 1,
+          formulariosRevisadosCorregidos: 1,
         },
       },
     ]);
@@ -186,6 +189,8 @@ const findEstadisticasFormularios = async () => {
     return { success: false, message: "Error al obtener estadísticas" };
   }
 };
+
+
 const obtenerEstadisticasPorActividad = async (fechaString = null) => {
   const fecha = fechaString || moment().tz(TIMEZONE).format("YYYY-MM-DD");
   const fechaInicio = moment.tz(fecha, TIMEZONE).startOf("day").toDate();
