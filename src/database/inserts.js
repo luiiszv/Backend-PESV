@@ -322,6 +322,7 @@ db.cargos.insertMany([
   { "name": "Microbus", "description": "Vehículo más pequeño que un autobús, usado para transporte de pasajeros.", "claseUnidad": "vehiculo" },
   { "name": "Motocarro", "description": "Vehículo pequeño de tres ruedas usado para carga o pasajeros.", "claseUnidad": "vehiculo" },
 
+
   
   { "name": "CARGADOR", "description": "Maquinaria de carga articulada (BELL, CAT, etc.)", "claseUnidad": "maquinaria" },
   { "name": "CAMION", "description": "Camión forestal o de carga pesada, algunos con placa", "claseUnidad": "vehiculo" },
