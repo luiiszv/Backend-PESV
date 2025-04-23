@@ -310,20 +310,19 @@ db.cargos.insertMany([
 
 
 
+// { "name": "Motocicleta", "description": "Vehículo de dos ruedas impulsado por un motor.", "claseUnidad": "vehiculo" },
+//   { "name": "Bus", "description": "Vehículo grande diseñado para transportar muchos pasajeros.", "claseUnidad": "vehiculo" },
+//   { "name": "Camioneta", "description": "Vehículo versátil utilizado para transporte de carga o pasajeros.", "claseUnidad": "vehiculo" },
+//   { "name": "Campero", "description": "Vehículo robusto adecuado para terrenos difíciles.", "claseUnidad": "vehiculo" },
+//   { "name": "Automovil", "description": "Vehículo de cuatro ruedas diseñado principalmente para transporte personal.", "claseUnidad": "vehiculo" },
+//   { "name": "Jeep", "description": "Vehículo compacto y resistente, ideal para usos todoterreno.", "claseUnidad": "vehiculo" },
+//   { "name": "Microbus", "description": "Vehículo más pequeño que un autobús, usado para transporte de pasajeros.", "claseUnidad": "vehiculo" },
+//   { "name": "Motocarro", "description": "Vehículo pequeño de tres ruedas usado para carga o pasajeros.", "claseUnidad": "vehiculo" },
 
 
-db.cargos.insertMany([
-  { "name": "Motocicleta", "description": "Vehículo de dos ruedas impulsado por un motor.", "claseUnidad": "vehiculo" },
-  { "name": "Bus", "description": "Vehículo grande diseñado para transportar muchos pasajeros.", "claseUnidad": "vehiculo" },
-  { "name": "Camioneta", "description": "Vehículo versátil utilizado para transporte de carga o pasajeros.", "claseUnidad": "vehiculo" },
-  { "name": "Campero", "description": "Vehículo robusto adecuado para terrenos difíciles.", "claseUnidad": "vehiculo" },
-  { "name": "Automovil", "description": "Vehículo de cuatro ruedas diseñado principalmente para transporte personal.", "claseUnidad": "vehiculo" },
-  { "name": "Jeep", "description": "Vehículo compacto y resistente, ideal para usos todoterreno.", "claseUnidad": "vehiculo" },
-  { "name": "Microbus", "description": "Vehículo más pequeño que un autobús, usado para transporte de pasajeros.", "claseUnidad": "vehiculo" },
-  { "name": "Motocarro", "description": "Vehículo pequeño de tres ruedas usado para carga o pasajeros.", "claseUnidad": "vehiculo" },
 
+db.clase_vehiculos.insertMany([
 
-  
   { "name": "CARGADOR", "description": "Maquinaria de carga articulada (BELL, CAT, etc.)", "claseUnidad": "maquinaria" },
   { "name": "CAMION", "description": "Camión forestal o de carga pesada, algunos con placa", "claseUnidad": "vehiculo" },
   { "name": "GRUA", "description": "Grúa hidráulica o articulada usada en operación forestal", "claseUnidad": "maquinaria" },
@@ -338,4 +337,7 @@ db.cargos.insertMany([
   { "name": "TRAKOLLER", "description": "Equipo remolcador de cable para extracción forestal", "claseUnidad": "maquinaria" },
   { "name": "WINCHE", "description": "Winche de tracción para cargas pesadas", "claseUnidad": "maquinaria" }
 ])
+
+
+
 
