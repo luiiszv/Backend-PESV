@@ -13,6 +13,14 @@ const VehiculosSchema = new Schema(
       ref: "usuarios",
       default: null, // Solo se usa si el vehículo es de empresa
     },
+
+    claseUnidad: {
+      type: String,
+      enum: ["vehiculo", "equipo"],  //Equipo es maquinaria
+      required: true
+    },
+
+
     idClaseVehiculo: {
       type: Schema.Types.ObjectId,
       ref: "clase_vehiculos",
@@ -41,7 +49,7 @@ const VehiculosSchema = new Schema(
     capacidadVehiculo: {
       //40
       type: Number,
-      require: true,
+      require: false,
     },
     noChasis: {
       //Numero del chassis
@@ -64,11 +72,11 @@ const VehiculosSchema = new Schema(
     },
     fechaMatricula: {
       type: Date,
-      require: true,
+      require: false,
     },
     placa: {
       type: String,
-      require: true,
+      require: false,
     },
     VehicleEmpresa: {
       // Si es vehículo de empresa
