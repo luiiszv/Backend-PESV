@@ -81,6 +81,13 @@ const findEnumValues = () => {
   }));
 };
 
+const findEnumValuesClaseUnidad = () => {
+  return VehiculosModel.schema.path("claseUnidad").enumValues.map((value) => ({
+    _id: value,
+    name: value,
+  }));
+};
+
 const updateVehicule = async (id_vehiculo, vehicule_data) => {
   return await VehiculosModel.updateOne({ _id: id_vehiculo }, vehicule_data);
 };
@@ -172,5 +179,6 @@ export default {
   updateVehicule,
   toggleVehiculoEnUso,
   obtenerVehiculosSinPreoperacional,
+  findEnumValuesClaseUnidad
 };
 

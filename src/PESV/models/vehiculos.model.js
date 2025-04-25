@@ -16,7 +16,7 @@ const VehiculosSchema = new Schema(
 
     claseUnidad: {
       type: String,
-      enum: ["vehiculo", "equipo"],  //Equipo es maquinaria
+      enum: ["Vehiculo", "Equipo"],  //Equipo es maquinaria
       required: true
     },
 

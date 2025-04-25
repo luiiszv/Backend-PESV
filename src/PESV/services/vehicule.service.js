@@ -123,12 +123,15 @@ export const findSelectInformationVehiculos = async () => {
   }
   const servicioEnum = await VehiculeRepository.findEnumValues();
 
+  const servicioEnumClaseUnidad = await VehiculeRepository.findEnumValuesClaseUnidad();
+
   return {
     success: true,
     zonas: selectZonas,
     clases: selectClaseVehiculos,
     tipos: selectTipoVehiuclo,
     servicio: servicioEnum,
+    unidad: servicioEnumClaseUnidad
   };
 };
 

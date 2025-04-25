@@ -9,6 +9,11 @@ const ClaseVehiculoSchema = new Schema({
     description: {
         type: String,
         required: false
+    },
+    requierePlaca: {
+        type: Boolean,
+        required: true,
+        default: true
     }
 });
 
