@@ -456,8 +456,8 @@ adminRoutes.get("/vehiculos", authMiddleware, authAdminMiddleware, getAllVehicul
 adminRoutes.post(
   "/vehiculos",
   authMiddleware,
-  validateSchema(regiterAdminVehiculosSchema),
   authAdminMiddleware,
+  validateSchema(regiterAdminVehiculosSchema),
   registerAdminVehiculos
 );
 

@@ -277,7 +277,8 @@ export const insertAdminVehiculos = async (id_admin, vehiculo_empresa_data) => {
       message: "Fecha de matrícula no puede ser futura",
     };
   }
-  const placaUperCase = placa.toUpperCase();
+  const placaUperCase = placa ? placa.toUpperCase() : null;
+
 
   const palcaVehiculoExist = await VehiculosRepository.findVehiculeByPlaca(
     placaUperCase
@@ -317,6 +318,8 @@ export const insertAdminVehiculos = async (id_admin, vehiculo_empresa_data) => {
       message: "idZona not Encontrada",
     };
   }
+
+  
 
   const newAdminVehicule = await {
     ...vehiculo_empresa_data,

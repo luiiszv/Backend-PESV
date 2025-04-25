@@ -132,10 +132,11 @@ export const registerAdminVehiculos = async (req, res) => {
   try {
     const userAdmin = req.user;
     console.log(req.body);
+    console.log("dep")
     const response = await insertAdminVehiculos(userAdmin.userId, req.body);
     res.status(200).json(response);
   } catch (error) {
-    console.log(error);
+    console.log(error)
     res.status(400).json({
       message: "Something went wrong in registerAdminVehiculos",
     });

@@ -10,7 +10,7 @@ export const regiterUserVehiculosSchema = z.object({
       message: "idClaseVehiculo es invalido",
     }),
 
-    idActividadVehiculo: z
+  idActividadVehiculo: z
     .string({ required_error: "idActividadVehiculo es requerido" })
     .refine(isValid, {
       message: "idActividadVehiculo es invalido",
@@ -23,9 +23,11 @@ export const regiterUserVehiculosSchema = z.object({
     .string({ required_error: "marca es requerida" })
     .min(2, { message: "Marca debe tener al menos 2 caracteres" }),
 
+
+
   servicio: z.enum(["Publico", "Particular"], {
-    error_map: () => "Servicio debe ser 'Publico' o 'Particular'",
-  }),
+    errorMap: () => ({ message: "Servicio debe ser 'Publico' o 'Particular'" }),
+  }).optional(),
 
   capacidadVehiculo: z.number({
     required_error: "Capacidad del vehículo es requerida",
@@ -55,20 +57,17 @@ export const regiterUserVehiculosSchema = z.object({
 
   placa: z
     .string({ required_error: "Placa es requerida" })
-    .min(6, { message: "La placa debe tener al menos 6 caracteres" }),
+    .min(12, { message: "La placa debe tener al menos 6 caracteres" }).optional(),
 });
 
 export const regiterAdminVehiculosSchema = z.object({
-  // idUsuarioAsignado: z.string().refine(isValid, {
-  //   message: "idUsuarioAsignado no es invalido",
-  // }),
   idClaseVehiculo: z
     .string({ required_error: "idClaseVehiculo es requerido" })
     .refine(isValid, {
       message: "idClaseVehiculo es invalido",
     }),
 
-    idActividadVehiculo: z
+  idActividadVehiculo: z
     .string({ required_error: "idActividadVehiculo es requerido" })
     .refine(isValid, {
       message: "idActividadVehiculo es invalido",
@@ -81,29 +80,26 @@ export const regiterAdminVehiculosSchema = z.object({
     .string({ required_error: "marca es requerida" })
     .min(2, { message: "Marca debe tener al menos 2 caracteres" }),
 
-  servicio: z.enum(["Publico", "Particular"], {
-    error_map: () => "Servicio debe ser 'Publico' o 'Particular'",
-  }),
+  servicio:
+    z.enum(["Publico", "Particular", ""], {
+      errorMap: () => ({ message: "Servicio debe ser 'Publico' o 'Particular'" }),
+    }).optional(),
+
 
   capacidadVehiculo: z.number({
     required_error: "Capacidad del vehículo es requerida",
   }),
 
-  modeloVehiculo: z
-    .number({
-      required_error: "Modelo del vehículo es requerido",
-    })
-    .int()
-    .gte(1000, { message: "El modelo debe ser de al menos 4 dígitos" })
-    .lte(9999, { message: "El modelo debe ser de máximo 4 dígitos" }),
-
-  color: z.string({ required_error: "Color es requerido" }),
+  modeloVehiculo: z.string({
+    required_error: "Modelo del vehículo es requerido",
+  }),
 
   fechaMatricula: z
-    .string({ required_error: "Fecha de matrícula es requerida" }),
-   
+    .string({ required_error: "Fecha de matrícula es requerida" }).optional(),
 
-  placa: z
-    .string({ required_error: "Placa es requerida" })
-    .min(6, { message: "La placa debe tener al menos 6 caracteres" }),
+  placa:
+    z.string({ required_error: "Placa es requerida" }).optional()
+
+
+
 });

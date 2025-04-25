@@ -20,7 +20,6 @@ const VehiculosSchema = new Schema(
       required: true
     },
 
-
     idClaseVehiculo: {
       type: Schema.Types.ObjectId,
       ref: "clase_vehiculos",
@@ -44,26 +43,19 @@ const VehiculosSchema = new Schema(
     servicio: {
       type: String,
       enum: ["Publico", "Particular"],
-      require: true,
+      required: false,
     },
+    
+
     capacidadVehiculo: {
       //40
       type: Number,
       require: false,
     },
-    noChasis: {
-      //Numero del chassis
-      type: String,
-      require: false,
-    },
-    noMotor: {
-      //Numero del Motor
-      type: String,
-      require: false,
-    },
+
     modeloVehiculo: {
-      //año 2030
-      type: Number,
+      //año 2030 || D39EX-22 modelo de un equipo (maquinaria)
+      type: String,
       require: true,
     },
     color: {
@@ -72,12 +64,15 @@ const VehiculosSchema = new Schema(
     },
     fechaMatricula: {
       type: Date,
-      require: false,
+      required: false,
+
     },
     placa: {
       type: String,
-      require: false,
+      required: false,
+
     },
+
     VehicleEmpresa: {
       // Si es vehículo de empresa
       type: Boolean,
