@@ -24,10 +24,20 @@ const findEstadisticasVehiculos = async () => {
     VehicleEmpresa: true,
   });
 
-  // Agrupar vehículos por servicio (Público/Particular)
+ 
+
   const vehiculosPorServicio = await VehiculosModel.aggregate([
-    { $group: { _id: "$servicio", cantidad: { $sum: 1 } } },
+    { 
+      $match: { claseUnidad: "Vehiculo" } // ✅ Solo Vehiculos
+    },
+    { 
+      $group: { 
+        _id: "$servicio", 
+        cantidad: { $sum: 1 } 
+      } 
+    }
   ]);
+  
 
   // Agrupar vehículos por zona con nombre en lugar de ID
   const vehiculosPorZona = await VehiculosModel.aggregate([
