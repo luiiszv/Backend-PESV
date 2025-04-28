@@ -45,11 +45,23 @@ const VehiculosSchema = new Schema(
       enum: ["Publico", "Particular"],
       required: false,
     },
-    
+
 
     capacidadVehiculo: {
       //40
       type: Number,
+      require: false,
+    },
+
+    numero_equipo: {
+      //40
+      type: String,
+      require: false,
+    },
+
+    codigo: {
+      //40
+      type: String,
       require: false,
     },
 
