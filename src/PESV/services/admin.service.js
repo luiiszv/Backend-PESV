@@ -279,6 +279,8 @@ export const insertAdminVehiculos = async (id_admin, vehiculo_empresa_data) => {
   }
   const placaUperCase = placa ? placa.toUpperCase() : null;
 
+  console.log(placaUperCase)
+
 
   const palcaVehiculoExist = await VehiculosRepository.findVehiculeByPlaca(
     placaUperCase
