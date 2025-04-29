@@ -118,8 +118,7 @@ const loginUser = async (email, password) => {
   }
   const payload = {
     userId: userExist._id,
-    email: userExist.email,
-    roleId: userExist.idRole,
+    email: userExist.email
   };
 
   const token = await createAccessToken(payload);
