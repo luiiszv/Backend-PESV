@@ -127,7 +127,8 @@ const loginUser = async (email, password) => {
     success: true,
     message: "logged user",
     token: token,
-   
+    user: payload
+
   };
 };
 
