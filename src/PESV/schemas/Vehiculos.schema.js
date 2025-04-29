@@ -37,7 +37,7 @@ export const regiterUserVehiculosSchema = z.object({
     .string({
       required_error: "Modelo del vehículo es requerido",
     })
-    .int()
+    
   ,
 
   color: z.string({ required_error: "Color es requerido" }),
