@@ -127,6 +127,7 @@ const loginUser = async (email, password) => {
     success: true,
     message: "logged user",
     token: token,
+    roleId: userExist.idRole
   };
 };
 
@@ -190,9 +191,9 @@ const updateUser = async (id_user, user_data) => {
       updateFields.password = await hash(user_data.password, 10);
     }
 
-    const userExist= await UserRepository.findUserById(id_user);
-    if(!userExist){
-      return{
+    const userExist = await UserRepository.findUserById(id_user);
+    if (!userExist) {
+      return {
         success: false,
         message: 'El Usuario no Existe'
       }
