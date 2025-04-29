@@ -34,12 +34,11 @@ export const regiterUserVehiculosSchema = z.object({
   }),
 
   modeloVehiculo: z
-    .number({
+    .string({
       required_error: "Modelo del vehículo es requerido",
     })
     .int()
-    .gte(1000, { message: "El modelo debe ser de al menos 4 dígitos" })
-    .lte(9999, { message: "El modelo debe ser de máximo 4 dígitos" }),
+  ,
 
   color: z.string({ required_error: "Color es requerido" }),
 
@@ -57,7 +56,7 @@ export const regiterUserVehiculosSchema = z.object({
 
   placa: z
     .string({ required_error: "Placa es requerida" })
-    .min(12, { message: "La placa debe tener al menos 6 caracteres" }).optional(),
+    .min(5, { message: "La placa debe tener al menos 5 caracteres" }).optional(),
 });
 
 export const regiterAdminVehiculosSchema = z.object({
