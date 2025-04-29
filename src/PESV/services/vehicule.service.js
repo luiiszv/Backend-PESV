@@ -69,6 +69,7 @@ export const insertVehiculo = async (id_user, vehiuclo) => {
 
   const vehiculoWithAuthUser = {
     ...vehiuclo,
+    claseUnidad: "Vehiculo",
     placa: placaUperCase,
     idUsuario: id_user,
     idUsuarioAsignado: id_user
