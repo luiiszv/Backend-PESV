@@ -112,12 +112,17 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
 
   // Notificar en caso de errores en el formulario
   if (estadoFormulario == "en_revision") {
+    const descripcionVehiculo = vehiculoExist.placa && vehiculoExist.placa.trim() !== ""
+      ? `vehículo con placa ${vehiculoExist.placa}`
+      : `equipo con código ${vehiculoExist.codigo}`;
+
     const res = await NotifyRepository.createNotificacion({
       idUsuario: vehiculoExist.idUsuarioAsignado || vehiculoExist.idUsuario,
       tipoNotificacion: "formulario_en_revision",
-      detalle: `El vehículo con placa ${vehiculoExist.placa} ha realizado un formulario con errores.`,
+      detalle: `El ${descripcionVehiculo} ha realizado un formulario en estado revision.`,
       enviadoA: ["administrador"],
     });
+
 
 
     const placaOcodigo = vehiculoExist.placa && vehiculoExist.placa.trim() !== ""
