@@ -119,14 +119,18 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
       enviadoA: ["administrador"],
     });
 
-    const res2= await NotifyRepository.createNotificacion({
+
+    const placaOcodigo = vehiculoExist.placa && vehiculoExist.placa.trim() !== ""
+      ? `vehículo con placas ${vehiculoExist.placa}`
+      : `equipo con código ${vehiculoExist.codigo}`;
+
+    const res2 = await NotifyRepository.createNotificacion({
       idUsuario: vehiculoExist.idUsuarioAsignado,
       tipoNotificacion: "formulario_en_revision",
-      detalle: `Según los resultados del formulario preoperacional, el vehículo con placas ${vehiculoExist.placa} NO cumple con las condiciones mínimas de seguridad para su circulación. .`,
+      detalle: `Según los resultados del formulario preoperacional, el ${placaOcodigo} NO cumple con las condiciones mínimas de seguridad para su circulación.`,
       enviadoA: ["usuario"],
     });
 
-    console.log(res2, "notify for vehiuclo no puede ciruclar")
   }
 
   return {
