@@ -150,25 +150,25 @@ export const findFormularioByVehiculo = async (vehiculoId) => {
       return { success: false, message: "Vehículo no encontrado" };
     }
 
-    
 
 
-    let idClaseVehiculo = ""
-    // IDs de referencia
-    const idMotocicleta = "67a50fff122183dc3aaddbae"; // ID de motocicleta
-    const idAutomovil = "67a50fff122183dc3aaddbb2"; // ID de automóvil
 
-    // Si el vehículo no es motocicleta, asignamos el ID de automóvil
-    idClaseVehiculo = vehiculo.idClaseVehiculo._id == idMotocicleta ? idMotocicleta : idAutomovil;
+    // let idClaseVehiculo = ""
+    // // IDs de referencia
+    // const idMotocicleta = "67a50fff122183dc3aaddbae"; // ID de motocicleta
+    // const idAutomovil = "67a50fff122183dc3aaddbb2"; // ID de automóvil
+
+    // // Si el vehículo no es motocicleta, asignamos el ID de automóvil
+    // idClaseVehiculo = vehiculo.idClaseVehiculo._id == idMotocicleta ? idMotocicleta : idAutomovil;
 
 
 
     // Obtener el formulario según la clase del vehículo
-    const formulario = await FormularioRepository.findFormulariosByUserAuth(idClaseVehiculo);
+    const formulario = await FormularioRepository.findFormulariosByUserAuth(vehiculo.idClaseVehiculo);
 
 
     if (!formulario || !formulario.success || !formulario.formularios.length) {
-      return { success: false, message: "No se encontró un formulario para este tipo de vehículo" };
+      return { success: false, message: "No se encontró un formulario para la clase de vehículo" };
     }
 
     return { success: true, formulario: formulario.formularios };
