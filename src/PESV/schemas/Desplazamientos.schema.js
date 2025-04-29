@@ -58,6 +58,6 @@ const registerDesplazamientos = z.object({
         required_error: "El estado es requerido",
         invalid_type_error: "Estado no válido"
     }).default("En Curso")
-}).strict("No se permiten campos adicionales");
+})
 
 export { registerDesplazamientos };

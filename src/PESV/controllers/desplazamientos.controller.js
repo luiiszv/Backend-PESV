@@ -3,24 +3,13 @@ import { registerNewDesplazamiento, findAllDesplazaminetos } from "../services/d
 
 export const createDesplazamiento = async (req, res) => {
     try {
-        const { idUsuario } = req.use;
+        const { userId } = req.user;
         const desplazamientoData = req.body;
 
 
-        const result = await registerNewDesplazamiento(idUsuario, desplazamientoData);
-
-        if (!result.success) {
-            return res.status(400).json(result);
-        }
-
-        // Éxito - 201 Created
-        return res.status(201).json({
-            success: true,
-            message: result.message,
-            affectedRows: result.affectedRows,
-            insertId: result.insertId,
-            data: result.data
-        });
+        const result = await registerNewDesplazamiento(userId, desplazamientoData);
+        const statusCode = result.statusCode || (result.success ? 201 : 400);
+        return res.status(statusCode).json(result);
 
     } catch (error) {
         console.error("Error en controlador createDesplazamiento:", error);
@@ -32,7 +21,6 @@ export const createDesplazamiento = async (req, res) => {
         });
     }
 };
-
 
 export const getAllDesplazamientos = async (req, res) => {
 

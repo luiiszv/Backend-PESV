@@ -17,11 +17,22 @@ const getAllDesplazamientos = async () => {
 }
 
 
+const findFormInProgress = async (idUsuario, idVehiculo) => {
+    return await DesplazamientosModel.findOne({
+        estadoDesplazamiento: "En Curso",
+        idUsuario,
+        idVehiculo
+    })
+}
+
+
+
 
 export default {
     insertDesplazamiento,
     getDesplazamintoById,
-    getAllDesplazamientos
+    getAllDesplazamientos,
+    findFormInProgress
 }
 
 

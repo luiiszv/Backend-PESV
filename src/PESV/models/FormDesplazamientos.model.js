@@ -9,6 +9,13 @@ const FormDesplazamientosSchema = new Schema({
     required: true,
   },
 
+
+  idVehiculo: {
+    type: Schema.Types.ObjectId,
+    ref: "vehiculos",
+    required: true,
+  },
+
   puntoInicio: {
     nombre: {
       type: String,
@@ -33,8 +40,6 @@ const FormDesplazamientosSchema = new Schema({
     }
   },
 
-
-
   fechaInicio: {
     type: Date,
     default: Date.now,
@@ -42,14 +47,12 @@ const FormDesplazamientosSchema = new Schema({
   fechaFin: {
     type: Date,
   },
-
   estadoDesplazamiento: {
     type: String,
-    enum: ["En Curso", "Completado", "Pendiente"],
+    enum: ["En Curso", "Completado", "Cancelado"],
     default: "En Curso",
-    require: true
+    required: true
   }
-
 });
 
 export default model("form_desplazamientos", FormDesplazamientosSchema);

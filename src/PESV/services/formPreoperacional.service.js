@@ -123,8 +123,6 @@ export const insertFormPreOperacional = async (idUsuario, form_data) => {
       enviadoA: ["administrador"],
     });
 
-
-
     const placaOcodigo = vehiculoExist.placa && vehiculoExist.placa.trim() !== ""
       ? `vehículo con placas ${vehiculoExist.placa}`
       : `equipo con código ${vehiculoExist.codigo}`;
